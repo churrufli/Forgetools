@@ -4,7 +4,7 @@ Imports System.Text
 Imports System.Text.RegularExpressions
 
 Public Class ext
-    Public Shared todaslascartas As String = IO.File.ReadAllText(Directory.GetCurrentDirectory() & "/fldata/allcards.txt")
+    Public Shared todaslascartas As String = IO.File.ReadAllText(Directory.GetCurrentDirectory() & "/fldata/allcardsandsets.txt")
     Public Shared todoslossets As String = IO.File.ReadAllText(Directory.GetCurrentDirectory() & "/fldata/allsets.txt")
 
     Public Shared Function getTitDeck(tx) As String
@@ -557,10 +557,13 @@ Public Class ext
     End Function
 
     Public Shared Function searchforedition(carta, tcartas, tediciones)
+        'Return ""
+
 
         If InStr(carta, "tun Grunt") > 0 Then
             carta = ""
         End If
+        if carta.contains("[sideboard]") Then Return ""
 
         If InStr(carta, "|") = True Then
             carta = ""
@@ -568,6 +571,18 @@ Public Class ext
         If InStr(carta, "[") = True Then
             carta = ""
         End If
+
+        If _
+            carta = "Forest" Or carta = "Plains" Or carta = "Swamp" Or carta = "Mountain" Or
+            carta = "Island" Then
+            Return "KHM"
+        End If
+
+        If carta = "Wastes" Then
+            Return  "OGW"
+        End If
+
+
 
         Dim myChars() As Char = carta.ToCharArray()
         Dim cantidad = ""
@@ -590,65 +605,6 @@ Public Class ext
 
         Try
             Dim buscacaarta = vbCrLf & carta & "|"
-
-            'aqui tendría que ver, de todas las veces que se ha impreso, cual es la más actual
-
-            'reduce el total de cartas filtrando por el nombre 
-            Dim mytcartas = Split(todaslascartas, vbCrLf)
-            'For i = 0 To mytcartas.Count - 1
-
-            'Next
-            Dim listcartas As New List(Of String)
-
-            'en vez de todas las cartas vamos a hacerlo por split y con fallo y salir de fallo
-            Dim salir As Boolean = False
-
-
-            For i As Integer = 0 To mytcartas.Count - 1
-                Dim lacarta = vbCrLf & Split(mytcartas(i), "|")(0) & "|"
-                If lacarta = buscacaarta Then
-                    'laencuentra y la suma
-                    listcartas.Add(mytcartas(i))
-                End If
-            Next i
-
-            'ya tendríamos todas las ediciones impresas, ahora recorremos para guardar las fechas
-            Dim listadodecartasconedicion As New List(Of String)
-            For i = 0 To listcartas.Count - 1
-                'listadodecartasconedicion.Add(Split(listcartas(i), "|")(1))
-                listadodecartasconedicion.Add(listcartas(i))
-            Next i
-
-            'ahora recorro las cartas y busco por edicion
-
-            'aqui podría filtrar sólo sets, expansiones, etc, por ahora van todos
-            Dim mytediciones = Split(todoslossets, Environment.NewLine)
-
-            'si solo encuentra una impresa, lo devuelvo 
-            If listadodecartasconedicion.Count = 1 Then Return Split(listadodecartasconedicion(0), "|")(1)
-
-
-
-            'ahora con los sets de esas cartas, recorriendo los sets tengo que saber cual es el más actual
-
-
-
-
-            For x = 0 To listadodecartasconedicion.Count - 1
-
-                For i = 0 To mytediciones.Count - 1
-                    'saco el set
-                    Dim SetCode = Split(mytediciones(i), "Code=")(1).Split(vbLf)(0).Split("|")(0)
-                    Dim setCarta = Split(listadodecartasconedicion(x), "|")(1).Split(vbLf)(0)
-
-                    If SetCode = setCarta Then
-                        Return SetCode
-                        Exit Function
-                    End If
-
-                Next
-            Next x
-
             a = Split(todaslascartas, buscacaarta)
             a = a(1)
         Catch e As Exception

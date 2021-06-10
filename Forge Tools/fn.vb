@@ -723,7 +723,7 @@ Public Class fn
                             "Your Forge " & x & "version is up to date." & vbCrLf &
                             "Do you want to start Forge and close Launcher?", MsgBoxStyle.YesNo, "Forge is up to date") =
                         MsgBoxResult.Yes Then
-                        launch()
+
                         Application.Exit()
                         Try
                             Environment.Exit(1)
@@ -1018,68 +1018,10 @@ Public Class fn
         Return LinkLine
     End Function
 
-    Public Shared Sub AlertAboutVersion(Optional ByVal ignorarigual = False)
-        Dim leer As String
-        Dim urltoshow As String
-        If ft.typeofupdate.SelectedItem.ToString = "snapshot" Then
-            leer = "forge_version"
-            urltoshow = vars.SnapshotUrl
-        Else
-            leer = "release_version"
-            urltoshow = vars.url_release
-        End If
-        Try
-            Dim vs, vu As String
-            vs = CheckForgeVersion(False, False)
-            If vs = "" Then
-                PrintError("Can't get last version.")
-                Exit Sub
-            End If
-            vu = ReadLogUser(leer, False).ToString
-            If vu.Contains("#") Then
-                vu = Split(vu, "#")(0).ToString
-            End If
 
-            If Trim(vs) = Trim(vu) Then
-                If ignorarigual = False Then
-
-                    If _
-                        MsgBox(
-                            "It's appears your version is up to date, Do you want to download again and reinstall it?",
-                            MsgBoxStyle.YesNo, "Warning!") = MsgBoxResult.Yes Then
-                        Dim link = Split(GetCheckAutomatic2(), "#")(1)
-                        If ext.isdevmode = True And ft.typeofupdate.SelectedText = "spanish snapshot" Then
-                            link = Split(GetCheckAutomaticKlaxnek(), "#")(1)
-                        End If
-                        UpdateForge(link)
-                    End If
-                End If
-
-            Else
-                'If ignorarigual = False Then
-
-                If _
-                    MsgBox("Do you want to install " & Replace(vs, urltoshow, "") & " in " & vars.UserDir & "?",
-                           MsgBoxStyle.YesNoCancel, "Version Available") = MsgBoxResult.Yes Then
-                    Dim link = Split(GetCheckAutomatic2(), "#")(1)
-                    If ext.isdevmode = True And ft.typeofupdate.SelectedItem.ToString = "spanish snapshot" Then
-                        link = Split(GetCheckAutomaticKlaxnek(), "#")(1)
-                    End If
-                    UpdateForge(link)
-                    'UpdateForge(vs)
-                End If
-
-                'End If
-            End If
-        Catch
-            PrintError(Err.Description)
-        End Try
-    End Sub
 
     Public Shared Sub UpdateForge(vtoupdate)
-        ft.vtoupdate.Text = vtoupdate
         ft.MenuGeneral.Enabled = False
-        ft.GroupForgeOptions.Enabled = False
         ft.GroupExtras.Enabled = False
         'Try
         If vtoupdate = "" Then vtoupdate = CheckForgeVersion(False)
@@ -1093,20 +1035,11 @@ Public Class fn
     End Sub
 
     Public Shared Sub DownloadStart(dwl, fn)
-        ft.ProgressBar1.Visible = True
         downloader = New WebClient
         downloader.DownloadFileAsync(New Uri(dwl), fn)
     End Sub
 
-    Public Shared Sub downloader_DownloadProgressChanged(sender As Object, e As DownloadProgressChangedEventArgs) _
-        Handles downloader.DownloadProgressChanged
-        ft.ProgressBar1.Value = e.ProgressPercentage
-    End Sub
 
-    Public Shared Sub downloader_DownloadFileCompleted(sender As Object, e As AsyncCompletedEventArgs) _
-        Handles downloader.DownloadFileCompleted
-        ContinueInstallingForge(ft.vtoupdate.Text)
-    End Sub
 
     Public Shared Function FindIt(total As String, first As String, last As String) As String
         If last.Length < 1 Then
@@ -1795,189 +1728,9 @@ Public Class fn
         Return str
     End Function
 
-    Public Shared Sub ContinueInstallingForge(vtoupdate As String, Optional isabackup As Boolean = False)
-
-        'Dim myfile = System.IO.Path.GetFileName(CheckForgeVersion(False, False))
-        Dim myfile = ft.vtoupdate.Text
-        myfile = Replace(myfile, "https://snapshots.cardforge.org/", "")
-        myfile = Replace(myfile, "https://downloads.cardforge.org/dailysnapshots/", "")
-        myfile = Replace(myfile, "https://www.pduran.net/forgespanish/", "")
 
 
-        'If Not isabackup Then
-        '    CheckFolder(vars.UserDir & "\backups")
 
-        '    'borro los anteriores backups
-        '    Dim directoryName As String = vars.UserDir & "\backups\"
-        '    For Each deleteFile In Directory.GetFiles(directoryName, "*.*", SearchOption.TopDirectoryOnly)
-        '        Try
-        '            If fn.ReadLogUser("forge_previous_version").Contains(myfile) = False Then
-        '                File.Delete(deleteFile)
-        '            End If
-
-        '        Catch
-        '        End Try
-        '    Next
-        '    'creo un backup FUNCIONA PERO LO COMENTO
-        '    'File.Copy(UserDir & "\" & myfile, UserDir & "\backups\" & myfile, True)
-        'Else
-        '    'muevo el backup
-        '    'File.Move(UserDir & "\backups\" & vtoupdate, UserDir & "\" & vtoupdate)
-
-        'End If
-        WriteUserLog("Done!" & vbCrLf)
-
-        If ReadLogUser("removepreviousjarfiles", False, False) = "yes" Then
-
-            'lo comento porque no me interesa que borre a los usuarios esos archivos del raiz
-            Try
-                Dim x As Integer
-                Dim paths() As String = Directory.GetFiles(vars.UserDir,
-                                                           "forge-gui-desktop-*-jar-with-dependencies.jar")
-                If paths.Length > 0 Then
-                    For x = 0 To paths.Length - 1
-                        File.Delete(paths(x))
-                    Next
-                End If
-            Catch
-
-            End Try
-        End If
-
-        'If vtoupdate = "" Then vtoupdate = CheckForgeVersion(False)
-        Dim urlcomplete = vtoupdate
-        WriteUserLog("Unpacking in " & Directory.GetCurrentDirectory() & "... please wait!" & vbCrLf)
-        UnzipFile(Directory.GetCurrentDirectory() & "/" & myfile, Directory.GetCurrentDirectory())
-        WriteUserLog("Done!." & vbCrLf)
-        Try
-            File.Delete(myfile)
-        Catch
-        End Try
-        'Try
-        '    Dim tarfile = Replace(myfile, ".bz2", "")
-        '    IO.File.Delete(tarfile)
-        'Catch
-        'End Try
-        'Try
-        '    IO.File.Delete("*.tar")
-        'Catch
-        'End Try
-        Try
-            DeleteDownloaded()
-
-        Catch
-
-        End Try
-
-        If ft.rbt_properties.Checked = True Then
-            Dim Path = Directory.GetCurrentDirectory() & "\forge.profile.properties"
-            If File.Exists(Path) Then
-                File.Delete(Path)
-            End If
-            Dim t As String
-            Using fs As FileStream = File.Create(Path)
-                t = "userDir=" & Directory.GetCurrentDirectory() & "/user" + Environment.NewLine
-                t = t + "cacheDir=" & Directory.GetCurrentDirectory() & "/cache" + Environment.NewLine
-                t = t + "cardPicsDir="
-                t = Replace(t, "\", "/")
-                ' Add some information to the file.
-                Dim info As Byte() = New UTF8Encoding(True).GetBytes(t)
-                fs.Write(info, 0, info.Length)
-            End Using
-            UpdateLog("decks_dir", Directory.GetCurrentDirectory() & "/user/decks")
-        End If
-
-        Dim v As String = ft.vtoupdate.Text
-        Dim upv As String = ReadLogUser("forge_previous_version")
-
-        If upv = "" Then
-            UpdateLog("forge_previous_version", v)
-        End If
-
-        Dim actual As String = ft.typeofupdate.SelectedItem.ToString
-
-        Select Case actual
-            Case "snapshot"
-                actual = "forge_version"
-            Case "release"
-                actual = "release_version"
-            Case "spanish snapshot"
-                actual = "other_version"
-        End Select
-
-        'If fl.typeofupdate.SelectedItem.ToString = "snapshot" Then
-        '    actual = "forge_version"
-        'Else
-        '    actual = "release_version"
-        'End If
-
-        If Not isabackup Then
-
-            Select Case actual
-                Case "forge_version"
-                    'UpdateLog(actual, "https://snapshots.cardforge.org/" & myfile)
-                    'Dim hola = Split(GetCheckAutomatic2(), "#")(0)
-                    Dim hola = GetCheckAutomatic2()
-                    UpdateLog(actual, hola)
-                    UpdateLog("release_version", "Not found")
-                    UpdateLog("other_version", "Not found")
-                Case "release_version"
-                    UpdateLog(actual, myfile)
-                    UpdateLog("forge_version", "Not found")
-                    UpdateLog("other_version", "Not found")
-                Case "other_version"
-                    'Dim hola = Split(GetCheckAutomaticKlaxnek(), "#")(0)
-                    Dim hola = GetCheckAutomaticKlaxnek()
-                    UpdateLog(actual, myfile)
-                    UpdateLog("release_version", "Not found")
-                    UpdateLog("forge_version", "Not found")
-            End Select
-        End If
-
-        If ft.chklaunchforgeafterupdate.Checked = True Then
-            launch()
-            Application.Exit()
-            Try
-                Environment.Exit(1)
-            Catch
-            End Try
-
-            Exit Sub
-        End If
-        DeleteDownloaded()
-        Application.Restart()
-    End Sub
-
-    Public Shared Sub launch()
-        Try
-            'DeleteDownloaded()
-        Catch
-        End Try
-
-        If ReadLogUser("launchmode") = "advanced" Then
-            WriteUserLog("Launching PlayForge.bat ..." & vbCrLf)
-            Try
-                Process.Start("PlayForge.bat")
-                Application.Exit()
-                Try
-                    Environment.Exit(1)
-                Catch
-                End Try
-                Exit Sub
-            Catch
-                WriteUserLog("Can't find PlayForge.bat ..." & vbCrLf)
-            End Try
-
-        Else
-            WriteUserLog("Launching Forge.exe ..." & vbCrLf)
-            If File.Exists("Forge.exe") Then
-                Process.Start("Forge.exe")
-                'Close()
-                Exit Sub
-            End If
-            WriteUserLog("Can't find Forge.exe!." & vbCrLf)
-        End If
-    End Sub
 
     Public Shared Function CheckFolder(DestinationFolder As String) As String
 
@@ -2046,7 +1799,7 @@ Public Class fn
 
             commander = Replace(commander, "1 1 ", "1 ")
 
-            If ext.isdevmode Then
+            If ft.insertedition.checked = true Then
                 tx = PonerEdicion(tx, name)
             Else
                 tx = "[metadata]" & vbCrLf & "Name = " & name & vbCrLf & "[Main]" & vbCrLf & tx
@@ -2057,7 +1810,7 @@ Public Class fn
 
         Else
 
-            If ext.isdevmode Then
+            If ft.insertedition.checked = true Then
                 tx = PonerEdicion(tx, name)
             Else
                 tx = "[metadata]" & vbCrLf & "Name = " & name & vbCrLf & "[Main]" & vbCrLf & tx
@@ -2073,24 +1826,17 @@ Public Class fn
     End Function
 
     Shared Function PonerEdicion(tx, name)
+        'Return "[metadata]" & vbCrLf & "Name = " & name & vbCrLf & "[Main]" & vbCrLf & tx
 
         '*******funcion nueva con los nuevos sets**********
-
-
-
-
-
-
-
-        '2021 ESTO FUNCIONA, PERO lo pongo a capon y salgo
-        'Return "[metadata]" & vbCrLf & "Name = " & name & vbCrLf & "[Main]" & vbCrLf & tx
-        'Exit Function
-        '/////////AQUI METEMOS LA EDICION DE A CARTA
-        If ext.isdevmode Then
+'        '/////////AQUI METEMOS LA EDICION DE A CARTA
+     
             Dim listado = Split(tx, vbLf)
             Dim r = ""
 
             For a = 0 To listado.Count - 1
+                If listado(a) <> vbCr then
+
                 Dim ed = ext.searchforedition(listado(a), ext.todaslascartas, ext.todoslossets)
                 ed = ed
                 If Trim(listado(a)) <> "" Then
@@ -2100,6 +1846,8 @@ Public Class fn
                         r = r & listado(a) & vbCrLf
                     End If
                 End If
+              end if
+
             Next a
             tx = r
 
@@ -2109,9 +1857,8 @@ Public Class fn
             If tx.Contains("|" & vbCrLf) Then
                 tx = Replace(tx, "|" & vbCrLf, vbCrLf)
             End If
-
+        tx = Replace(tx, vbCr & vbCrLf, vbCrLf)
             tx = "[metadata]" & vbCrLf & "Name = " & name & vbCrLf & "[Main]" & vbCrLf & tx
-        End If
         Return tx
     End Function
 

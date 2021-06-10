@@ -27,20 +27,6 @@ Partial Class ft
         Me.txlog = New System.Windows.Forms.TextBox()
         Me.FolderBrowserDialog1 = New System.Windows.Forms.FolderBrowserDialog()
         Me.FolderBrowserDialog2 = New System.Windows.Forms.FolderBrowserDialog()
-        Me.launchforge = New System.Windows.Forms.Button()
-        Me.rbt_normal = New System.Windows.Forms.RadioButton()
-        Me.rbt_properties = New System.Windows.Forms.RadioButton()
-        Me.group_install = New System.Windows.Forms.GroupBox()
-        Me.Button2 = New System.Windows.Forms.Button()
-        Me.ProgressBar1 = New System.Windows.Forms.ProgressBar()
-        Me.GroupForgeOptions = New System.Windows.Forms.GroupBox()
-        Me.chkenableprompt = New System.Windows.Forms.CheckBox()
-        Me.btnupdate = New System.Windows.Forms.Button()
-        Me.btnlaunchmode = New System.Windows.Forms.Button()
-        Me.chklaunchforgeafterupdate = New System.Windows.Forms.CheckBox()
-        Me.PictureBox3 = New System.Windows.Forms.PictureBox()
-        Me.typeofupdate = New System.Windows.Forms.ComboBox()
-        Me.vtoupdate = New System.Windows.Forms.Label()
         Me.MenuGeneral = New System.Windows.Forms.MenuStrip()
         Me.OpenDecksFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SettingsToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
@@ -51,11 +37,6 @@ Partial Class ft
         Me.ToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.ReadForgeLogFileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.RestoreForgePreferencesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.AboutForgeToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ForgeForumToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ForgeWikiToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ForgeDiscordChannelToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.WhatsNewToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.PictureBox5 = New System.Windows.Forms.PictureBox()
         Me.PictureBox6 = New System.Windows.Forms.PictureBox()
@@ -66,6 +47,7 @@ Partial Class ft
         Me.TabPage1 = New System.Windows.Forms.TabPage()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.by_metagame = New System.Windows.Forms.TabPage()
+        Me.insertedition = New System.Windows.Forms.CheckBox()
         Me.extract1 = New System.Windows.Forms.Button()
         Me.chktopnumber = New System.Windows.Forms.CheckBox()
         Me.howmuch = New System.Windows.Forms.ComboBox()
@@ -91,9 +73,11 @@ Partial Class ft
         Me.BackgroundWorker1 = New System.ComponentModel.BackgroundWorker()
         Me.Button4 = New System.Windows.Forms.Button()
         Me.Button5 = New System.Windows.Forms.Button()
-        Me.group_install.SuspendLayout()
-        Me.GroupForgeOptions.SuspendLayout()
-        CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.Button6 = New System.Windows.Forms.Button()
+        Me.cardtofind = New System.Windows.Forms.TextBox()
+        Me.Button7 = New System.Windows.Forms.Button()
+        Me.Button8 = New System.Windows.Forms.Button()
+        Me.Button9 = New System.Windows.Forms.Button()
         Me.MenuGeneral.SuspendLayout()
         CType(Me.PictureBox5, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox6, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -110,284 +94,81 @@ Partial Class ft
         'txlog
         '
         Me.txlog.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.8!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txlog.Location = New System.Drawing.Point(16, 284)
+        Me.txlog.Location = New System.Drawing.Point(16, 200)
         Me.txlog.Multiline = True
         Me.txlog.Name = "txlog"
         Me.txlog.ReadOnly = True
         Me.txlog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txlog.Size = New System.Drawing.Size(698, 217)
+        Me.txlog.Size = New System.Drawing.Size(698, 301)
         Me.txlog.TabIndex = 24
-        '
-        'launchforge
-        '
-        Me.launchforge.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.0!, System.Drawing.FontStyle.Bold)
-        Me.launchforge.ForeColor = System.Drawing.Color.Black
-        Me.launchforge.Location = New System.Drawing.Point(211, 22)
-        Me.launchforge.Name = "launchforge"
-        Me.launchforge.Size = New System.Drawing.Size(197, 28)
-        Me.launchforge.TabIndex = 28
-        Me.launchforge.Text = "Launch Forge"
-        Me.ToolTip1.SetToolTip(Me.launchforge, "Launch Forge")
-        Me.launchforge.UseVisualStyleBackColor = True
-        '
-        'rbt_normal
-        '
-        Me.rbt_normal.AutoSize = True
-        Me.rbt_normal.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.2!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.rbt_normal.ForeColor = System.Drawing.Color.Black
-        Me.rbt_normal.Location = New System.Drawing.Point(124, 22)
-        Me.rbt_normal.Name = "rbt_normal"
-        Me.rbt_normal.Size = New System.Drawing.Size(104, 19)
-        Me.rbt_normal.TabIndex = 33
-        Me.rbt_normal.Text = "Normal Install"
-        Me.rbt_normal.UseVisualStyleBackColor = True
-        '
-        'rbt_properties
-        '
-        Me.rbt_properties.AutoSize = True
-        Me.rbt_properties.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.2!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.rbt_properties.ForeColor = System.Drawing.Color.Black
-        Me.rbt_properties.Location = New System.Drawing.Point(214, 22)
-        Me.rbt_properties.Name = "rbt_properties"
-        Me.rbt_properties.Size = New System.Drawing.Size(397, 19)
-        Me.rbt_properties.TabIndex = 34
-        Me.rbt_properties.Text = "Install All In The Same Folder Creating Forge.Profiles.Properties File"
-        Me.rbt_properties.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        Me.rbt_properties.UseVisualStyleBackColor = True
-        '
-        'group_install
-        '
-        Me.group_install.BackColor = System.Drawing.Color.Transparent
-        Me.group_install.Controls.Add(Me.Button2)
-        Me.group_install.Controls.Add(Me.rbt_normal)
-        Me.group_install.Controls.Add(Me.rbt_properties)
-        Me.group_install.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.2!, System.Drawing.FontStyle.Bold)
-        Me.group_install.ForeColor = System.Drawing.Color.Black
-        Me.group_install.Location = New System.Drawing.Point(16, 35)
-        Me.group_install.Margin = New System.Windows.Forms.Padding(1)
-        Me.group_install.Name = "group_install"
-        Me.group_install.Size = New System.Drawing.Size(698, 59)
-        Me.group_install.TabIndex = 35
-        Me.group_install.TabStop = False
-        Me.group_install.Text = "Install Options"
-        '
-        'Button2
-        '
-        Me.Button2.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.2!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Button2.ForeColor = System.Drawing.Color.Black
-        Me.Button2.Location = New System.Drawing.Point(6, 20)
-        Me.Button2.Name = "Button2"
-        Me.Button2.Size = New System.Drawing.Size(104, 24)
-        Me.Button2.TabIndex = 36
-        Me.Button2.Text = "Install Forge"
-        Me.Button2.UseVisualStyleBackColor = True
-        '
-        'ProgressBar1
-        '
-        Me.ProgressBar1.Location = New System.Drawing.Point(16, 511)
-        Me.ProgressBar1.Name = "ProgressBar1"
-        Me.ProgressBar1.Size = New System.Drawing.Size(697, 25)
-        Me.ProgressBar1.TabIndex = 36
-        Me.ProgressBar1.Visible = False
-        '
-        'GroupForgeOptions
-        '
-        Me.GroupForgeOptions.BackColor = System.Drawing.Color.WhiteSmoke
-        Me.GroupForgeOptions.Controls.Add(Me.chkenableprompt)
-        Me.GroupForgeOptions.Controls.Add(Me.btnupdate)
-        Me.GroupForgeOptions.Controls.Add(Me.btnlaunchmode)
-        Me.GroupForgeOptions.Controls.Add(Me.chklaunchforgeafterupdate)
-        Me.GroupForgeOptions.Controls.Add(Me.PictureBox3)
-        Me.GroupForgeOptions.Controls.Add(Me.typeofupdate)
-        Me.GroupForgeOptions.Controls.Add(Me.vtoupdate)
-        Me.GroupForgeOptions.Controls.Add(Me.launchforge)
-        Me.GroupForgeOptions.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.2!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.GroupForgeOptions.Location = New System.Drawing.Point(16, 35)
-        Me.GroupForgeOptions.Name = "GroupForgeOptions"
-        Me.GroupForgeOptions.Size = New System.Drawing.Size(698, 70)
-        Me.GroupForgeOptions.TabIndex = 39
-        Me.GroupForgeOptions.TabStop = False
-        Me.GroupForgeOptions.Text = "Update Options"
-        '
-        'chkenableprompt
-        '
-        Me.chkenableprompt.AutoSize = True
-        Me.chkenableprompt.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.2!)
-        Me.chkenableprompt.Location = New System.Drawing.Point(476, 20)
-        Me.chkenableprompt.Name = "chkenableprompt"
-        Me.chkenableprompt.Size = New System.Drawing.Size(195, 19)
-        Me.chkenableprompt.TabIndex = 53
-        Me.chkenableprompt.Text = "Enable prompt for new version"
-        Me.ToolTip1.SetToolTip(Me.chkenableprompt, "If this is checked, when Launcher loads will alert you when a new version is avai" &
-        "lable")
-        Me.chkenableprompt.UseVisualStyleBackColor = True
-        '
-        'btnupdate
-        '
-        Me.btnupdate.Image = CType(resources.GetObject("btnupdate.Image"), System.Drawing.Image)
-        Me.btnupdate.Location = New System.Drawing.Point(7, 24)
-        Me.btnupdate.Name = "btnupdate"
-        Me.btnupdate.Size = New System.Drawing.Size(32, 26)
-        Me.btnupdate.TabIndex = 52
-        Me.ToolTip1.SetToolTip(Me.btnupdate, "Check for Forge Updates")
-        Me.btnupdate.UseVisualStyleBackColor = True
-        '
-        'btnlaunchmode
-        '
-        Me.btnlaunchmode.BackColor = System.Drawing.Color.Gainsboro
-        Me.btnlaunchmode.FlatAppearance.BorderSize = 0
-        Me.btnlaunchmode.Image = CType(resources.GetObject("btnlaunchmode.Image"), System.Drawing.Image)
-        Me.btnlaunchmode.Location = New System.Drawing.Point(417, 22)
-        Me.btnlaunchmode.Name = "btnlaunchmode"
-        Me.btnlaunchmode.Size = New System.Drawing.Size(43, 29)
-        Me.btnlaunchmode.TabIndex = 51
-        Me.ToolTip1.SetToolTip(Me.btnlaunchmode, "Launch Options")
-        Me.btnlaunchmode.UseVisualStyleBackColor = False
-        '
-        'chklaunchforgeafterupdate
-        '
-        Me.chklaunchforgeafterupdate.AutoSize = True
-        Me.chklaunchforgeafterupdate.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.2!)
-        Me.chklaunchforgeafterupdate.Location = New System.Drawing.Point(476, 38)
-        Me.chklaunchforgeafterupdate.Name = "chklaunchforgeafterupdate"
-        Me.chklaunchforgeafterupdate.Size = New System.Drawing.Size(175, 19)
-        Me.chklaunchforgeafterupdate.TabIndex = 50
-        Me.chklaunchforgeafterupdate.Text = "Launch Forge after Update"
-        Me.ToolTip1.SetToolTip(Me.chklaunchforgeafterupdate, "Launch Forge after Update")
-        Me.chklaunchforgeafterupdate.UseVisualStyleBackColor = True
-        '
-        'PictureBox3
-        '
-        Me.PictureBox3.Image = CType(resources.GetObject("PictureBox3.Image"), System.Drawing.Image)
-        Me.PictureBox3.Location = New System.Drawing.Point(141, 25)
-        Me.PictureBox3.Name = "PictureBox3"
-        Me.PictureBox3.Size = New System.Drawing.Size(25, 24)
-        Me.PictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.PictureBox3.TabIndex = 49
-        Me.PictureBox3.TabStop = False
-        Me.ToolTip1.SetToolTip(Me.PictureBox3, "snapshot: You get new cards and features earlier, but you also have a higher chan" &
-        "ce to encounter some bugs" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "release: Last stable version.")
-        '
-        'typeofupdate
-        '
-        Me.typeofupdate.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.typeofupdate.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.2!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.typeofupdate.FormattingEnabled = True
-        Me.typeofupdate.Items.AddRange(New Object() {"release", "snapshot"})
-        Me.typeofupdate.Location = New System.Drawing.Point(45, 26)
-        Me.typeofupdate.Name = "typeofupdate"
-        Me.typeofupdate.Size = New System.Drawing.Size(90, 23)
-        Me.typeofupdate.TabIndex = 35
-        Me.ToolTip1.SetToolTip(Me.typeofupdate, "Type of Update")
-        '
-        'vtoupdate
-        '
-        Me.vtoupdate.AutoSize = True
-        Me.vtoupdate.Location = New System.Drawing.Point(557, 30)
-        Me.vtoupdate.Name = "vtoupdate"
-        Me.vtoupdate.Size = New System.Drawing.Size(134, 15)
-        Me.vtoupdate.TabIndex = 34
-        Me.vtoupdate.Text = "Version a actualizar"
-        Me.vtoupdate.Visible = False
         '
         'MenuGeneral
         '
         Me.MenuGeneral.BackColor = System.Drawing.Color.Silver
         Me.MenuGeneral.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.0!)
         Me.MenuGeneral.ImageScalingSize = New System.Drawing.Size(20, 20)
-        Me.MenuGeneral.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenDecksFolderToolStripMenuItem, Me.SettingsToolStripMenuItem1, Me.ToolsToolStripMenuItem, Me.ToolStripMenuItem1, Me.AboutForgeToolStripMenuItem1, Me.WhatsNewToolStripMenuItem})
+        Me.MenuGeneral.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenDecksFolderToolStripMenuItem, Me.SettingsToolStripMenuItem1, Me.ToolsToolStripMenuItem, Me.ToolStripMenuItem1})
         Me.MenuGeneral.Location = New System.Drawing.Point(0, 0)
         Me.MenuGeneral.Name = "MenuGeneral"
-        Me.MenuGeneral.Size = New System.Drawing.Size(729, 25)
+        Me.MenuGeneral.Size = New System.Drawing.Size(729, 28)
         Me.MenuGeneral.TabIndex = 41
         Me.MenuGeneral.Text = "MenuStrip1"
         '
         'OpenDecksFolderToolStripMenuItem
         '
         Me.OpenDecksFolderToolStripMenuItem.Name = "OpenDecksFolderToolStripMenuItem"
-        Me.OpenDecksFolderToolStripMenuItem.Size = New System.Drawing.Size(144, 21)
+        Me.OpenDecksFolderToolStripMenuItem.Size = New System.Drawing.Size(142, 24)
         Me.OpenDecksFolderToolStripMenuItem.Text = "Open Decks Folder"
         '
         'SettingsToolStripMenuItem1
         '
         Me.SettingsToolStripMenuItem1.Name = "SettingsToolStripMenuItem1"
-        Me.SettingsToolStripMenuItem1.Size = New System.Drawing.Size(73, 21)
+        Me.SettingsToolStripMenuItem1.Size = New System.Drawing.Size(71, 24)
         Me.SettingsToolStripMenuItem1.Text = "Settings"
         '
         'ToolsToolStripMenuItem
         '
         Me.ToolsToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.RestartForgeLauncherToolStripMenuItem, Me.CheckForForgeLauncherUpdatesToolStripMenuItem, Me.ForzeUpdateForgeLauncherToolStripMenuItem})
         Me.ToolsToolStripMenuItem.Name = "ToolsToolStripMenuItem"
-        Me.ToolsToolStripMenuItem.Size = New System.Drawing.Size(121, 21)
+        Me.ToolsToolStripMenuItem.Size = New System.Drawing.Size(119, 24)
         Me.ToolsToolStripMenuItem.Text = "Launcher Tools"
         '
         'RestartForgeLauncherToolStripMenuItem
         '
         Me.RestartForgeLauncherToolStripMenuItem.Name = "RestartForgeLauncherToolStripMenuItem"
-        Me.RestartForgeLauncherToolStripMenuItem.Size = New System.Drawing.Size(446, 26)
+        Me.RestartForgeLauncherToolStripMenuItem.Size = New System.Drawing.Size(438, 26)
         Me.RestartForgeLauncherToolStripMenuItem.Text = "Restart Forge Launcher"
         '
         'CheckForForgeLauncherUpdatesToolStripMenuItem
         '
         Me.CheckForForgeLauncherUpdatesToolStripMenuItem.Name = "CheckForForgeLauncherUpdatesToolStripMenuItem"
-        Me.CheckForForgeLauncherUpdatesToolStripMenuItem.Size = New System.Drawing.Size(446, 26)
+        Me.CheckForForgeLauncherUpdatesToolStripMenuItem.Size = New System.Drawing.Size(438, 26)
         Me.CheckForForgeLauncherUpdatesToolStripMenuItem.Text = "Check for Forge Launcher Updates"
         '
         'ForzeUpdateForgeLauncherToolStripMenuItem
         '
         Me.ForzeUpdateForgeLauncherToolStripMenuItem.Name = "ForzeUpdateForgeLauncherToolStripMenuItem"
-        Me.ForzeUpdateForgeLauncherToolStripMenuItem.Size = New System.Drawing.Size(446, 26)
+        Me.ForzeUpdateForgeLauncherToolStripMenuItem.Size = New System.Drawing.Size(438, 26)
         Me.ForzeUpdateForgeLauncherToolStripMenuItem.Text = "Force to Install Last Forge Launcher Version from server"
         '
         'ToolStripMenuItem1
         '
         Me.ToolStripMenuItem1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ReadForgeLogFileToolStripMenuItem, Me.RestoreForgePreferencesToolStripMenuItem})
         Me.ToolStripMenuItem1.Name = "ToolStripMenuItem1"
-        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(98, 21)
+        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(96, 24)
         Me.ToolStripMenuItem1.Text = "Forge Tools"
         '
         'ReadForgeLogFileToolStripMenuItem
         '
         Me.ReadForgeLogFileToolStripMenuItem.Name = "ReadForgeLogFileToolStripMenuItem"
-        Me.ReadForgeLogFileToolStripMenuItem.Size = New System.Drawing.Size(262, 26)
+        Me.ReadForgeLogFileToolStripMenuItem.Size = New System.Drawing.Size(254, 26)
         Me.ReadForgeLogFileToolStripMenuItem.Text = "Read Forge Log File"
         '
         'RestoreForgePreferencesToolStripMenuItem
         '
         Me.RestoreForgePreferencesToolStripMenuItem.Name = "RestoreForgePreferencesToolStripMenuItem"
-        Me.RestoreForgePreferencesToolStripMenuItem.Size = New System.Drawing.Size(262, 26)
+        Me.RestoreForgePreferencesToolStripMenuItem.Size = New System.Drawing.Size(254, 26)
         Me.RestoreForgePreferencesToolStripMenuItem.Text = "Restore Forge Preferences"
-        '
-        'AboutForgeToolStripMenuItem1
-        '
-        Me.AboutForgeToolStripMenuItem1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ForgeForumToolStripMenuItem, Me.ForgeWikiToolStripMenuItem, Me.ForgeDiscordChannelToolStripMenuItem})
-        Me.AboutForgeToolStripMenuItem1.Name = "AboutForgeToolStripMenuItem1"
-        Me.AboutForgeToolStripMenuItem1.Size = New System.Drawing.Size(100, 21)
-        Me.AboutForgeToolStripMenuItem1.Text = "About Forge"
-        '
-        'ForgeForumToolStripMenuItem
-        '
-        Me.ForgeForumToolStripMenuItem.Name = "ForgeForumToolStripMenuItem"
-        Me.ForgeForumToolStripMenuItem.Size = New System.Drawing.Size(235, 26)
-        Me.ForgeForumToolStripMenuItem.Text = "Forge Forum"
-        '
-        'ForgeWikiToolStripMenuItem
-        '
-        Me.ForgeWikiToolStripMenuItem.Name = "ForgeWikiToolStripMenuItem"
-        Me.ForgeWikiToolStripMenuItem.Size = New System.Drawing.Size(235, 26)
-        Me.ForgeWikiToolStripMenuItem.Text = "Forge Wiki"
-        '
-        'ForgeDiscordChannelToolStripMenuItem
-        '
-        Me.ForgeDiscordChannelToolStripMenuItem.Name = "ForgeDiscordChannelToolStripMenuItem"
-        Me.ForgeDiscordChannelToolStripMenuItem.Size = New System.Drawing.Size(235, 26)
-        Me.ForgeDiscordChannelToolStripMenuItem.Text = "Forge Discord Channel"
-        '
-        'WhatsNewToolStripMenuItem
-        '
-        Me.WhatsNewToolStripMenuItem.Name = "WhatsNewToolStripMenuItem"
-        Me.WhatsNewToolStripMenuItem.Size = New System.Drawing.Size(104, 21)
-        Me.WhatsNewToolStripMenuItem.Text = "What's New?"
         '
         'ToolTip1
         '
@@ -453,7 +234,7 @@ Partial Class ft
         Me.GroupExtras.Controls.Add(Me.TabPage1)
         Me.GroupExtras.Controls.Add(Me.TabPage2)
         Me.GroupExtras.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.2!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.GroupExtras.Location = New System.Drawing.Point(15, 113)
+        Me.GroupExtras.Location = New System.Drawing.Point(11, 37)
         Me.GroupExtras.Name = "GroupExtras"
         Me.GroupExtras.SelectedIndex = 0
         Me.GroupExtras.Size = New System.Drawing.Size(702, 157)
@@ -486,6 +267,7 @@ Partial Class ft
         'by_metagame
         '
         Me.by_metagame.BackColor = System.Drawing.Color.Transparent
+        Me.by_metagame.Controls.Add(Me.insertedition)
         Me.by_metagame.Controls.Add(Me.PictureBox1)
         Me.by_metagame.Controls.Add(Me.extract1)
         Me.by_metagame.Controls.Add(Me.chktopnumber)
@@ -497,6 +279,19 @@ Partial Class ft
         Me.by_metagame.Size = New System.Drawing.Size(671, 75)
         Me.by_metagame.TabIndex = 2
         Me.by_metagame.Text = "Top Formats"
+        '
+        'insertedition
+        '
+        Me.insertedition.AutoSize = True
+        Me.insertedition.Checked = True
+        Me.insertedition.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.insertedition.Location = New System.Drawing.Point(249, 50)
+        Me.insertedition.Name = "insertedition"
+        Me.insertedition.Size = New System.Drawing.Size(159, 19)
+        Me.insertedition.TabIndex = 49
+        Me.insertedition.Text = "insert |EDITION in cards"
+        Me.insertedition.UseVisualStyleBackColor = True
+        Me.insertedition.Visible = False
         '
         'extract1
         '
@@ -739,34 +534,86 @@ Partial Class ft
         '
         'Button4
         '
-        Me.Button4.Location = New System.Drawing.Point(16, 565)
+        Me.Button4.Location = New System.Drawing.Point(540, 447)
         Me.Button4.Name = "Button4"
-        Me.Button4.Size = New System.Drawing.Size(75, 23)
+        Me.Button4.Size = New System.Drawing.Size(143, 23)
         Me.Button4.TabIndex = 47
         Me.Button4.Text = "Sets"
         Me.Button4.UseVisualStyleBackColor = True
+        Me.Button4.Visible = False
         '
         'Button5
         '
-        Me.Button5.Location = New System.Drawing.Point(200, 565)
+        Me.Button5.Location = New System.Drawing.Point(556, 410)
         Me.Button5.Name = "Button5"
-        Me.Button5.Size = New System.Drawing.Size(75, 23)
+        Me.Button5.Size = New System.Drawing.Size(127, 23)
         Me.Button5.TabIndex = 48
         Me.Button5.Text = "Cards"
         Me.Button5.UseVisualStyleBackColor = True
+        Me.Button5.Visible = False
+        '
+        'Button6
+        '
+        Me.Button6.Location = New System.Drawing.Point(394, 284)
+        Me.Button6.Name = "Button6"
+        Me.Button6.Size = New System.Drawing.Size(289, 23)
+        Me.Button6.TabIndex = 49
+        Me.Button6.Text = "poner ediciones"
+        Me.Button6.UseVisualStyleBackColor = True
+        Me.Button6.Visible = False
+        '
+        'cardtofind
+        '
+        Me.cardtofind.Location = New System.Drawing.Point(48, 455)
+        Me.cardtofind.Name = "cardtofind"
+        Me.cardtofind.Size = New System.Drawing.Size(100, 21)
+        Me.cardtofind.TabIndex = 50
+        Me.cardtofind.Visible = False
+        '
+        'Button7
+        '
+        Me.Button7.Location = New System.Drawing.Point(169, 455)
+        Me.Button7.Name = "Button7"
+        Me.Button7.Size = New System.Drawing.Size(75, 23)
+        Me.Button7.TabIndex = 51
+        Me.Button7.Text = "find card"
+        Me.Button7.UseVisualStyleBackColor = True
+        Me.Button7.Visible = False
+        '
+        'Button8
+        '
+        Me.Button8.Location = New System.Drawing.Point(394, 323)
+        Me.Button8.Name = "Button8"
+        Me.Button8.Size = New System.Drawing.Size(289, 23)
+        Me.Button8.TabIndex = 52
+        Me.Button8.Text = "quitar ediciones"
+        Me.Button8.UseVisualStyleBackColor = True
+        Me.Button8.Visible = False
+        '
+        'Button9
+        '
+        Me.Button9.Location = New System.Drawing.Point(394, 369)
+        Me.Button9.Name = "Button9"
+        Me.Button9.Size = New System.Drawing.Size(289, 23)
+        Me.Button9.TabIndex = 53
+        Me.Button9.Text = "comprimir directorios"
+        Me.Button9.UseVisualStyleBackColor = True
+        Me.Button9.Visible = False
         '
         'ft
         '
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
         Me.BackColor = System.Drawing.Color.WhiteSmoke
-        Me.ClientSize = New System.Drawing.Size(729, 629)
+        Me.ClientSize = New System.Drawing.Size(729, 509)
+        Me.Controls.Add(Me.Button9)
+        Me.Controls.Add(Me.Button8)
+        Me.Controls.Add(Me.Button7)
+        Me.Controls.Add(Me.cardtofind)
+        Me.Controls.Add(Me.Button6)
         Me.Controls.Add(Me.Button5)
         Me.Controls.Add(Me.Button4)
-        Me.Controls.Add(Me.GroupForgeOptions)
         Me.Controls.Add(Me.GroupExtras)
-        Me.Controls.Add(Me.group_install)
         Me.Controls.Add(Me.Label1)
-        Me.Controls.Add(Me.ProgressBar1)
         Me.Controls.Add(Me.MenuGeneral)
         Me.Controls.Add(Me.txlog)
         Me.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.2!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -777,60 +624,40 @@ Partial Class ft
         Me.Name = "ft"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Forge Tools for Devs"
-        Me.group_install.ResumeLayout(False)
-        Me.group_install.PerformLayout()
-        Me.GroupForgeOptions.ResumeLayout(False)
-        Me.GroupForgeOptions.PerformLayout()
-        CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).EndInit()
         Me.MenuGeneral.ResumeLayout(False)
-        Me.MenuGeneral.PerformLayout()
-        CType(Me.PictureBox5, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.PictureBox6, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.GroupExtras.ResumeLayout(False)
-        Me.TabPage1.ResumeLayout(False)
-        Me.TabControl1.ResumeLayout(False)
-        Me.by_metagame.ResumeLayout(False)
-        Me.by_metagame.PerformLayout()
-        Me.By_Tournament.ResumeLayout(False)
-        Me.By_Tournament.PerformLayout()
-        Me.Other_Formats.ResumeLayout(False)
-        Me.TabPage2.ResumeLayout(False)
-        Me.TabPage2.PerformLayout()
-        Me.ResumeLayout(False)
-        Me.PerformLayout()
+        Me.MenuGeneral.PerformLayout
+        CType(Me.PictureBox5,System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.PictureBox6,System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.PictureBox1,System.ComponentModel.ISupportInitialize).EndInit
+        Me.GroupExtras.ResumeLayout(false)
+        Me.TabPage1.ResumeLayout(false)
+        Me.TabControl1.ResumeLayout(false)
+        Me.by_metagame.ResumeLayout(false)
+        Me.by_metagame.PerformLayout
+        Me.By_Tournament.ResumeLayout(false)
+        Me.By_Tournament.PerformLayout
+        Me.Other_Formats.ResumeLayout(false)
+        Me.TabPage2.ResumeLayout(false)
+        Me.TabPage2.PerformLayout
+        Me.ResumeLayout(false)
+        Me.PerformLayout
 
-    End Sub
+End Sub
     Friend WithEvents txlog As System.Windows.Forms.TextBox
     Friend WithEvents FolderBrowserDialog1 As System.Windows.Forms.FolderBrowserDialog
     Friend WithEvents FolderBrowserDialog2 As System.Windows.Forms.FolderBrowserDialog
-    Friend WithEvents launchforge As Button
-    Friend WithEvents rbt_normal As RadioButton
-    Friend WithEvents rbt_properties As RadioButton
-    Friend WithEvents group_install As GroupBox
-    Friend WithEvents Button2 As Button
-    Friend WithEvents ProgressBar1 As ProgressBar
-    Friend WithEvents GroupForgeOptions As GroupBox
     Friend WithEvents MenuGeneral As MenuStrip
     Friend WithEvents ToolTip1 As ToolTip
-    Friend WithEvents AboutForgeToolStripMenuItem1 As ToolStripMenuItem
-    Friend WithEvents ForgeDiscordChannelToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents ForgeForumToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents ForgeWikiToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents Label1 As Label
     Friend WithEvents ToolsToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents RestartForgeLauncherToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents WhatsNewToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ForzeUpdateForgeLauncherToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents GroupExtras As TabControl
     Friend WithEvents TabPage1 As TabPage
-    Friend WithEvents vtoupdate As Label
     Friend WithEvents ToolStripMenuItem1 As ToolStripMenuItem
     Friend WithEvents RestoreForgePreferencesToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ReadForgeLogFileToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents OpenDecksFolderToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents PictureBox3 As PictureBox
-    Friend WithEvents typeofupdate As ComboBox
     Friend WithEvents TabControl1 As TabControl
     Friend WithEvents by_metagame As TabPage
     Friend WithEvents PictureBox1 As PictureBox
@@ -852,10 +679,7 @@ Partial Class ft
     Friend WithEvents extract3 As Button
     Friend WithEvents howmuch2 As ComboBox
     Friend WithEvents metag2 As ComboBox
-    Friend WithEvents chklaunchforgeafterupdate As CheckBox
-    Friend WithEvents btnlaunchmode As Button
     Friend WithEvents SettingsToolStripMenuItem1 As ToolStripMenuItem
-    Friend WithEvents btnupdate As Button
     Friend WithEvents Timer1 As Timer
     Friend WithEvents TabPage2 As TabPage
     Friend WithEvents Button1 As Button
@@ -865,7 +689,12 @@ Partial Class ft
     Private WithEvents TextBox2 As TextBox
     Friend WithEvents Button3 As Button
     Friend WithEvents CheckForForgeLauncherUpdatesToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents chkenableprompt As CheckBox
     Friend WithEvents Button4 As Button
     Friend WithEvents Button5 As Button
+    Friend WithEvents Button6 As Button
+    Friend WithEvents cardtofind As TextBox
+    Friend WithEvents Button7 As Button
+    Friend WithEvents insertedition As CheckBox
+    Friend WithEvents Button8 As Button
+    Friend WithEvents Button9 As Button
 End Class
