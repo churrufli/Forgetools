@@ -77,7 +77,7 @@ Public Class ft
         'If result = "yes" Or result = Nothing Then
         'End If
 
-        fn.ShowingWhatsNew()
+        'fn.ShowingWhatsNew()
         'todas = ext.tenertodas()
 
         fn.SearchFolders(True)
@@ -766,7 +766,7 @@ Public Class ft
                 End If
 
                 If resultado <> "" Then
-                    Dim carpetaca = "C:\Users\portatil\Documents\Hernan\Forge Versiones\forge\cache\pics\cards\" &
+                    Dim carpetaca = Directory.GetCurrentDirectory() & "\cache\pics\cards\" &
                                     Split(resultado, "|")(1)
                     If Directory.Exists(carpetaca) = False And hapasado = True Then
                         carpetaca = carpetaca
@@ -948,7 +948,8 @@ Public Class ft
     End Sub
 
     Sub CreateSetsFile()
-        Dim di As New DirectoryInfo(IO.Directory.GetCurrentDirectory() & "/res/editions/")
+        Dim di As New DirectoryInfo(Directory.GetCurrentDirectory() & "\res\editions\")
+        'Dim di As New DirectoryInfo(IO.Directory.GetCurrentDirectory() & "/res/editions/")
         ' Get a reference to each file in that directory.
         Dim fiArr As FileInfo() = di.GetFiles()
         ' Display the names of the files.
@@ -977,7 +978,7 @@ Public Class ft
 
 
             Dim linea = "SetDate=" & SetDate & "|SetName=" & SetName & "|SetCode=" & SetCode & "|SetFolder=" & SetFolder & "|SetType=" & SetType
-            linea = Replace(linea, vbCr,Nothing)
+            linea = Replace(linea, vbCr, Nothing)
             myList.Add(linea)
 
             Console.WriteLine(fri.Name)
