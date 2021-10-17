@@ -61,7 +61,7 @@ Public Class ft
         fn.MaintainVersionInAdvancedLaunchMode()
         SetComboboxes()
         fn.CheckIfPreviousProfileProperties()
-        DisableStuffs()
+        'DisableStuffs()
 
         'fn.HitToLauncherUpdates()
         'fn.CheckLauncherUpdates()
@@ -102,15 +102,13 @@ Public Class ft
         comboSource2.Add("25", "Last 25")
         comboSource2.Add("50", "Last 50")
 
-        If File.Exists("gimmemoredecks.txt") Then
-            comboSource.Add("99", "Top 99")
-            comboSource.Add("120", "Top 120")
+        comboSource.Add("99", "Top 99")
+        comboSource.Add("120", "Top 120")
             comboSource.Add("150", "Top 150")
             comboSource.Add("200", "Top 200")
             comboSource2.Add("99", "Last 99")
             comboSource2.Add("120", "Last 120")
             comboSource2.Add("200", "Last 200")
-        End If
 
         howmuch2.DataSource = New BindingSource(comboSource2, Nothing)
         howmuch2.DisplayMember = "Value"
@@ -944,7 +942,9 @@ Public Class ft
     End Sub
 
     Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click
+        Button4.Enabled = False
         CreateSetsFile()
+        Button4.Enabled = True
     End Sub
 
     Sub CreateSetsFile()
@@ -1021,12 +1021,16 @@ Public Class ft
             afile.WriteLine(myListSortedByDate(i))
         Next i
         afile.Close()
-        MsgBox("Done")
+        MsgBox("\fldata\allmysets.tx created!")
 
     End Sub
 
     Private Sub Button5_Click_2(sender As Object, e As EventArgs) Handles Button5.Click
+        Button5.Enabled = False
+
         CreateCardsBySetFile()
+        Button5.Enabled = True
+
     End Sub
 
     Private Sub Button6_Click(sender As Object, e As EventArgs) Handles Button6.Click
@@ -1046,8 +1050,8 @@ Public Class ft
             tx = tx
 
             name = name
-            tx = fn.PonerEdicion(tx, name)
-            tx = tx
+                'tx = fn.PonerEdicion(tx, name)
+                tx = tx
             File.Delete(f)
             Dim afile As New StreamWriter(f, True)
             afile.WriteLine(tx)
@@ -1207,8 +1211,96 @@ Public Class ft
 
         if carpeta = "" then carpeta = Directory.GetCurrentDirectory() & "\user\decks\constructed\" & metajuego
 
+        Dim elfichero = Directory.GetCurrentDirectory() & "\current" & LCase(fn.RemoveWhitespace(Replace(metajuego, " ", "")) & "metagame.zip")
+        If File.Exists(elfichero) Then
+            File.Delete(elfichero)
+        End If
+
+        compressDirectory(carpeta, elfichero)
+        fn.WriteUserLog("Zipped " & elfichero & vbCrLf)
+
+    End Sub
+
+    Private Sub Button2_Click_1(sender As Object, e As EventArgs) Handles Button2.Click
+
+        If File.Exists(IO.Directory.GetCurrentDirectory() & "/fldata/allcardsandsets.txt") = False Then
+            File.Create(IO.Directory.GetCurrentDirectory() & "/fldata/allcardsandsets.txt").Dispose()
+        End If
+
+        Dim actual As String = File.ReadAllText(IO.Directory.GetCurrentDirectory() & "/fldata/allcardsandsets.txt")
+        Dim Listado As New List(Of String)()
+        Dim listbuenas As New List(Of String)()
+        Dim arr = Split(actual, vbCrLf)
+        For Each i In arr
+            If i <> "" Then
+                Listado.Add(i.ToString)
+            End If
+        Next
 
 
-        compressDirectory(carpeta,Directory.GetCurrentDirectory() & "\current" & LCase(fn.RemoveWhitespace(Replace(metajuego," ", "")) & "metagame.zip"))
+        Dim Cards As New List(Of String)()
+
+        'realmente tendría que recorrer los sets por fecha para tener las cartas actuales, PERO PRUEBO ASI
+
+        Dim di As New DirectoryInfo(Directory.GetCurrentDirectory() & "\res\editions\")
+
+        Dim fiArr As FileInfo() = di.GetFiles()
+        ' Display the names of the files.
+        Dim fri As FileInfo
+        Dim myList As New List(Of String)()
+        For Each fri In fiArr
+            Dim readText As String = File.ReadAllText(IO.Directory.GetCurrentDirectory() & "/res/editions/" & fri.Name)
+            If readText.Contains(vbLf) Then readText.Replace(vbLf, vbCrLf)
+            If readText.Contains(vbCr) Then readText.Replace(vbCr, vbCrLf)
+            Dim Listcards
+            Try
+                Listcards = Split(readText, "[cards]" & vbCrLf)(1)
+            Catch
+            End Try
+            If Listcards = Nothing Then
+                Listcards = Split(readText, "[cards]" & vbLf)(1)
+
+            End If
+
+            If Listcards.Contains("[tokens]") Then Listcards = Split(Listcards, "[tokens]" & vbCrLf)(0)
+            Listcards = Replace(Listcards, vbCrLf & vbCrLf, Nothing)
+            Listcards = RemoveNumbers(Listcards)
+            Listcards = Replace(Listcards, " R ", "")
+            Listcards = Replace(Listcards, " M ", "")
+            Listcards = Replace(Listcards, " U ", "")
+            Listcards = Replace(Listcards, " S ", "")
+            Listcards = Replace(Listcards, " C ", "")
+            Listcards = Replace(Listcards, " L ", "")
+            Dim list = Split(Listcards, vbCrLf)
+            For i = 0 To list.Count - 1
+                If list(i) <> "" Then
+                    Dim carta = list(i)
+                    If carta.Contains("+") Then carta = Split(carta, "+")(0).ToString()
+                    If carta.Contains("|") Then carta = Split(carta, "|")(0).ToString()
+                    If carta.Contains("[") Then carta = Split(carta, "[")(0).ToString()
+                    carta = Trim(carta)
+                    '"★"
+                    'si no existe ya se añade
+                    If actual.Contains(carta & vbCrLf) = False Then
+                        Cards.Add(carta)
+                    End If
+                End If
+            Next
+
+        Next
+        'ORDENO ALFABETICAMENTE
+        Cards.Sort()
+        Cards.Distinct()
+
+        Dim t As String
+        For Each a In Cards
+            t = t & a & vbCrLf
+        Next
+
+        Dim afile As New StreamWriter(IO.Directory.GetCurrentDirectory() & "/fldata/allcardsandsets.txt", True)
+        afile.WriteLine(t)
+        afile.Close()
+
+
     End Sub
 End Class

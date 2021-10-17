@@ -1800,7 +1800,7 @@ Public Class fn
             commander = Replace(commander, "1 1 ", "1 ")
 
             If ft.insertedition.checked = true Then
-                tx = PonerEdicion(tx, name)
+                'tx = PonerEdicion(tx, name)
             Else
                 tx = "[metadata]" & vbCrLf & "Name = " & name & vbCrLf & "[Main]" & vbCrLf & tx
             End If
@@ -1811,7 +1811,7 @@ Public Class fn
         Else
 
             If ft.insertedition.checked = true Then
-                tx = PonerEdicion(tx, name)
+                'tx = PonerEdicion(tx, name)
             Else
                 tx = "[metadata]" & vbCrLf & "Name = " & name & vbCrLf & "[Main]" & vbCrLf & tx
             End If
@@ -1825,42 +1825,42 @@ Public Class fn
         FormatDeck = tx
     End Function
 
-    Shared Function PonerEdicion(tx, name)
-        'Return "[metadata]" & vbCrLf & "Name = " & name & vbCrLf & "[Main]" & vbCrLf & tx
+    '    Shared Function PonerEdicion(tx, name)
+    '        'Return "[metadata]" & vbCrLf & "Name = " & name & vbCrLf & "[Main]" & vbCrLf & tx
 
-        '*******funcion nueva con los nuevos sets**********
-'        '/////////AQUI METEMOS LA EDICION DE A CARTA
-     
-            Dim listado = Split(tx, vbLf)
-            Dim r = ""
+    '        '*******funcion nueva con los nuevos sets**********
+    ''        '/////////AQUI METEMOS LA EDICION DE A CARTA
 
-            For a = 0 To listado.Count - 1
-                If listado(a) <> vbCr then
+    '            Dim listado = Split(tx, vbLf)
+    '            Dim r = ""
 
-                Dim ed = ext.searchforedition(listado(a), ext.todaslascartas, ext.todoslossets)
-                ed = ed
-                If Trim(listado(a)) <> "" Then
-                    If Not IsNothing(ed) Or ed <> "" Then
-                        r = r & listado(a) & "|" & ed & vbCrLf
-                    Else
-                        r = r & listado(a) & vbCrLf
-                    End If
-                End If
-              end if
+    '            For a = 0 To listado.Count - 1
+    '                If listado(a) <> vbCr then
 
-            Next a
-            tx = r
+    '                Dim ed = ext.searchforedition(listado(a), ext.todaslascartas, ext.todoslossets)
+    '                ed = ed
+    '                If Trim(listado(a)) <> "" Then
+    '                    If Not IsNothing(ed) Or ed <> "" Then
+    '                        r = r & listado(a) & "|" & ed & vbCrLf
+    '                    Else
+    '                        r = r & listado(a) & vbCrLf
+    '                    End If
+    '                End If
+    '              end if
 
-            tx = Replace(tx, "]|", "]")
+    '            Next a
+    '            tx = r
 
-            'arreglo algunas que no encuentra
-            If tx.Contains("|" & vbCrLf) Then
-                tx = Replace(tx, "|" & vbCrLf, vbCrLf)
-            End If
-        tx = Replace(tx, vbCr & vbCrLf, vbCrLf)
-            tx = "[metadata]" & vbCrLf & "Name = " & name & vbCrLf & "[Main]" & vbCrLf & tx
-        Return tx
-    End Function
+    '            tx = Replace(tx, "]|", "]")
+
+    '            'arreglo algunas que no encuentra
+    '            If tx.Contains("|" & vbCrLf) Then
+    '                tx = Replace(tx, "|" & vbCrLf, vbCrLf)
+    '            End If
+    '        tx = Replace(tx, vbCr & vbCrLf, vbCrLf)
+    '            tx = "[metadata]" & vbCrLf & "Name = " & name & vbCrLf & "[Main]" & vbCrLf & tx
+    '        Return tx
+    '    End Function
 
     Public Shared Sub WriteUserLog(msg)
         ft.txlog.SelectedText = msg

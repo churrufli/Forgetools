@@ -4,9 +4,11 @@ Imports System.Text
 Imports System.Text.RegularExpressions
 
 Public Class ext
-    Public Shared todaslascartas As String = IO.File.ReadAllText(Directory.GetCurrentDirectory() & "/fldata/allcardsandsets.txt")
-    Public Shared todoslossets As String = IO.File.ReadAllText(Directory.GetCurrentDirectory() & "/fldata/allsets.txt")
 
+    Public Shared Sub cardsdata()
+        Dim todaslascartas As String = IO.File.ReadAllText(Directory.GetCurrentDirectory() & "/fldata/allcardsandsets.txt")
+        Dim todoslossets As String = IO.File.ReadAllText(Directory.GetCurrentDirectory() & "/fldata/allsets.txt")
+    End Sub
     Public Shared Function getTitDeck(tx) As String
         Dim TitDeck = ""
         TitDeck = fn.FindIt(tx, "<title>", "Deck for Magic: the Gathering")
@@ -25,8 +27,7 @@ Public Class ext
         getTitDeck = TitDeck
     End Function
 
-    Public Shared Sub ExtractTopMtggoldfish(metag As String, hm As Object, puttop As Object, customurl As String,
-                                            Optional ByVal customfolder As String = "")
+    Public Shared Sub ExtractTopMtggoldfish(metag As String, hm As Object, puttop As Object, customurl As String, Optional ByVal customfolder As String = "")
         'se usa para el top de los decks y para los custom decks 
         ft.txlog.Text = ""
 
@@ -185,10 +186,11 @@ Public Class ext
                                     tx2 =
                                         fn.ReadWeb(
                                             "https://www.mtggoldfish.com/archetype/other-061deb94-cf17-4926-a252-571799137b88#paper")
+
                                 Case Else
                                     tx2 =
                                         fn.ReadWeb(
-                                            "https://www.mtggoldfish.com/archetype/" & LCase(metag) & "-other-eld#paper")
+                                            "https://www.mtggoldfish.com/archetype/" & LCase(metag) & "-other-znr#paper")
 
 
                             End Select
@@ -226,7 +228,7 @@ Public Class ext
                                 Case Else
                                     tx2 =
                                         fn.ReadWeb(
-                                            "https://www.mtggoldfish.com/archetype/" & LCase(metag) & "-other-eld#paper")
+                                            "https://www.mtggoldfish.com/archetype/" & LCase(metag) & "-other-znr#paper")
                             End Select
 
                             tx2 = extmtggoldfish(tx2, "/deck/", "", "custom")
@@ -234,8 +236,19 @@ Public Class ext
                     Else
                         url = vars.mtggf & "/metagame/" & Replace(LCase(metag), " ", "_") & "/full?page=" & cuentaveces &
                               "#paper"
+                        If LCase(metag) = "oathbreaker" Then
+                            url = Replace(url, "/metagame/", "/deck/custom/")
+                            url = Replace(url, "/full", "/")
+                        End If
                         tx2 = fn.ReadWeb(url)
-                        tx2 = extmtggoldfish(tx2, "/archetype/", "#paper", "custom")
+                        If LCase(metag) = "oathbreaker" Then
+                            tx2 = extmtggoldfish(tx2, "/deck/", "#paper", "custom")
+
+                        Else
+                            tx2 = extmtggoldfish(tx2, "/archetype/", "#paper", "custom")
+
+                        End If
+
                     End If
 
                     lasurls = lasurls & tx2
@@ -523,34 +536,34 @@ Public Class ext
         End If
     End Function
 
-    Shared Function tenertodas()
-        'esto funciona pero lo voy a quitar, 2021
-        'Return Nothing
-        'Exit Function
-        If todaslascartas = "" Or IsNothing(todaslascartas) Then
-            If isdevmode() Then
-                Try
-                    todaslascartas = My.Computer.FileSystem.ReadAllText("fldata/allcardsandsets.txt")
-                    'no se si está chungo cards = Split(todas, vbCrLf)
-                Catch
-                End Try
-            End If
+    'Shared Function tenertodas()
+    '    'esto funciona pero lo voy a quitar, 2021
+    '    'Return Nothing
+    '    'Exit Function
+    '    If todaslascartas = "" Or IsNothing(todaslascartas) Then
+    '        If isdevmode() Then
+    '            Try
+    '                todaslascartas = My.Computer.FileSystem.ReadAllText("fldata/allcardsandsets.txt")
+    '                'no se si está chungo cards = Split(todas, vbCrLf)
+    '            Catch
+    '            End Try
+    '        End If
 
 
-            Dim todicas As New List(Of String)
-            Dim arr As Array = Split(todaslascartas, vbCrLf)
-            Dim x
-            For x = 0 To arr.Length - 1
-                todicas.Add(arr(x))
-            Next x
-            todicas.Reverse()
+    '        Dim todicas As New List(Of String)
+    '        Dim arr As Array = Split(todaslascartas, vbCrLf)
+    '        Dim x
+    '        For x = 0 To arr.Length - 1
+    '            todicas.Add(arr(x))
+    '        Next x
+    '        todicas.Reverse()
 
-            x = 0
-            todaslascartas = String.Join(vbCrLf, todicas)
-        End If
+    '        x = 0
+    '        todaslascartas = String.Join(vbCrLf, todicas)
+    '    End If
 
-        Return todaslascartas
-    End Function
+    '    Return todaslascartas
+    'End Function
 
     Public Shared Function RemoveDigits(S As String) As String
         Return Regex.Replace(S, "\d", "")
@@ -563,7 +576,7 @@ Public Class ext
         If InStr(carta, "tun Grunt") > 0 Then
             carta = ""
         End If
-        if carta.contains("[sideboard]") Then Return ""
+        If carta.contains("[sideboard]") Then Return ""
 
         If InStr(carta, "|") = True Then
             carta = ""
@@ -579,7 +592,7 @@ Public Class ext
         End If
 
         If carta = "Wastes" Then
-            Return  "OGW"
+            Return "OGW"
         End If
 
 
@@ -603,13 +616,13 @@ Public Class ext
 
         Dim a
 
-        Try
-            Dim buscacaarta = vbCrLf & carta & "|"
-            a = Split(todaslascartas, buscacaarta)
-            a = a(1)
-        Catch e As Exception
-            Return ""
-        End Try
+        'Try
+        '    Dim buscacaarta = vbCrLf & carta & "|"
+        '    a = Split(todaslascartas, buscacaarta)
+        '    a = a(1)
+        'Catch e As Exception
+        '    Return ""
+        'End Try
 
         a = Split(a, vbCrLf)(0)
         If InStr(a, "|") > 0 Then

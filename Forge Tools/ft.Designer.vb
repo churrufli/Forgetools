@@ -72,6 +72,7 @@ Partial Class ft
         Me.metag2 = New System.Windows.Forms.ComboBox()
         Me.TabPage3 = New System.Windows.Forms.TabPage()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
+        Me.Button2 = New System.Windows.Forms.Button()
         Me.Button4 = New System.Windows.Forms.Button()
         Me.Button5 = New System.Windows.Forms.Button()
         Me.TabPage2 = New System.Windows.Forms.TabPage()
@@ -136,26 +137,26 @@ Partial Class ft
         '
         Me.ToolsToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.RestartForgeLauncherToolStripMenuItem, Me.CheckForForgeLauncherUpdatesToolStripMenuItem, Me.ForzeUpdateForgeLauncherToolStripMenuItem})
         Me.ToolsToolStripMenuItem.Name = "ToolsToolStripMenuItem"
-        Me.ToolsToolStripMenuItem.Size = New System.Drawing.Size(119, 21)
-        Me.ToolsToolStripMenuItem.Text = "Launcher Tools"
+        Me.ToolsToolStripMenuItem.Size = New System.Drawing.Size(113, 21)
+        Me.ToolsToolStripMenuItem.Text = "Program Tools"
         '
         'RestartForgeLauncherToolStripMenuItem
         '
         Me.RestartForgeLauncherToolStripMenuItem.Name = "RestartForgeLauncherToolStripMenuItem"
-        Me.RestartForgeLauncherToolStripMenuItem.Size = New System.Drawing.Size(438, 26)
-        Me.RestartForgeLauncherToolStripMenuItem.Text = "Restart Forge Launcher"
+        Me.RestartForgeLauncherToolStripMenuItem.Size = New System.Drawing.Size(413, 26)
+        Me.RestartForgeLauncherToolStripMenuItem.Text = "Restart Program"
         '
         'CheckForForgeLauncherUpdatesToolStripMenuItem
         '
         Me.CheckForForgeLauncherUpdatesToolStripMenuItem.Name = "CheckForForgeLauncherUpdatesToolStripMenuItem"
-        Me.CheckForForgeLauncherUpdatesToolStripMenuItem.Size = New System.Drawing.Size(438, 26)
-        Me.CheckForForgeLauncherUpdatesToolStripMenuItem.Text = "Check for Forge Launcher Updates"
+        Me.CheckForForgeLauncherUpdatesToolStripMenuItem.Size = New System.Drawing.Size(413, 26)
+        Me.CheckForForgeLauncherUpdatesToolStripMenuItem.Text = "Check for Forge Tools Updates"
         '
         'ForzeUpdateForgeLauncherToolStripMenuItem
         '
         Me.ForzeUpdateForgeLauncherToolStripMenuItem.Name = "ForzeUpdateForgeLauncherToolStripMenuItem"
-        Me.ForzeUpdateForgeLauncherToolStripMenuItem.Size = New System.Drawing.Size(438, 26)
-        Me.ForzeUpdateForgeLauncherToolStripMenuItem.Text = "Force to Install Last Forge Launcher Version from server"
+        Me.ForzeUpdateForgeLauncherToolStripMenuItem.Size = New System.Drawing.Size(413, 26)
+        Me.ForzeUpdateForgeLauncherToolStripMenuItem.Text = "Force to Install Last Forge Tools Version from server"
         '
         'ToolStripMenuItem1
         '
@@ -278,7 +279,7 @@ Partial Class ft
         '
         Me.cardtofind.Location = New System.Drawing.Point(20, 63)
         Me.cardtofind.Name = "cardtofind"
-        Me.cardtofind.Size = New System.Drawing.Size(365, 21)
+        Me.cardtofind.Size = New System.Drawing.Size(425, 21)
         Me.cardtofind.TabIndex = 50
         '
         'Button7
@@ -517,7 +518,7 @@ Partial Class ft
         '
         Me.howmuch2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.howmuch2.FormattingEnabled = True
-        Me.howmuch2.Items.AddRange(New Object() {"last 8", "last 16", "last 25", "last 50", "all"})
+        Me.howmuch2.Items.AddRange(New Object() {"last 8", "last 16", "last 25", "last 50", "last 99", "all"})
         Me.howmuch2.Location = New System.Drawing.Point(288, 23)
         Me.howmuch2.Name = "howmuch2"
         Me.howmuch2.Size = New System.Drawing.Size(71, 23)
@@ -547,6 +548,7 @@ Partial Class ft
         '
         'GroupBox2
         '
+        Me.GroupBox2.Controls.Add(Me.Button2)
         Me.GroupBox2.Controls.Add(Me.Button4)
         Me.GroupBox2.Controls.Add(Me.Button5)
         Me.GroupBox2.Location = New System.Drawing.Point(16, 19)
@@ -555,6 +557,15 @@ Partial Class ft
         Me.GroupBox2.TabIndex = 55
         Me.GroupBox2.TabStop = False
         Me.GroupBox2.Text = "File Generation"
+        '
+        'Button2
+        '
+        Me.Button2.Location = New System.Drawing.Point(187, 20)
+        Me.Button2.Name = "Button2"
+        Me.Button2.Size = New System.Drawing.Size(219, 23)
+        Me.Button2.TabIndex = 49
+        Me.Button2.Text = "Generate Cards File Without Edition"
+        Me.Button2.UseVisualStyleBackColor = True
         '
         'Button4
         '
@@ -571,7 +582,7 @@ Partial Class ft
         Me.Button5.Name = "Button5"
         Me.Button5.Size = New System.Drawing.Size(219, 23)
         Me.Button5.TabIndex = 48
-        Me.Button5.Text = "Generate Cards File"
+        Me.Button5.Text = "Generate Cards File With Last Edition"
         Me.Button5.UseVisualStyleBackColor = True
         '
         'TabPage2
@@ -736,4 +747,5 @@ End Sub
     Friend WithEvents GroupBox1 As GroupBox
     Friend WithEvents TabPage3 As TabPage
     Public WithEvents cardtofind As TextBox
+    Friend WithEvents Button2 As Button
 End Class
