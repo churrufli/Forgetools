@@ -2260,23 +2260,6 @@
         IAAAADAubRAAAAAYlzYIAAAAjMnSt/wfBEKWNGyg5SMAAAAASUVORK5CYII=
 </value>
   </data>
-  <data name="Button3.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAZFJREFUOE/F
-        U71qwmAUTUzIEDUkBuI/iYg/QRPq1qWTdim06DN0cHO0k5OLg+Ar9Ak6dOzQRVp8AV+hFIS2a4uFnpOk
-        lNYf3HrhwOV85xxu7lVhS4n5fL7led7c9/13gn2hUGjxLZTsqVQqZcH03Gg0bnK53BnBnpxpmlYk2yxV
-        VSXLso4qlcoE4pdSqdROp9MnhOM4bXLVanVCTTwelyJbWBC5ECyBzwOxzGazbmCWJEloNpv3INd/RPuw
-        pkeWZWxFFDnBMUY+L5fLF4eAWnpisVgwBENEbPoWyW8RXncgeKcW5p+LMAAPi1qtdp3JZHo4Yxff2MUF
-        ArCPuB411G4EIHWBbV9hwwr6O13XDYzbx1X6mqYZ5BKJhEINtbsChhCp6D8Mw7BhnuF0M4TZ5JLJpGrb
-        9vDQAOc7gP2/BGx8AnaxN+ABhlG0xEeYTCxxAG4Ao0kOEyjgRtT+CkCJOM/Y9/0nCC6LxWIHJzvF6ToE
-        e3J8o6Zer4/pCa1R4c+k4GEKwQrY9vMlVq7rTjll6BKEL0VvtvJkisZhAAAAAElFTkSuQmCC
-</value>
-  </data>
-  <data name="TextBox2.Text" xml:space="preserve">
-    <value>Extract Gauntlets to play through Forge &gt; Gauntlets &gt; Gauntlets Conquest. Choose your deck and overcome each challenge, defeating all opponents, from the last deck to the first deck of the tournament, from 2014 onwards. 
-
-Warning! Forge may slow down loading if there are too many Gauntlets files. Consider not downloading all gauntlets, in case of problem you can delete all using trash icon button.</value>
-  </data>
   <metadata name="Timer1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>681, 17</value>
   </metadata>

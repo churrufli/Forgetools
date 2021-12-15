@@ -534,28 +534,39 @@ Public Class fn
         MyUrl = Replace(MyUrl, """", "")
         Dim res As String
         If MyUrl = "" Then Exit Function
-        Dim request As WebRequest
+        'Dim request As WebRequest
+        'Try
+        '    request = WebRequest.Create(MyUrl)
+        'Catch
+        '    ReadWeb = ""
+        '    Exit Function
+        'End Try
+        'Dim response As WebResponse
+        'Try
+        '    response = request.GetResponse()
+        'Catch
+        '    ReadWeb = ""
+        '    Exit Function
+        'End Try
+        'Dim reader As New StreamReader(response.GetResponseStream())
+        'Try
+        '    res = reader.ReadToEnd()
+        'Catch
+        '    Exit Function
+        'End Try
+        'reader.Close()
+        'response.Close()
+
         Try
-            request = WebRequest.Create(MyUrl)
-        Catch
-            ReadWeb = ""
-            Exit Function
-        End Try
-        Dim response As WebResponse
-        Try
-            response = request.GetResponse()
-        Catch
-            ReadWeb = ""
-            Exit Function
-        End Try
-        Dim reader As New StreamReader(response.GetResponseStream())
-        Try
-            res = reader.ReadToEnd()
-        Catch
-            Exit Function
-        End Try
-        reader.Close()
-        response.Close()
+
+                Dim client As WebClient = New WebClient()
+                System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12
+                Dim reply As String = client.DownloadString(MyUrl)
+                Return reply
+            Catch ex As Exception
+
+            End Try
+
         ReadWeb = res
     End Function
 
@@ -1042,6 +1053,7 @@ Public Class fn
 
 
     Public Shared Function FindIt(total As String, first As String, last As String) As String
+        If total = Nothing Then total = ""
         If last.Length < 1 Then
             FindIt = total.Substring(total.IndexOf(first))
         End If
@@ -1619,7 +1631,7 @@ Public Class fn
         End Try
         Try
             Dim mycount As Long = 0
-            vars.UserDir = My.Settings.myuser_directory
+            vars.UserDir = Directory.GetCurrentDirectory()
             vars.UserDir = Replace(vars.UserDir, "/user", "")
             vars.UserDir = Replace(vars.UserDir, "\user", "")
             Using archive As ZipArchive = System.IO.Compression.ZipFile.OpenRead("gauntlet.zip")
@@ -1875,11 +1887,11 @@ Public Class fn
         'If File.Exists("fldata\unsupportedcards.txt") Then FileSystem.Rename("fldata\unsupportedcards.txt", "fldata\unsupportedcards_bu.txt"
         'Dim ok As Boolean = False
         ''pruebo a descargar
-        Try
-            DownloadFile(vars.BaseUrl & "unsupportedcards.txt", "fldata\unsupportedcards.txt", True)
-            'ok = True
-        Catch
-        End Try
+        'Try
+        '    DownloadFile(vars.BaseUrl & "unsupportedcards.txt", "fldata\unsupportedcards.txt", True)
+        '    'ok = True
+        'Catch
+        'End Try
 
         'If ok Then
         '    Try

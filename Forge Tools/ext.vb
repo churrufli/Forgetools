@@ -3,13 +3,13 @@ Imports System.Runtime.CompilerServices
 Imports System.Text
 Imports System.Text.RegularExpressions
 
-Public Class ext
+Public Class Ext
 
-    Public Shared Sub cardsdata()
+    Public Shared Sub Cardsdata()
         Dim todaslascartas As String = IO.File.ReadAllText(Directory.GetCurrentDirectory() & "/fldata/allcardsandsets.txt")
         Dim todoslossets As String = IO.File.ReadAllText(Directory.GetCurrentDirectory() & "/fldata/allsets.txt")
     End Sub
-    Public Shared Function getTitDeck(tx) As String
+    Public Shared Function GetTitDeck(tx) As String
         Dim TitDeck = ""
         TitDeck = fn.FindIt(tx, "<title>", "Deck for Magic: the Gathering")
         TitDeck = Replace(TitDeck, "&#39;", "'")
@@ -19,15 +19,15 @@ Public Class ext
         TitDeck = Replace(TitDeck, "&amp;", "and")
         TitDeck = Replace(TitDeck, ":", " ")
         If TitDeck <> Nothing Then
-            If TitDeck.Contains(" by ") Then getTitDeck = Split(TitDeck, " by ")(0).ToString
+            If TitDeck.Contains(" by ") Then GetTitDeck = Split(TitDeck, " by ")(0).ToString
         Else
             TitDeck = TitDeck
         End If
 
-        getTitDeck = TitDeck
+        GetTitDeck = TitDeck
     End Function
 
-    Public Shared Sub ExtractTopMtggoldfish(metag As String, hm As Object, puttop As Object, customurl As String, Optional ByVal customfolder As String = "")
+    Public Shared Sub ExtractTopMtggoldfish(metag As String, hm As Object, puttop As Object, customurl As String, Optional customfolder As String = "")
         'se usa para el top de los decks y para los custom decks 
         ft.txlog.Text = ""
 
@@ -46,7 +46,6 @@ Public Class ext
                           "#paper"
                 Case "Budget Commander"
                     url = vars.mtggf & "/decks/budget/commander/" & "#paper"
-
                 Case "Standard", "Modern", "Pioneer", "Pauper", "Legacy", "Vintage", "Historic", "Penny Dreadful"
                     url = vars.mtggf & "/metagame/" & LCase(fn.Normalize(metag)) & "/full#paper"
                 Case Else
@@ -108,13 +107,12 @@ Public Class ext
             Case "Tiny Leaders"
                 MyDir = fn.GetForgeDecksDir() & "\tiny_leaders\"
                 MyFolder = MyDir
-            Case "Brawl"
+            Case "Brawl", "Historic Brawl"
                 MyDir = fn.GetForgeDecksDir() & "\brawl\"
-                MyFolder = MyDir
+                MyFolder = MyDir     
             Case Else
                 MyDir = fn.GetForgeDecksDir() & "\constructed\"
                 MyFolder = MyDir
-
         End Select
         MyFolder = Replace(MyFolder, "\\", "\")
 
@@ -160,12 +158,13 @@ Public Class ext
 
                     If _
                         LCase(metag) = "standard" Or LCase(metag) = "legacy" Or LCase(metag) = "vintage" Or
-                        LCase(metag) = "pauper" Or LCase(metag) = "pioneer" Or LCase(metag) = "historic" Then
+                        LCase(metag) = "pauper" Or LCase(metag) = "pioneer" Or LCase(metag) = "historic" Or LCase(metag) = "penny dreadful" Or LCase(metag) = "brawl" Then
                         If cuentaveces = 2 Then
                             tx2 = ""
                             'entra por primera vez
                             'entro a esta url y saco resultados
-                            Select Case LCase(metag)
+                            Dim val = LCase(metag)
+                            Select Case val
                                 Case "legacy"
                                     tx2 =
                                         fn.ReadWeb(
@@ -186,6 +185,10 @@ Public Class ext
                                     tx2 =
                                         fn.ReadWeb(
                                             "https://www.mtggoldfish.com/archetype/other-061deb94-cf17-4926-a252-571799137b88#paper")
+                                Case "penny dreadful"
+                                    tx2 =
+                                        fn.ReadWeb(
+                                            "https://www.mtggoldfish.com/archetype/penny_dreadful-other-s22#paper")
 
                                 Case Else
                                     tx2 =
@@ -197,8 +200,8 @@ Public Class ext
                             tx2 = extmtggoldfish(tx2, "/deck/", "", "custom")
 
                         Else
-
-                            Select Case LCase(metag)
+                            Dim val = LCase(metag)
+                            Select Case val
 
                                 Case "legacy"
                                     tx2 =
@@ -225,10 +228,15 @@ Public Class ext
                                         fn.ReadWeb(
                                             "https://www.mtggoldfish.com/archetype/other-061deb94-cf17-4926-a252-571799137b88/decks?page=" &
                                             cuentaveces)
+
+                                Case ("penny dreadful")
+                                    tx2 =
+                                        fn.ReadWeb(
+                                            "https://www.mtggoldfish.com/archetype/penny_dreadful-other-s22/decks#paper")
                                 Case Else
                                     tx2 =
                                         fn.ReadWeb(
-                                            "https://www.mtggoldfish.com/archetype/" & LCase(metag) & "-other-znr#paper")
+                                            "https: //www.mtggoldfish.com/archetype/" & LCase(metag) & "-other-znr#paper")
                             End Select
 
                             tx2 = extmtggoldfish(tx2, "/deck/", "", "custom")
@@ -282,7 +290,7 @@ Public Class ext
                     InStr(DeckPage, "<h3>Similar Decks</h3>", CompareMethod.Text) > 0 Then
                     'puede que no tenga similar decks 
                     Dim t2 As String = Split(DeckPage, "<h3>Similar Decks</h3>")(1).ToString
-                    TitDeck = getTitDeck(DeckPage)
+                    TitDeck = GetTitDeck(DeckPage)
                     Dim links = extlinks(t2, "/deck/")
                     Dim aurls() As String = Split(links, vbCrLf)
                     For a = 0 To urls.Length - 1
@@ -296,7 +304,7 @@ Public Class ext
 
                 'ESTABLEZCO EL TÍTULO DEL MAZO
                 If TitDeck = "" Then
-                    TitDeck = getTitDeck(DeckPage)
+                    TitDeck = GetTitDeck(DeckPage)
                 End If
 
                 Dim pasar = False
@@ -377,6 +385,8 @@ Public Class ext
                                 mycmnd = Split(mycmnd, " Companion ")(0).ToString
                             End If
                             mycmnd = Replace(mycmnd, "$", "")
+                          mycmnd = Replace(mycmnd, " Â", "")
+
 
                             'voy a ver si tiene varios comandantes
                             Dim cuentacomandantes As Long = 1
@@ -433,6 +443,7 @@ Public Class ext
 
                             mycmnd = fn.RemoveWhitespace(mycmnd)
                             mycmnd = Trim(mycmnd)
+                                                      mycmnd = Replace(mycmnd, " Â", "")
 
                             Dim substr As String = mycmnd
                             If mycmnd <> "" Then
@@ -799,8 +810,7 @@ Public Class ext
         'MsgBox(r)
     End Function
 
-    Public Shared Sub ExtractTournamentMtgtop8(Optional ByVal tournament_url As String = "",
-                                               Optional ByVal maxdecks As Integer = 100)
+    Public Shared Sub ExtractTournamentMtgtop8(Optional ByVal tournament_url As String = "")
 
         ft.txlog.Clear()
 
@@ -960,7 +970,7 @@ Public Class ext
         For i = 0 To urls.Length - 1
             If i > (max - 1) Then Exit For
             Dim MyUrl As String = vars.mtgtop8 & "/" & urls(i)
-            ExtractTournamentMtgtop8(MyUrl, maxdecks)
+            ExtractTournamentMtgtop8(MyUrl)
         Next
     End Sub
 End Class

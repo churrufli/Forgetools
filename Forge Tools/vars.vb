@@ -12,7 +12,7 @@ Public Class vars
     Public Shared SnapshotUrl As String = "https://snapshots.cardforge.org/"
     Public Shared url_release As String = "https://releases.cardforge.org/forge/forge-gui-desktop/"
     Public Shared LinkLine As String = ""
-    Public Shared TxtError As String
+    Public Shared TxtError As String = ""
     Public Shared txlogserver As String
     Public Shared InitAll As Boolean = True
     Public Shared ForgeDecksDir, ForgePicsDir As String

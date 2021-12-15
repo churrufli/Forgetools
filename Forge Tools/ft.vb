@@ -104,11 +104,11 @@ Public Class ft
 
         comboSource.Add("99", "Top 99")
         comboSource.Add("120", "Top 120")
-            comboSource.Add("150", "Top 150")
-            comboSource.Add("200", "Top 200")
-            comboSource2.Add("99", "Last 99")
-            comboSource2.Add("120", "Last 120")
-            comboSource2.Add("200", "Last 200")
+        comboSource.Add("150", "Top 150")
+        comboSource.Add("200", "Top 200")
+        comboSource2.Add("99", "Last 99")
+        comboSource2.Add("120", "Last 120")
+        comboSource2.Add("200", "Last 200")
 
         howmuch2.DataSource = New BindingSource(comboSource2, Nothing)
         howmuch2.DisplayMember = "Value"
@@ -148,22 +148,10 @@ Public Class ft
         'GroupExtras.TabPages.Remove(GroupExtras.TabPages(1))
     End Sub
 
-    Private Sub Button2_Click(sender As Object, e As EventArgs)
-        If (FolderBrowserDialog1.ShowDialog() = DialogResult.OK) Then
-            vars.UserDir = FolderBrowserDialog1.SelectedPath
-            My.Settings.userdir = vars.UserDir
-            My.Settings.Save()
-            fn.SearchFolders(False)
-        End If
-    End Sub
-
     Private Sub Button3_Click(sender As Object, e As EventArgs)
         fn.getgauntlets()
     End Sub
-
-
-
-    Private Sub update_Click(sender As Object, e As EventArgs)
+        Private Sub update_Click(sender As Object, e As EventArgs)
     End Sub
 
     Private Sub fl_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
@@ -175,7 +163,7 @@ Public Class ft
         fn.checkunsupportedcards()
 
         If InStr(metagame.SelectedItem.ToString, "-") = 0 Then
-            ext.ExtractTopMtggoldfish(metagame.SelectedItem.ToString, howmuch.SelectedValue, chktopnumber.Checked,
+            Ext.ExtractTopMtggoldfish(metagame.SelectedItem.ToString, howmuch.SelectedValue, chktopnumber.Checked,
                                       Nothing)
             Exit Sub
         End If
@@ -187,14 +175,14 @@ Public Class ft
                 Dim formats = "Standard,Modern,Pauper,Legacy,Vintage,Commander 1v1,Commander, Arena Standard"
                 Dim f() = Split(formats, ",")
                 For i = 0 To f.Length - 1
-                    ext.ExtractTopMtggoldfish(f(i), howmuch.SelectedValue, chktopnumber.Checked, Nothing)
+                    Ext.ExtractTopMtggoldfish(f(i), howmuch.SelectedValue, chktopnumber.Checked, Nothing)
                 Next i
             End If
         End If
     End Sub
 
     Private Sub Button5_Click(sender As Object, e As EventArgs)
-        ext.ExtractTournamentMtgtop8()
+        Ext.ExtractTournamentMtgtop8()
     End Sub
 
     Private Sub Button3_Click_1(sender As Object, e As EventArgs)
@@ -233,7 +221,7 @@ Public Class ft
     End Sub
 
     Private Sub extract2_Click(sender As Object, e As EventArgs)
-        ext.ExtractTournamentMtgtop8()
+        Ext.ExtractTournamentMtgtop8()
     End Sub
 
     Private Sub WhatsNewToolStripMenuItem_Click_2(sender As Object, e As EventArgs)
@@ -279,7 +267,7 @@ Public Class ft
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles extract3.Click
         fn.checkunsupportedcards()
         If InStr(metag2.SelectedItem.ToString, "-") = 0 Then
-            ext.ExtractTopMtggoldfish(metag2.SelectedItem.ToString, howmuch2.SelectedValue, False, Nothing)
+            Ext.ExtractTopMtggoldfish(metag2.SelectedItem.ToString, howmuch2.SelectedValue, False, Nothing)
         End If
     End Sub
 
@@ -378,12 +366,12 @@ Public Class ft
         fn.checkunsupportedcards()
         Select Case fromweb.SelectedItem.ToString
             Case "mtgtop8"
-                ext.ExtractFromMtgtop8(Replace(maxtournamentsdecks.SelectedItem.ToString, "Limit ", ""))
+                Ext.ExtractFromMtgtop8(Replace(maxtournamentsdecks.SelectedItem.ToString, "Limit ", ""))
             Case "mtggoldfish"
                 Dim w As String =
                         fn.ReadWeb(
                             "https://www.mtggoldfish.com/tournaments/" & ComboBox2.SelectedItem.ToString & "#paper")
-                Dim links = ext.extlinks(w, "/tournament/")
+                Dim links = Ext.extlinks(w, "/tournament/")
                 Dim laweb = ""
                 Dim t = ""
 
@@ -466,7 +454,7 @@ Public Class ft
         'SACAMOS LAS URLS DE LOS MAZOS
 
 
-        tx1 = ext.extlinks(tx1, "/deck/", "/deck/custom/standard") '"/visual/",
+        tx1 = Ext.extlinks(tx1, "/deck/", "/deck/custom/standard") '"/visual/",
 
 
         'YA TENGO LAS URL, AHORA A EXTRAER UNA POR UNA
@@ -489,7 +477,7 @@ Public Class ft
                 DeckPage = fn.ReadWeb(vars.mtggf & lasurls(a))
                 'url del mazo i
 
-                UrlDeck = ext.extmtggoldfish(DeckPage, "/deck/download/")
+                UrlDeck = Ext.extmtggoldfish(DeckPage, "/deck/download/")
 
                 Dim Deck = ""
                 Dim TitDeck = ""
@@ -880,7 +868,7 @@ Public Class ft
         'End If
     End Sub
 
-    Private Sub Button3_Click_3(sender As Object, e As EventArgs) Handles Button3.Click
+    Private Sub Button3_Click_3(sender As Object, e As EventArgs)
         Dim rutausuario = fn.ReadLogUser("gauntlet_dir", False, False)
         Dim directoryName As String = rutausuario
         Try
@@ -1038,82 +1026,19 @@ Public Class ft
     End Sub
 
 
-    sub poneredicionesenmazos(metajuego)
+    Sub poneredicionesenmazos(metajuego)
 
 
         For Each f In Directory.GetFiles(Directory.GetCurrentDirectory() & "\user\decks\constructed\" & metajuego)
-           Dim t =  File.ReadAllText(f)
+            Dim t = File.ReadAllText(f)
             t = t
-            if t <> "" then
-            Dim tx = Split(t,"[Main]")(1).ToString()
-            Dim name = Split(t,"Name = ")(1).Split(vbCrLf)(0)
-            tx = tx
-
-            name = name
-                'tx = fn.PonerEdicion(tx, name)
-                tx = tx
-            File.Delete(f)
-            Dim afile As New StreamWriter(f, True)
-            afile.WriteLine(tx)
-            afile.Close()
-            fn.WriteUserLog(name & vbCrLf)
-
-            end if
-
-        Next
-
-    End sub
-
-
-
-    sub quitarediciones(metajuego)
-
-
-        Dim carpeta =""
-        
-        if metajuego.contains("Commander") then 
-            carpeta = Directory.GetCurrentDirectory() & "\user\decks\commander\" 
-        End If
-
-        if metajuego.contains("Brawl") then 
-            carpeta = Directory.GetCurrentDirectory() & "\user\decks\brawl\"
-        End If
-
-        if carpeta = "" then carpeta = Directory.GetCurrentDirectory() & "\user\decks\constructed\" & metajuego
-
-                        Dim result as string
-
-        For Each f In Directory.GetFiles(carpeta)
-            result= ""
-            Dim t =  File.ReadAllText(f)
-            t = t
-            if t <> "" then
-                Dim tx = Split(t,"[Main]")(1).ToString()
-                Dim name = Split(t,"Name = ")(1).Split(vbCrLf)(0)
+            If t <> "" Then
+                Dim tx = Split(t, "[Main]")(1).ToString()
+                Dim name = Split(t, "Name = ")(1).Split(vbCrLf)(0)
                 tx = tx
 
                 name = name
-
-
-                'parto por los saltos
-                Dim lines() = split(tx,vbCrLf)
-                For i = 0 to lines.Count -1
-                    if lines(i) <> "" then
-                    if lines(i).Contains("|") then
-                    result = result &  Split(lines(i),"|")(0) & vbCrLf
-                    Else 
-                        result = result & lines(i) & vbCrLf
-                    end if
-                        End If
-
-                Next
-
-                tx = "[metadata]" & vbCrLf & "Name = " & name & vbCrLf & "[Main]" & vbCrLf & result
-                tx = replace(tx,environment.NewLine,vbCrLf)
-               tx = replace(tx,vbCrLf & vbCrLf & vbCrLf,vbCrLf)
-                tx = replace(tx,vbCrLf & vbCrLf,vbCrLf)
-
-               
+                'tx = fn.PonerEdicion(tx, name)
                 tx = tx
                 File.Delete(f)
                 Dim afile As New StreamWriter(f, True)
@@ -1121,37 +1046,100 @@ Public Class ft
                 afile.Close()
                 fn.WriteUserLog(name & vbCrLf)
 
-            end if
+            End If
 
         Next
 
-    End sub
+    End Sub
 
-    sub findcard(cardname)
-        Dim metajuego  = metagame.SelectedItem.ToString()
-        Dim carpeta =""
-        
-        if metajuego.contains("Commander") then 
-            carpeta = Directory.GetCurrentDirectory() & "\user\decks\commander\" 
+
+
+    Sub quitarediciones(metajuego)
+
+
+        Dim carpeta = ""
+
+        If metajuego.contains("Commander") Then
+            carpeta = Directory.GetCurrentDirectory() & "\user\decks\commander\"
         End If
 
-        if metajuego.contains("Brawl") then 
+        If metajuego.contains("Brawl") Then
             carpeta = Directory.GetCurrentDirectory() & "\user\decks\brawl\"
         End If
 
-        if carpeta = "" then carpeta = Directory.GetCurrentDirectory() & "\user\decks\constructed\" & metajuego
+        If carpeta = "" Then carpeta = Directory.GetCurrentDirectory() & "\user\decks\constructed\" & metajuego
+
+        Dim result As String
+
+        For Each f In Directory.GetFiles(carpeta)
+            result = ""
+            Dim t = File.ReadAllText(f)
+            t = t
+            If t <> "" Then
+                Dim tx = Split(t, "[Main]")(1).ToString()
+                Dim name = Split(t, "Name = ")(1).Split(vbCrLf)(0)
+                tx = tx
+
+                name = name
+
+
+                'parto por los saltos
+                Dim lines() = Split(tx, vbCrLf)
+                For i = 0 To lines.Count - 1
+                    If lines(i) <> "" Then
+                        If lines(i).Contains("|") Then
+                            result = result & Split(lines(i), "|")(0) & vbCrLf
+                        Else
+                            result = result & lines(i) & vbCrLf
+                        End If
+                    End If
+
+                Next
+
+                tx = "[metadata]" & vbCrLf & "Name = " & name & vbCrLf & "[Main]" & vbCrLf & result
+                tx = Replace(tx, Environment.NewLine, vbCrLf)
+                tx = Replace(tx, vbCrLf & vbCrLf & vbCrLf, vbCrLf)
+                tx = Replace(tx, vbCrLf & vbCrLf, vbCrLf)
+
+
+                tx = tx
+                File.Delete(f)
+                Dim afile As New StreamWriter(f, True)
+                afile.WriteLine(tx)
+                afile.Close()
+                fn.WriteUserLog(name & vbCrLf)
+
+            End If
+
+        Next
+
+    End Sub
+
+    Sub findcard(cardname)
+        Dim metajuego = metagame.SelectedItem.ToString()
+        Dim carpeta = ""
+
+        If metajuego.Contains("Commander") Then
+            carpeta = Directory.GetCurrentDirectory() & "\user\decks\commander\"
+        End If
+
+        If metajuego.Contains("Brawl") Then
+            carpeta = Directory.GetCurrentDirectory() & "\user\decks\brawl\"
+        End If
+
+        If carpeta = "" Then carpeta = Directory.GetCurrentDirectory() & "\user\decks\constructed\" & metajuego
 
 
         For Each f In Directory.GetFiles(carpeta)
-            Dim t =  File.ReadAllText(f)
-            if t.Contains(cardname) Then
+            Dim t = File.ReadAllText(f)
+            If t.Contains(cardname) Then
                 MsgBox("Find " & cardname & " in " & f)
-                exit sub
+                Exit Sub
             End If
-            fn.WriteUserLog("Searching in " &  f & vbCrLf)
-            next
+            fn.WriteUserLog("Searching in " & f & vbCrLf)
+        Next
 
-    End sub
+    End Sub
 
     Private Sub Button7_Click(sender As Object, e As EventArgs) Handles Button7.Click
         findcard(cardtofind.Text)
@@ -1198,18 +1186,18 @@ Public Class ft
 
     Private Sub Button9_Click(sender As Object, e As EventArgs) Handles Button9.Click
 
-        Dim metajuego  = metagame.SelectedItem.ToString()
-        Dim carpeta =""
-        
-        if metajuego.contains("Commander") then 
-            carpeta = Directory.GetCurrentDirectory() & "\user\decks\commander\" 
+        Dim metajuego = metagame.SelectedItem.ToString()
+        Dim carpeta = ""
+
+        If metajuego.Contains("Commander") Then
+            carpeta = Directory.GetCurrentDirectory() & "\user\decks\commander\"
         End If
 
-        if metajuego.contains("Brawl") then 
+        If metajuego.Contains("Brawl") Then
             carpeta = Directory.GetCurrentDirectory() & "\user\decks\brawl\"
         End If
 
-        if carpeta = "" then carpeta = Directory.GetCurrentDirectory() & "\user\decks\constructed\" & metajuego
+        If carpeta = "" Then carpeta = Directory.GetCurrentDirectory() & "\user\decks\constructed\" & metajuego
 
         Dim elfichero = Directory.GetCurrentDirectory() & "\current" & LCase(fn.RemoveWhitespace(Replace(metajuego, " ", "")) & "metagame.zip")
         If File.Exists(elfichero) Then
@@ -1301,6 +1289,10 @@ Public Class ft
         afile.WriteLine(t)
         afile.Close()
 
+
+    End Sub
+
+    Private Sub by_metagame_Click(sender As Object, e As EventArgs) Handles by_metagame.Click
 
     End Sub
 End Class
