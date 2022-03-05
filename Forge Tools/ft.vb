@@ -3,7 +3,11 @@ Imports System.ComponentModel
 Imports System.Net
 Imports System.Runtime.CompilerServices
 Imports System.Timers
+Imports HtmlAgilityPack
 Imports ICSharpCode.SharpZipLib.Zip
+Imports System.Xml
+
+Imports System
 
 Public Class ft
     Shared todas
@@ -151,7 +155,7 @@ Public Class ft
     Private Sub Button3_Click(sender As Object, e As EventArgs)
         fn.getgauntlets()
     End Sub
-        Private Sub update_Click(sender As Object, e As EventArgs)
+    Private Sub update_Click(sender As Object, e As EventArgs)
     End Sub
 
     Private Sub fl_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
@@ -1021,7 +1025,7 @@ Public Class ft
 
     End Sub
 
-    Private Sub Button6_Click(sender As Object, e As EventArgs) Handles Button6.Click
+    Private Sub Button6_Click(sender As Object, e As EventArgs)
         poneredicionesenmazos(metagame.SelectedItem.ToString())
     End Sub
 
@@ -1145,7 +1149,7 @@ Public Class ft
         findcard(cardtofind.Text)
     End Sub
 
-    Private Sub Button8_Click(sender As Object, e As EventArgs) Handles Button8.Click
+    Private Sub Button8_Click(sender As Object, e As EventArgs)
         quitarediciones(metagame.SelectedItem.ToString())
     End Sub
 
@@ -1295,4 +1299,84 @@ Public Class ft
     Private Sub by_metagame_Click(sender As Object, e As EventArgs) Handles by_metagame.Click
 
     End Sub
+
+    Private Sub Button1_Click_3(sender As Object, e As EventArgs)
+
+
+        Dim origen = "C:\Forge Versiones\forge\otros exes\NEOCOMANDERJPG"
+        Dim destino = "C:\Forge Versiones\forge\cache\pics\cards\NEC"
+        'recorro la carpeta de alternativas, cojo de la de neo y si existe la renombro a 1.fullborder y esta la meto como 2.fullborder
+        Dim file As File
+
+        Dim di As New DirectoryInfo(origen)
+        Dim fiArr As FileInfo() = di.GetFiles()
+        Dim fri As FileInfo
+        For Each fri In fiArr
+
+
+            Console.WriteLine(fri.Name)
+            'ahora busco si en neo otra se llama asi y la renombro
+
+            Dim di2 As New DirectoryInfo(destino)
+            Dim fiArr2 As FileInfo() = di2.GetFiles()
+            Dim fri2 As FileInfo
+            For Each fri2 In fiArr2
+                Dim nombre1, nombre2 As String
+                nombre1 = Replace(fri.Name, ".fullborder.jpg", "")
+                nombre2 = Replace(fri2.Name, ".fullborder.jpg", "")
+
+                'si hay en el destino una igual que se llama 1.fullborder tengo que del origen copiar renombrando a 1.fullborder
+                If nombre1 = nombre2 Then
+                    If nombre2.Contains("1") = True Then
+                        ' My.Computer.FileSystem.RenameFile(destino & "\" & fri2.Name, nombre2 & "1.fullborder.jpg")
+                        File.Copy(origen & "\" & fri.Name, destino & "\" & nombre2 & "1.fullborder.jpg", True)
+                    Else
+                        File.Copy(origen & "\" & fri.Name, destino & "\" & nombre2 & ".fullborder.jpg", True)
+                    End If
+                End If
+            Next fri2
+        Next fri
+    End Sub
+
+    Public Sub Button3_Click_4(sender As Object, e As EventArgs) Handles Button3.Click
+        Dim doc As HtmlAgilityPack.HtmlDocument = New HtmlAgilityPack.HtmlDocument()
+        doc.LoadHtml(fn.ReadWeb("https://aetherhub.com/User/MTGJeff"))
+        Dim MyFolderName = doc.DocumentNode.SelectSingleNode("//head/title").InnerText
+        Dim div = doc.DocumentNode.SelectSingleNode("//div[@class='card-body d-flex flex-column pr-0 pl-0 pb-0']")
+        Dim links
+        If div IsNot Nothing Then
+            links = div.Descendants("a").[Select](Function(a) a.GetAttributeValue("href", "")).ToList()
+        End If
+
+        Dim i = 0
+        Dim MyName
+        For Each l In links
+            'leo la web
+            Dim doc2 As HtmlAgilityPack.HtmlDocument = New HtmlAgilityPack.HtmlDocument()
+            doc2.LoadHtml(fn.ReadWeb("https://aetherhub.com" & links(i).ToString))
+            MyName = doc2.DocumentNode.SelectSingleNode("//head/title").InnerText
+            Dim div2 = doc2.DocumentNode.SelectSingleNode("//div[@class='card-body pl-0 pr-0']")
+            Dim links2
+            If div2 IsNot Nothing Then
+                links2 = div2.Descendants("a").[Select](Function(b) b.GetAttributeValue("href", "")).ToList()
+            End If
+            links2 = links2
+            Dim mylink
+            For Each li2 In links2
+                If li2.contains("/Deck/MtgoDeckExport/") Then
+                    mylink = li2
+                    Exit For
+                End If
+            Next li2
+            i = i + 1
+            'ya tengo el link me falta el tituli
+            Dim Deck As String = "[metadata]" & vbCrLf & "Name=" & MyName & vbCrLf & "[Main]" & vbCrLf & fn.ReadWeb("https://aetherhub.com" & mylink)
+            Deck = Replace(Deck, vbCrLf & vbCrLf, vbCrLf & "[sideboard]" & vbCrLf)
+            Deck = Replace(Deck, vbLf & vbLf, vbLf & "[sideboard]" & vbCrLf)
+            fn.WriteUserLog(fn.StringToDeck(Directory.GetCurrentDirectory & "/aetherhub/" & fn.NormalizeName(MyFolderName) & "/", Deck, MyName))
+        Next
+
+
+    End Sub
+
 End Class

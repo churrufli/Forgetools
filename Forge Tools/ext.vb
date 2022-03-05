@@ -1,4 +1,5 @@
 ﻿Imports System.Diagnostics.Contracts
+Imports System.Globalization
 Imports System.Runtime.CompilerServices
 Imports System.Text
 Imports System.Text.RegularExpressions
@@ -12,19 +13,60 @@ Public Class Ext
     Public Shared Function GetTitDeck(tx) As String
         Dim TitDeck = ""
         TitDeck = fn.FindIt(tx, "<title>", "Deck for Magic: the Gathering")
-        TitDeck = Replace(TitDeck, "&#39;", "'")
+        If TitDeck = Nothing Then
+            TitDeck = fn.FindIt(tx, "<title>", "</title>")
+        End If
+        TitDeck = Replace(TitDeck, " &#39;", "'")
         If TitDeck = "" Then TitDeck = fn.FindIt(tx, "<title>", " Deck")
         TitDeck = Trim(TitDeck)
         TitDeck = Replace(TitDeck, """", "'")
         TitDeck = Replace(TitDeck, "&amp;", "and")
         TitDeck = Replace(TitDeck, ":", " ")
+
+        Dim startString As String = TitDeck
+        Dim tempParts As String()
+        Dim testValue As String
+        Dim tempDate As Date
+
+
         If TitDeck <> Nothing Then
-            If TitDeck.Contains(" by ") Then GetTitDeck = Split(TitDeck, " by ")(0).ToString
+            If TitDeck.Contains(" by ") Then TitDeck = Split(TitDeck, " by ")(0).ToString
+            If TitDeck.Contains(" Deck") Then TitDeck = Split(TitDeck, " Deck")(0).ToString
         Else
             TitDeck = TitDeck
         End If
 
+
+        tempParts = startString.Split(" ")
+
+        For Each testValue In tempParts
+            Try
+                testValue = Replace(testValue, "-", "/")
+                testValue = Replace(testValue, """", "")
+                'DateTime.Parse(testValue)
+                Dim resultado = DateTime.ParseExact(Convert.ToString(testValue), "d/MMM/yyyy", CultureInfo.CreateSpecificCulture("es-US"))
+                TitDeck.Replace(testValue, Nothing)
+            Catch ex As Exception
+            End Try
+            testValue = Replace(testValue, "/", "-")
+
+
+            'If DateTime.TryParse(testValue, tempDate) = True Then
+            '    MessageBox.Show(String.Format("Date in string: {0}", tempDate))
+
+            'End If
+            'If DateTime.TryParse(testValue, tempDate) = True Then
+            '    MessageBox.Show(String.Format("Date in string: {0}", tempDate))
+            'End If
+        Next
+
         GetTitDeck = TitDeck
+    End Function
+
+    Public Shared Function IsaDate(input As String) As Boolean
+        Dim result As DateTime
+        IsaDate = DateTime.TryParse(input, result)
+        IsaDate = IsaDate
     End Function
 
     Public Shared Sub ExtractTopMtggoldfish(metag As String, hm As Object, puttop As Object, customurl As String, Optional customfolder As String = "")
@@ -109,7 +151,7 @@ Public Class Ext
                 MyFolder = MyDir
             Case "Brawl", "Historic Brawl"
                 MyDir = fn.GetForgeDecksDir() & "\brawl\"
-                MyFolder = MyDir     
+                MyFolder = MyDir
             Case Else
                 MyDir = fn.GetForgeDecksDir() & "\constructed\"
                 MyFolder = MyDir
@@ -385,7 +427,7 @@ Public Class Ext
                                 mycmnd = Split(mycmnd, " Companion ")(0).ToString
                             End If
                             mycmnd = Replace(mycmnd, "$", "")
-                          mycmnd = Replace(mycmnd, " Â", "")
+                            mycmnd = Replace(mycmnd, " Â", "")
 
 
                             'voy a ver si tiene varios comandantes
@@ -443,7 +485,7 @@ Public Class Ext
 
                             mycmnd = fn.RemoveWhitespace(mycmnd)
                             mycmnd = Trim(mycmnd)
-                                                      mycmnd = Replace(mycmnd, " Â", "")
+                            mycmnd = Replace(mycmnd, " Â", "")
 
                             Dim substr As String = mycmnd
                             If mycmnd <> "" Then

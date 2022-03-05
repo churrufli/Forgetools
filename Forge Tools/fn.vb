@@ -562,8 +562,9 @@ Public Class fn
                 Dim client As WebClient = New WebClient()
                 System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12
                 Dim reply As String = client.DownloadString(MyUrl)
-                Return reply
-            Catch ex As Exception
+            Return reply
+            Exit Function
+        Catch ex As Exception
 
             End Try
 
