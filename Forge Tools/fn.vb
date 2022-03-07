@@ -162,8 +162,8 @@ Public Class fn
     Public Shared Sub checkunsupportedcards()
         'Dim myLastDate = fn.ReadLogUser("lastupdate")
         'If myLastDate <> DateTime.Now.ToString("dd'/'MM'/'yyyy") Then
-        WriteUserLog("Downloading unsupportedcards.txt..." & vbCrLf)
-        UnsupportedCards()
+        'WriteUserLog("Downloading unsupportedcards.txt..." & vbCrLf)
+        'UnsupportedCards()
         'End If
     End Sub
 
@@ -487,19 +487,19 @@ Public Class fn
     End Sub
 
     Public Shared Sub CheckIfICSharpCodeExist()
-        If File.Exists(vars.MyDll) = False Then
-            Try
-                DownloadFile(vars.BaseUrl & vars.MyDll & ".zip", vars.MyDll & ".zip")
-                Using archive As ZipArchive = System.IO.Compression.ZipFile.OpenRead(vars.MyDll & ".zip")
-                    For Each entry As ZipArchiveEntry In archive.Entries
-                        entry.ExtractToFile(Path.Combine(vars.UserDir & "\", entry.FullName), True)
-                        WriteUserLog(vars.MyDll & " Downloaded." & vbCrLf)
-                        File.Delete(vars.UserDir & vars.MyDll & ".zip")
-                    Next
-                End Using
-            Catch
-            End Try
-        End If
+        'If File.Exists(vars.MyDll) = False Then
+        '    Try
+        '        DownloadFile(vars.BaseUrl & vars.MyDll & ".zip", vars.MyDll & ".zip")
+        '        Using archive As ZipArchive = System.IO.Compression.ZipFile.OpenRead(vars.MyDll & ".zip")
+        '            For Each entry As ZipArchiveEntry In archive.Entries
+        '                entry.ExtractToFile(Path.Combine(vars.UserDir & "\", entry.FullName), True)
+        '                WriteUserLog(vars.MyDll & " Downloaded." & vbCrLf)
+        '                File.Delete(vars.UserDir & vars.MyDll & ".zip")
+        '            Next
+        '        End Using
+        '    Catch
+        '    End Try
+        'End If
     End Sub
 
     Public Shared Sub ExtractToDirectory(archive As ZipArchive, destinationDirectoryName As String,
@@ -1087,7 +1087,7 @@ Public Class fn
 
     Public Shared Function SearchFolders(Optional ShowMsg As Boolean = True, Optional idlog As String = "decks_dir")
 
-        Dim lafolder As String = ReadLogUser(idlog, False)
+        Dim lafolder As String = ReadLogUser(idlog, False, False)
 
         If lafolder <> "" Then
             If ShowMsg Then

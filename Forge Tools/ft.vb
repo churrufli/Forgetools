@@ -6,8 +6,9 @@ Imports System.Timers
 Imports HtmlAgilityPack
 Imports ICSharpCode.SharpZipLib.Zip
 Imports System.Xml
-
 Imports System
+Imports OpenQA.Selenium
+Imports OpenQA.Selenium.Chrome
 
 Public Class ft
     Shared todas
@@ -23,7 +24,9 @@ Public Class ft
 
     Private Sub Fl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         ' tal()
-        TabControl1.TabPages.Remove(TabControl1.TabPages(1))
+        'TabControl1.TabPages.Remove(TabControl1.TabPages(1))
+        GroupExtras.TabPages.Remove(GroupExtras.TabPages(1))
+
     End Sub
 
     Private Sub Fl_Shown(sender As Object, e As EventArgs) Handles Me.Shown
@@ -55,16 +58,14 @@ Public Class ft
         End If
 
         fn.movefilestofldata()
-        fn.CheckIfICSharpCodeExist()
+        'fn.CheckIfICSharpCodeExist()
         'fn.WriteUserLog("Checking Forge Version..." & vbCrLf)
-        fn.RewriteLog()
+        'fn.RewriteLog()
         fn.CheckLog()
 
-
-
-        fn.MaintainVersionInAdvancedLaunchMode()
+        'fn.MaintainVersionInAdvancedLaunchMode()
         SetComboboxes()
-        fn.CheckIfPreviousProfileProperties()
+        ' fn.CheckIfPreviousProfileProperties()
         'DisableStuffs()
 
         'fn.HitToLauncherUpdates()
@@ -126,7 +127,7 @@ Public Class ft
         metag2.SelectedIndex = 0
         'metag3.SelectedIndex = 0
 
-        'ComboBox1.SelectedItem = ComboBox1.Items(0)
+        ComboBox1.SelectedItem = ComboBox1.Items(0)
         ComboBox2.SelectedItem = ComboBox2.Items(0)
         'ComboBox3.SelectedItem = ComboBox3.Items(0)
 
@@ -161,7 +162,6 @@ Public Class ft
     Private Sub fl_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
         fn.DeleteDownloaded()
     End Sub
-
 
     Private Sub extract_Click(sender As Object, e As EventArgs) Handles extract1.Click
         fn.checkunsupportedcards()
@@ -208,8 +208,8 @@ Public Class ft
         Process.Start("https://www.slightlymagic.net/wiki/Forge")
     End Sub
 
-    Private Sub RestartForgeLauncherToolStripMenuItem_Click(sender As Object, e As EventArgs) _
-        Handles RestartForgeLauncherToolStripMenuItem.Click
+    Private Sub RestartForgeLauncherToolStripMenuItem_Click(sender As Object, e As EventArgs)
+
         Application.Restart()
     End Sub
 
@@ -253,8 +253,8 @@ Public Class ft
         End Try
     End Sub
 
-    Private Sub ForzeUpdateForgeLauncherToolStripMenuItem_Click(sender As Object, e As EventArgs) _
-        Handles ForzeUpdateForgeLauncherToolStripMenuItem.Click
+    Private Sub ForzeUpdateForgeLauncherToolStripMenuItem_Click(sender As Object, e As EventArgs)
+
         fn.UpdateLog("launcher_version", "")
         fn.UpdateLog("lastupdate", "")
         Application.Restart()
@@ -327,13 +327,13 @@ Public Class ft
         fn.CopyIPtoClipboard()
     End Sub
 
-    Private Sub RestoreForgePreferencesToolStripMenuItem_Click(sender As Object, e As EventArgs) _
-        Handles RestoreForgePreferencesToolStripMenuItem.Click
+    Private Sub RestoreForgePreferencesToolStripMenuItem_Click(sender As Object, e As EventArgs)
+
         fn.RestoreForgePreferences()
     End Sub
 
-    Private Sub ReadForgeLogFileToolStripMenuItem_Click(sender As Object, e As EventArgs) _
-        Handles ReadForgeLogFileToolStripMenuItem.Click
+    Private Sub ReadForgeLogFileToolStripMenuItem_Click(sender As Object, e As EventArgs)
+
         fn.OpenLogFile()
     End Sub
 
@@ -373,8 +373,8 @@ Public Class ft
                 Ext.ExtractFromMtgtop8(Replace(maxtournamentsdecks.SelectedItem.ToString, "Limit ", ""))
             Case "mtggoldfish"
                 Dim w As String =
-                        fn.ReadWeb(
-                            "https://www.mtggoldfish.com/tournaments/" & ComboBox2.SelectedItem.ToString & "#paper")
+                        fn.ReadWeb(LCase(
+                            "https://www.mtggoldfish.com/tournaments/" & ComboBox2.SelectedItem.ToString & "#paper"))
                 Dim links = Ext.extlinks(w, "/tournament/")
                 Dim laweb = ""
                 Dim t = ""
@@ -429,13 +429,32 @@ Public Class ft
         'FORMATO DEL name
         tourname = fn.FindIt(tx1, "<title>", "</title>")
         tourname = Replace(tourname, " (" & ComboBox2.SelectedItem.ToString & ") Decks", "")
-
+        While tourname = Nothing
+            If _
+        MsgBox(
+            "Throtted in page, PLEASE WAIT!!! 1 OR 2 MINUTE TO CONTINUE, THEN PRESS YES", MsgBoxStyle.YesNo, "Warning!") = MsgBoxResult.Yes Then
+                tx1 = fn.ReadWeb(tournament_url)
+                'repito codigo
+                tourname = ""
+                ' Leer el contenido.
+                res = tx1
+                'FORMATO DEL name
+                tourname = fn.FindIt(tx1, "<title>", "</title>")
+                'repito hasta aqui
+            Else
+                Exit Sub
+            End If
+        End While
 
         If tourname Is Nothing Then tourname = ""
+        tourname = fn.NormalizeName(tourname)
         tourname = tourname.Trim()
         tourname = Replace(tourname, ":", "")
         'CREAMOS UNA MyFolder CON EL name DEL TORNEO
         Dim MyFolder As String = eldir & tourname & "\"
+
+
+
         If Directory.Exists(MyFolder) Then
             If _
                 MsgBox(
@@ -482,7 +501,7 @@ Public Class ft
                 'url del mazo i
 
                 UrlDeck = Ext.extmtggoldfish(DeckPage, "/deck/download/")
-
+                If UrlDeck.Contains(vbCrLf) Then UrlDeck = UrlDeck.Split(vbCrLf)(0).ToString
                 Dim Deck = ""
                 Dim TitDeck = ""
                 'titulo del mazo i
@@ -499,9 +518,10 @@ Public Class ft
                 Deck = Replace(Deck, "[[", "[")
                 Deck = Replace(Deck, "]]", "]")
                 TitDeck = fn.FindIt(DeckPage, "<title>", "</title>")
+                TitDeck = fn.Normalize(TitDeck)
                 TitDeck = Replace(TitDeck, "_", " ")
                 TitDeck = Replace(TitDeck, """", "'")
-                ' TitDeck = fn.Normalize(TitDeck)
+
 
                 Dim num As String = (contadorposicion + 1).ToString
                 If Len(num) <= 1 Then num = "0" & num
@@ -897,7 +917,15 @@ Public Class ft
 
     Private Sub CheckForForgeLauncherUpdatesToolStripMenuItem_Click(sender As Object, e As EventArgs) _
         Handles CheckForForgeLauncherUpdatesToolStripMenuItem.Click
-        fn.CheckLauncherUpdates()
+
+
+
+
+
+
+
+
+
     End Sub
 
     Private Sub chkenableprompt_CheckedChanged(sender As Object, e As EventArgs)
@@ -1339,23 +1367,56 @@ Public Class ft
     End Sub
 
     Public Sub Button3_Click_4(sender As Object, e As EventArgs) Handles Button3.Click
+        ExtractfromAetherhub(TextBox1.Text.ToString, False, "")
+    End Sub
+
+    Private Sub Button1_Click_4(sender As Object, e As EventArgs) Handles Button1.Click
+        Dim metag = Replace(ComboBox1.Text, " ", "-")
+        ExtractfromAetherhub("https://aetherhub.com/Metagame/" & metag & "/", IIf(puttopaetherhub.Checked, True, False), metag)
+    End Sub
+
+    Public Shared Function ExtractfromAetherhub(myUrl As String, puttop As Boolean, metag As String)
+        'ExtractfromAetherhub(Trim(TextBox1.Text.ToString)
+        '    Exit Sub
+        'If myUrl = "" Then myUrl = "https://aetherhub.com/Metagame/Standard-BO1/"
         Dim doc As HtmlAgilityPack.HtmlDocument = New HtmlAgilityPack.HtmlDocument()
-        doc.LoadHtml(fn.ReadWeb("https://aetherhub.com/User/MTGJeff"))
+        doc.LoadHtml(fn.ReadWeb(Trim(myUrl)))
         Dim MyFolderName = doc.DocumentNode.SelectSingleNode("//head/title").InnerText
-        Dim div = doc.DocumentNode.SelectSingleNode("//div[@class='card-body d-flex flex-column pr-0 pl-0 pb-0']")
+        'Dim div = doc.DocumentNode.SelectSingleNode("//div[@class='card-body d-flex flex-column pr-0 pl-0 pb-0']")
+        Dim div = doc.DocumentNode.SelectSingleNode("//div[@class='inner-content']")
+
         Dim links
         If div IsNot Nothing Then
             links = div.Descendants("a").[Select](Function(a) a.GetAttributeValue("href", "")).ToList()
         End If
 
-        Dim i = 0
+        Try
+            fn.DeleteDecks(fn.NormalizeName(MyFolderName), "*")
+        Catch
+        End Try
+
+        'aqui mejor voy a tomar todos los links y los voy a filtrar por la palabra Deck
+
+        Dim filteredLinks As New List(Of String)
+        Dim counter As Integer = 0
+        For Each li2 In links
+            If li2.contains("/Deck/") And Not li2.contains("comment") Then
+                If Not filteredLinks.Contains(li2) Then
+                    filteredLinks.Add(li2)
+                    counter = counter + 1
+                End If
+            End If
+        Next li2
+
+
         Dim MyName
-        For Each l In links
+        Dim i = 0
+        For Each l In filteredLinks
             'leo la web
             Dim doc2 As HtmlAgilityPack.HtmlDocument = New HtmlAgilityPack.HtmlDocument()
-            doc2.LoadHtml(fn.ReadWeb("https://aetherhub.com" & links(i).ToString))
-            MyName = doc2.DocumentNode.SelectSingleNode("//head/title").InnerText
-            Dim div2 = doc2.DocumentNode.SelectSingleNode("//div[@class='card-body pl-0 pr-0']")
+            doc2.LoadHtml(fn.ReadWeb("https://aetherhub.com" & filteredLinks(i).ToString))
+            Dim TitDeck = doc2.DocumentNode.SelectSingleNode("//head/title").InnerText
+            Dim div2 = doc2.DocumentNode.SelectSingleNode("//div[@class='row pt-2']")
             Dim links2
             If div2 IsNot Nothing Then
                 links2 = div2.Descendants("a").[Select](Function(b) b.GetAttributeValue("href", "")).ToList()
@@ -1363,20 +1424,56 @@ Public Class ft
             links2 = links2
             Dim mylink
             For Each li2 In links2
-                If li2.contains("/Deck/MtgoDeckExport/") Then
+                If li2.Contains("/Deck/MtgoDeckExport/") Then
                     mylink = li2
                     Exit For
                 End If
             Next li2
             i = i + 1
+
+            If puttop Then
+                Dim num As String = i
+                If Len(num) <= 1 Then
+                    num = "0" & num
+                End If
+                TitDeck = "#" & num & " - " & TitDeck
+            End If
+            Dim metag2 = Replace(metag, "-", " ") & " Metagame"
+
+            If TitDeck.Contains(metag2) Then
+                TitDeck = Replace(TitDeck, metag2, "")
+                TitDeck = Trim(TitDeck)
+                TitDeck = Replace(TitDeck, "  ", " ")
+
+            End If
+
             'ya tengo el link me falta el tituli
-            Dim Deck As String = "[metadata]" & vbCrLf & "Name=" & MyName & vbCrLf & "[Main]" & vbCrLf & fn.ReadWeb("https://aetherhub.com" & mylink)
+            Dim Deck As String = "[metadata]" & vbCrLf & "Name=" & TitDeck & vbCrLf & "[Main]" & vbCrLf & fn.ReadWeb("https://aetherhub.com" & mylink)
             Deck = Replace(Deck, vbCrLf & vbCrLf, vbCrLf & "[sideboard]" & vbCrLf)
             Deck = Replace(Deck, vbLf & vbLf, vbLf & "[sideboard]" & vbCrLf)
-            fn.WriteUserLog(fn.StringToDeck(Directory.GetCurrentDirectory & "/aetherhub/" & fn.NormalizeName(MyFolderName) & "/", Deck, MyName))
+            Deck = Replace(Deck, "Commander" & vbCrLf, "[Commander]" & vbCrLf)
+            fn.WriteUserLog(fn.StringToDeck(Directory.GetCurrentDirectory & "/aetherhub/" & fn.NormalizeName(MyFolderName) & "/", Deck, TitDeck))
         Next
+    End Function
 
 
-    End Sub
+
+
+    'Public Shared Function ExtractfromAetherhub(myUrl)
+    '    If myUrl = "" Then myUrl = ""
+    '    Dim _driver As IWebDriver = New ChromeDriver()
+    '    _driver.Navigate().GoToUrl(myUrl.ToString)
+    '    Dim elements As IList(Of IWebElement) = _driver.FindElements(By.ClassName("green"))
+
+
+
+    '    'Dim manager As New DriverManager
+    '    'Dim chromeConfig = New ChromeConfig()
+    '    'manager.SetUpDriver(chromeConfig)
+    '    'driver.Navigate().GoToUrl(myUrl)
+    '    'Dim elements As IList(Of IWebElement) = driverOne.FindElements(By.ClassName("green"))
+
+    'End Function
+
 
 End Class

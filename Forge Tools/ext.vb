@@ -529,7 +529,7 @@ Public Class Ext
 
                         If Deck <> "" And InStr(Deck, "fb-root") = 0 Then
                             TitDeck = "[" & metag & "] " & TitDeck
-                            TitDeck = Replace(TitDeck, "&#39;", "'")
+                            TitDeck = Replace(TitDeck, "'", "'")
                             If InStr(TitDeck, "</title>") > 0 Then
                                 Try
                                     TitDeck = Split(TitDeck, "</title>")(0).ToString
@@ -899,8 +899,9 @@ Public Class Ext
         tourname = tourname.Replace("/", "")
         tourname = Replace(tourname, vbCrLf, "")
 
-        tourname = tourname.Trim()
         tourname = Replace(tourname, ":", "")
+        If tourname.Contains("@") Then tourname = Split(tourname, "@")(0)
+        tourname = Trim(tourname)
         'CREAMOS UNA MyFolder CON EL name DEL TORNEO
         Dim MyFolder As String = eldir & tourname & "\"
 

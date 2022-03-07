@@ -86,7 +86,7 @@
         End If
     End Sub
 
-    Private Sub UFL_Click(sender As Object, e As EventArgs) Handles UFL.Click
+    Private Sub UFL_Click(sender As Object, e As EventArgs) 
         fn.UninstallForgeLauncher()
     End Sub
 

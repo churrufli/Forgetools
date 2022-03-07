@@ -47,7 +47,6 @@ Partial Class preferences
         Me.Button2 = New System.Windows.Forms.Button()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.removepreviousjarfiles = New System.Windows.Forms.CheckBox()
-        Me.UFL = New System.Windows.Forms.Button()
         Me.Button1 = New System.Windows.Forms.Button()
         Me.FolderBrowserDialog3 = New System.Windows.Forms.FolderBrowserDialog()
         Me.flpref = New System.Windows.Forms.GroupBox()
@@ -70,7 +69,7 @@ Partial Class preferences
         Me.group_forgeoptions.Controls.Add(Me.Label2)
         Me.group_forgeoptions.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.2!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.group_forgeoptions.ForeColor = System.Drawing.Color.Black
-        Me.group_forgeoptions.Location = New System.Drawing.Point(20, 68)
+        Me.group_forgeoptions.Location = New System.Drawing.Point(20, 12)
         Me.group_forgeoptions.Name = "group_forgeoptions"
         Me.group_forgeoptions.Size = New System.Drawing.Size(706, 107)
         Me.group_forgeoptions.TabIndex = 40
@@ -102,7 +101,7 @@ Partial Class preferences
         Me.decks_dir.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.2!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.decks_dir.Location = New System.Drawing.Point(142, 31)
         Me.decks_dir.Name = "decks_dir"
-        Me.decks_dir.Size = New System.Drawing.Size(467, 21)
+        Me.decks_dir.Size = New System.Drawing.Size(467, 18)
         Me.decks_dir.TabIndex = 1
         '
         'Label1
@@ -111,7 +110,7 @@ Partial Class preferences
         Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.2!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label1.Location = New System.Drawing.Point(73, 34)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(63, 15)
+        Me.Label1.Size = New System.Drawing.Size(55, 13)
         Me.Label1.TabIndex = 0
         Me.Label1.Text = "Decks Dir:"
         '
@@ -120,7 +119,7 @@ Partial Class preferences
         Me.gauntlet_dir.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.2!)
         Me.gauntlet_dir.Location = New System.Drawing.Point(147, 67)
         Me.gauntlet_dir.Name = "gauntlet_dir"
-        Me.gauntlet_dir.Size = New System.Drawing.Size(462, 21)
+        Me.gauntlet_dir.Size = New System.Drawing.Size(462, 18)
         Me.gauntlet_dir.TabIndex = 4
         '
         'Label2
@@ -129,7 +128,7 @@ Partial Class preferences
         Me.Label2.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.2!)
         Me.Label2.Location = New System.Drawing.Point(16, 70)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(125, 15)
+        Me.Label2.Size = New System.Drawing.Size(110, 13)
         Me.Label2.TabIndex = 3
         Me.Label2.Text = "Gauntlet Contests Dir:"
         '
@@ -146,7 +145,7 @@ Partial Class preferences
         '
         Me.pics_dir.Location = New System.Drawing.Point(138, 546)
         Me.pics_dir.Name = "pics_dir"
-        Me.pics_dir.Size = New System.Drawing.Size(462, 21)
+        Me.pics_dir.Size = New System.Drawing.Size(462, 18)
         Me.pics_dir.TabIndex = 7
         '
         'Label5
@@ -154,7 +153,7 @@ Partial Class preferences
         Me.Label5.AutoSize = True
         Me.Label5.Location = New System.Drawing.Point(57, 546)
         Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(52, 15)
+        Me.Label5.Size = New System.Drawing.Size(45, 13)
         Me.Label5.TabIndex = 6
         Me.Label5.Text = "Pics Dir:"
         '
@@ -169,7 +168,7 @@ Partial Class preferences
         Me.GroupBox1.Controls.Add(Me.chk_preservedecks)
         Me.GroupBox1.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.2!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.GroupBox1.ForeColor = System.Drawing.Color.Black
-        Me.GroupBox1.Location = New System.Drawing.Point(20, 193)
+        Me.GroupBox1.Location = New System.Drawing.Point(20, 137)
         Me.GroupBox1.Name = "GroupBox1"
         Me.GroupBox1.Size = New System.Drawing.Size(706, 94)
         Me.GroupBox1.TabIndex = 40
@@ -182,7 +181,7 @@ Partial Class preferences
         Me.chk_delcardordeck.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.2!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.chk_delcardordeck.Location = New System.Drawing.Point(13, 58)
         Me.chk_delcardordeck.Name = "chk_delcardordeck"
-        Me.chk_delcardordeck.Size = New System.Drawing.Size(346, 19)
+        Me.chk_delcardordeck.Size = New System.Drawing.Size(301, 17)
         Me.chk_delcardordeck.TabIndex = 58
         Me.chk_delcardordeck.Text = "Delete unsupported card in deck instead of no saving deck"
         Me.chk_delcardordeck.UseVisualStyleBackColor = True
@@ -194,7 +193,7 @@ Partial Class preferences
         Me.Label6.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.2!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label6.Location = New System.Drawing.Point(255, 35)
         Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(94, 15)
+        Me.Label6.Size = New System.Drawing.Size(82, 13)
         Me.Label6.TabIndex = 56
         Me.Label6.Text = "Extracted Packs"
         '
@@ -205,7 +204,7 @@ Partial Class preferences
         Me.preservedecksnumber.Items.AddRange(New Object() {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"})
         Me.preservedecksnumber.Location = New System.Drawing.Point(213, 31)
         Me.preservedecksnumber.Name = "preservedecksnumber"
-        Me.preservedecksnumber.Size = New System.Drawing.Size(39, 23)
+        Me.preservedecksnumber.Size = New System.Drawing.Size(39, 21)
         Me.preservedecksnumber.TabIndex = 55
         '
         'Label4
@@ -214,7 +213,7 @@ Partial Class preferences
         Me.Label4.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.2!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label4.Location = New System.Drawing.Point(430, 35)
         Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(155, 15)
+        Me.Label4.Size = New System.Drawing.Size(129, 13)
         Me.Label4.TabIndex = 53
         Me.Label4.Text = "Tournaments Folder Name"
         '
@@ -223,7 +222,7 @@ Partial Class preferences
         Me.tournamentsdecks_dir.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.2!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.tournamentsdecks_dir.Location = New System.Drawing.Point(593, 33)
         Me.tournamentsdecks_dir.Name = "tournamentsdecks_dir"
-        Me.tournamentsdecks_dir.Size = New System.Drawing.Size(88, 21)
+        Me.tournamentsdecks_dir.Size = New System.Drawing.Size(88, 18)
         Me.tournamentsdecks_dir.TabIndex = 52
         '
         'chk_preservedecks
@@ -232,7 +231,7 @@ Partial Class preferences
         Me.chk_preservedecks.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.2!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.chk_preservedecks.Location = New System.Drawing.Point(13, 33)
         Me.chk_preservedecks.Name = "chk_preservedecks"
-        Me.chk_preservedecks.Size = New System.Drawing.Size(174, 19)
+        Me.chk_preservedecks.Size = New System.Drawing.Size(153, 17)
         Me.chk_preservedecks.TabIndex = 0
         Me.chk_preservedecks.Text = "Preserve Decks saving last" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10)
         Me.ToolTip1.SetToolTip(Me.chk_preservedecks, "Metagame Decks Folder is saved with the date info and the decks are not overwritt" &
@@ -244,7 +243,7 @@ Partial Class preferences
         Me.Label3.AutoSize = True
         Me.Label3.Location = New System.Drawing.Point(-2, 561)
         Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(218, 15)
+        Me.Label3.Size = New System.Drawing.Size(186, 13)
         Me.Label3.TabIndex = 51
         Me.Label3.Text = "Downloaded Decks Root Folder Name"
         Me.Label3.Visible = False
@@ -253,18 +252,18 @@ Partial Class preferences
         '
         Me.downloadeddecks_dir.Location = New System.Drawing.Point(185, 561)
         Me.downloadeddecks_dir.Name = "downloadeddecks_dir"
-        Me.downloadeddecks_dir.Size = New System.Drawing.Size(88, 21)
+        Me.downloadeddecks_dir.Size = New System.Drawing.Size(88, 18)
         Me.downloadeddecks_dir.TabIndex = 50
         Me.downloadeddecks_dir.Visible = False
         '
         'Button2
         '
         Me.Button2.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.2!)
-        Me.Button2.Location = New System.Drawing.Point(156, 29)
+        Me.Button2.Location = New System.Drawing.Point(258, 28)
         Me.Button2.Name = "Button2"
         Me.Button2.Size = New System.Drawing.Size(166, 27)
         Me.Button2.TabIndex = 56
-        Me.Button2.Text = "Reset Forge Launcher settings"
+        Me.Button2.Text = "Reset Settings"
         Me.ToolTip1.SetToolTip(Me.Button2, "Reset Forge Launcher will delete your launcher setting files")
         Me.Button2.UseVisualStyleBackColor = True
         '
@@ -274,28 +273,17 @@ Partial Class preferences
         Me.removepreviousjarfiles.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.2!)
         Me.removepreviousjarfiles.Location = New System.Drawing.Point(13, 22)
         Me.removepreviousjarfiles.Name = "removepreviousjarfiles"
-        Me.removepreviousjarfiles.Size = New System.Drawing.Size(237, 19)
+        Me.removepreviousjarfiles.Size = New System.Drawing.Size(206, 17)
         Me.removepreviousjarfiles.TabIndex = 58
         Me.removepreviousjarfiles.Text = "Delete previous Jar file in each update"
         Me.ToolTip1.SetToolTip(Me.removepreviousjarfiles, "only if you use releases (temporarily unavailable). Not necessary if you use snap" &
         "shots. ")
         Me.removepreviousjarfiles.UseVisualStyleBackColor = True
         '
-        'UFL
-        '
-        Me.UFL.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.2!)
-        Me.UFL.Location = New System.Drawing.Point(370, 28)
-        Me.UFL.Name = "UFL"
-        Me.UFL.Size = New System.Drawing.Size(153, 28)
-        Me.UFL.TabIndex = 58
-        Me.UFL.Text = "Uninstall Forge Launcher"
-        Me.ToolTip1.SetToolTip(Me.UFL, "Uninstall and delete all files used by Forge Launcher")
-        Me.UFL.UseVisualStyleBackColor = True
-        '
         'Button1
         '
         Me.Button1.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.2!, System.Drawing.FontStyle.Bold)
-        Me.Button1.Location = New System.Drawing.Point(176, 407)
+        Me.Button1.Location = New System.Drawing.Point(184, 389)
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(367, 27)
         Me.Button1.TabIndex = 55
@@ -307,12 +295,13 @@ Partial Class preferences
         Me.flpref.Controls.Add(Me.checklauncherupdates)
         Me.flpref.Controls.Add(Me.removepreviousjarfiles)
         Me.flpref.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.2!, System.Drawing.FontStyle.Bold)
-        Me.flpref.Location = New System.Drawing.Point(20, 12)
+        Me.flpref.Location = New System.Drawing.Point(20, 422)
         Me.flpref.Name = "flpref"
         Me.flpref.Size = New System.Drawing.Size(706, 51)
         Me.flpref.TabIndex = 57
         Me.flpref.TabStop = False
         Me.flpref.Text = "Launcher Preferences"
+        Me.flpref.Visible = False
         '
         'checklauncherupdates
         '
@@ -320,7 +309,7 @@ Partial Class preferences
         Me.checklauncherupdates.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.2!)
         Me.checklauncherupdates.Location = New System.Drawing.Point(342, 20)
         Me.checklauncherupdates.Name = "checklauncherupdates"
-        Me.checklauncherupdates.Size = New System.Drawing.Size(339, 19)
+        Me.checklauncherupdates.Size = New System.Drawing.Size(291, 17)
         Me.checklauncherupdates.TabIndex = 59
         Me.checklauncherupdates.Text = "check for launcher updates automatically (once peer day)"
         Me.checklauncherupdates.UseVisualStyleBackColor = True
@@ -329,18 +318,17 @@ Partial Class preferences
         'GroupBox2
         '
         Me.GroupBox2.Controls.Add(Me.Button2)
-        Me.GroupBox2.Controls.Add(Me.UFL)
         Me.GroupBox2.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.2!, System.Drawing.FontStyle.Bold)
-        Me.GroupBox2.Location = New System.Drawing.Point(20, 306)
+        Me.GroupBox2.Location = New System.Drawing.Point(20, 254)
         Me.GroupBox2.Name = "GroupBox2"
         Me.GroupBox2.Size = New System.Drawing.Size(714, 74)
         Me.GroupBox2.TabIndex = 59
         Me.GroupBox2.TabStop = False
-        Me.GroupBox2.Text = "Forge Launcher Settings"
+        Me.GroupBox2.Text = "Forge Tools Settings"
         '
         'preferences
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 15.0!)
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(748, 456)
         Me.Controls.Add(Me.picsdirbutton)
@@ -399,7 +387,6 @@ Partial Class preferences
     Friend WithEvents Label6 As Label
     Friend WithEvents flpref As GroupBox
     Friend WithEvents removepreviousjarfiles As CheckBox
-    Friend WithEvents UFL As Button
     Friend WithEvents GroupBox2 As GroupBox
     Friend WithEvents chk_delcardordeck As CheckBox
     Friend WithEvents checklauncherupdates As CheckBox
