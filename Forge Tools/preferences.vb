@@ -86,10 +86,6 @@
         End If
     End Sub
 
-    Private Sub UFL_Click(sender As Object, e As EventArgs) 
-        fn.UninstallForgeLauncher()
-    End Sub
-
     Private Sub downloadeddecks_dir_TextChanged(sender As Object, e As EventArgs) _
         Handles downloadeddecks_dir.TextChanged
     End Sub

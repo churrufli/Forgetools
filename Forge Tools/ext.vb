@@ -107,7 +107,7 @@ Public Class Ext
         Select Case metag
             Case "Standard", "Modern", "Pioneer", "Pauper", "Legacy", "Vintage", "Historic", "Penny Dreadful",
                 "Budget Modern", "Budget Standard"
-                MyDir = fn.GetForgeDecksDir() & "\constructed"
+                MyDir = fn.GetForgeDecksDir() & "\mtggoldfish\"
                 If fn.ReadLogUser("preserve_decks", False) = "yes" Then
                     MyFolder = MyDir & "\" & metag & "\" & (Replace(DateTime.Today.ToShortDateString, "/", "-")) &
                                "\"
@@ -153,7 +153,7 @@ Public Class Ext
                 MyDir = fn.GetForgeDecksDir() & "\brawl\"
                 MyFolder = MyDir
             Case Else
-                MyDir = fn.GetForgeDecksDir() & "\constructed\"
+                MyDir = fn.GetForgeDecksDir() & "\constructed\mtggoldfish\"
                 MyFolder = MyDir
         End Select
         MyFolder = Replace(MyFolder, "\\", "\")
@@ -563,12 +563,11 @@ Public Class Ext
                             Deck = Replace(Deck, "Mothra's Giant Cocoon", "Mysterious Egg")
                             Deck = Replace(Deck, "Spacegodzilla, Void Invader", "Void Beckoner")
 
-                            Deck = fn.FormatDeck(Deck, TitDeck, mycmnd)
                             If InStr(Deck, "1 Companion") > 0 Then
                                 Dim hola = ""
                             End If
 
-                            fn.WriteUserLog(fn.StringToDeck(MyFolder, Deck, TitDeck))
+                            fn.WriteUserLog(fn.StringToDeck(MyFolder, fn.FormatDeck(Deck, TitDeck, mycmnd), TitDeck))
                             num = num + 1
                         End If
 
@@ -691,7 +690,6 @@ Public Class Ext
         Return a
         Exit Function
     End Function
-
 
     Public Shared Function extlinks(str As String, condition As String, Optional ByVal negate As String = "") _
         As String
@@ -964,7 +962,7 @@ Public Class Ext
                 TitDeck = fn.FindIt(DeckPage, "<title>", "@")
                 TitDeck = Replace(TitDeck, "_", " ")
                 TitDeck = Replace(TitDeck, """", "'")
-                TitDeck = fn.NormalizeName(TitDeck)
+                TitDeck = fn.Normalize(TitDeck)
                 Dim num As String = (i + 1).ToString
                 If Len(num) <= 1 Then num = "0" & num
 
@@ -1016,4 +1014,87 @@ Public Class Ext
             ExtractTournamentMtgtop8(MyUrl)
         Next
     End Sub
+    Public Shared Function ExtractfromAetherhub(myUrl As String, puttop As Boolean, metag As String, hm As Object)
+        'ExtractfromAetherhub(Trim(TextBox1.Text.ToString)
+        '    Exit Sub
+        'If myUrl = "" Then myUrl = "https://aetherhub.com/Metagame/Standard-BO1/"
+        Dim doc As HtmlAgilityPack.HtmlDocument = New HtmlAgilityPack.HtmlDocument()
+        doc.LoadHtml(fn.ReadWeb(Trim(myUrl)))
+        Dim MyFolderName = doc.DocumentNode.SelectSingleNode("//head/title").InnerText
+        Dim div = doc.DocumentNode.SelectSingleNode("//div[@class='inner-content']")
+
+        Dim links
+        If div IsNot Nothing Then
+            links = div.Descendants("a").[Select](Function(a) a.GetAttributeValue("href", "")).ToList()
+        End If
+
+        Try
+            fn.DeleteDecks(fn.Normalize(MyFolderName), "*")
+        Catch
+        End Try
+
+        Dim filteredLinks As New List(Of String)
+        Dim counter As Integer = 0
+        For Each li2 In links
+            If li2.contains("/Deck/") And Not li2.contains("comment") Then
+                If Not filteredLinks.Contains(li2) Then
+                    filteredLinks.Add(li2)
+                    counter = counter + 1
+                End If
+            End If
+        Next li2
+
+        Dim i = 0
+        Dim mycounter = 0
+        For Each l In filteredLinks
+            mycounter = mycounter + 1
+            If mycounter > hm Then Exit Function
+
+            'leo la web
+            Dim doc2 As HtmlAgilityPack.HtmlDocument = New HtmlAgilityPack.HtmlDocument()
+            doc2.LoadHtml(fn.ReadWeb("https://aetherhub.com" & filteredLinks(i).ToString))
+            Dim TitDeck = doc2.DocumentNode.SelectSingleNode("//head/title").InnerText
+            Dim div2 = doc2.DocumentNode.SelectSingleNode("//div[@class='row pt-2']")
+            Dim links2
+            If div2 IsNot Nothing Then
+                links2 = div2.Descendants("a").[Select](Function(b) b.GetAttributeValue("href", "")).ToList()
+            End If
+            links2 = links2
+            Dim mylink
+            For Each li2 In links2
+                If li2.Contains("/Deck/MtgoDeckExport/") Then
+                    mylink = li2
+                    Exit For
+                End If
+            Next li2
+            i = i + 1
+
+            If puttop Then
+                Dim num As String = i
+                If Len(num) <= 1 Then
+                    num = "0" & num
+                End If
+                TitDeck = "#" & num & " - " & TitDeck
+            End If
+            Dim metag2 = Replace(metag, "-", " ")
+            If TitDeck.Contains("MTG " & metag2 & " Metagame") Then TitDeck = Replace(TitDeck, "MTG " & metag2 & " Metagame", "")
+            If TitDeck.Contains(metag2 & " Metagame") Then TitDeck = Replace(TitDeck, metag2 & " Metagame", "")
+            If TitDeck.Contains("Arena Standard Metagame") Then TitDeck = Replace(TitDeck, "Arena Standard Metagame", "")
+            If TitDeck.Contains("Arena Standard") Then TitDeck = Replace(TitDeck, "Arena Standard", "")
+            If TitDeck.Contains("Standard Metagame") Then TitDeck = Replace(TitDeck, "Standard Metagame", "")
+
+            TitDeck = Replace(TitDeck, "   ", " ")
+            TitDeck = Replace(TitDeck, "  ", " ")
+            TitDeck = Trim(TitDeck)
+                TitDeck = Replace(TitDeck, "  ", " ")
+                TitDeck = "[" & metag & "] " & TitDeck
+            'TitDeck = fn.Normalize(TitDeck)
+            Dim MyDir = fn.GetForgeDecksDir() & "\aetherhub\" & metag & "\" & fn.Normalize(MyFolderName)
+            Dim Deck As String = "[metadata]" & vbCrLf & "Name=" & TitDeck & vbCrLf & "[Main]" & vbCrLf & fn.ReadWeb("https://aetherhub.com" & mylink)
+            Deck = Replace(Deck, vbCrLf & vbCrLf, vbCrLf & "[sideboard]" & vbCrLf)
+            Deck = Replace(Deck, vbLf & vbLf, vbLf & "[sideboard]" & vbCrLf)
+            Deck = Replace(Deck, "Commander" & vbCrLf, "[Commander]" & vbCrLf)
+            fn.WriteUserLog(fn.StringToDeck(Directory.GetCurrentDirectory & "/aetherhub/" & fn.Normalize(MyFolderName) & "/", Deck, TitDeck))
+        Next
+    End Function
 End Class

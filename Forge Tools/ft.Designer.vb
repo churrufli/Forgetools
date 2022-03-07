@@ -47,6 +47,7 @@ Partial Class ft
         Me.howmuch = New System.Windows.Forms.ComboBox()
         Me.metagame = New System.Windows.Forms.ComboBox()
         Me.AetherHub_Top2 = New System.Windows.Forms.TabPage()
+        Me.howmuch3 = New System.Windows.Forms.ComboBox()
         Me.Button1 = New System.Windows.Forms.Button()
         Me.puttopaetherhub = New System.Windows.Forms.CheckBox()
         Me.ComboBox1 = New System.Windows.Forms.ComboBox()
@@ -76,30 +77,30 @@ Partial Class ft
         Me.Button5 = New System.Windows.Forms.Button()
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
         Me.BackgroundWorker1 = New System.ComponentModel.BackgroundWorker()
-        Me.MenuGeneral.SuspendLayout
-        CType(Me.PictureBox5,System.ComponentModel.ISupportInitialize).BeginInit
-        CType(Me.PictureBox6,System.ComponentModel.ISupportInitialize).BeginInit
-        CType(Me.PictureBox1,System.ComponentModel.ISupportInitialize).BeginInit
-        Me.GroupExtras.SuspendLayout
-        Me.TabPage1.SuspendLayout
-        Me.TabControl1.SuspendLayout
-        Me.by_metagame.SuspendLayout
-        Me.AetherHub_Top2.SuspendLayout
-        Me.By_Tournament.SuspendLayout
-        Me.AetherHub_User.SuspendLayout
-        Me.Other_Formats.SuspendLayout
-        Me.GroupBox1.SuspendLayout
-        Me.TabPage3.SuspendLayout
-        Me.GroupBox2.SuspendLayout
-        Me.SuspendLayout
+        Me.MenuGeneral.SuspendLayout()
+        CType(Me.PictureBox5, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.PictureBox6, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.GroupExtras.SuspendLayout()
+        Me.TabPage1.SuspendLayout()
+        Me.TabControl1.SuspendLayout()
+        Me.by_metagame.SuspendLayout()
+        Me.AetherHub_Top2.SuspendLayout()
+        Me.By_Tournament.SuspendLayout()
+        Me.AetherHub_User.SuspendLayout()
+        Me.Other_Formats.SuspendLayout()
+        Me.GroupBox1.SuspendLayout()
+        Me.TabPage3.SuspendLayout()
+        Me.GroupBox2.SuspendLayout()
+        Me.SuspendLayout()
         '
         'txlog
         '
-        Me.txlog.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.8!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
+        Me.txlog.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.8!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txlog.Location = New System.Drawing.Point(11, 181)
-        Me.txlog.Multiline = true
+        Me.txlog.Multiline = True
         Me.txlog.Name = "txlog"
-        Me.txlog.ReadOnly = true
+        Me.txlog.ReadOnly = True
         Me.txlog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
         Me.txlog.Size = New System.Drawing.Size(698, 424)
         Me.txlog.TabIndex = 24
@@ -107,7 +108,7 @@ Partial Class ft
         'MenuGeneral
         '
         Me.MenuGeneral.BackColor = System.Drawing.Color.Silver
-        Me.MenuGeneral.Font = New System.Drawing.Font("Microsoft Sans Serif", 8!)
+        Me.MenuGeneral.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.0!)
         Me.MenuGeneral.ImageScalingSize = New System.Drawing.Size(20, 20)
         Me.MenuGeneral.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenDecksFolderToolStripMenuItem, Me.SettingsToolStripMenuItem1, Me.ToolsToolStripMenuItem})
         Me.MenuGeneral.Location = New System.Drawing.Point(0, 0)
@@ -149,41 +150,41 @@ Partial Class ft
         '
         'PictureBox5
         '
-        Me.PictureBox5.Image = CType(resources.GetObject("PictureBox5.Image"),System.Drawing.Image)
+        Me.PictureBox5.Image = CType(resources.GetObject("PictureBox5.Image"), System.Drawing.Image)
         Me.PictureBox5.Location = New System.Drawing.Point(16, 21)
         Me.PictureBox5.Name = "PictureBox5"
         Me.PictureBox5.Size = New System.Drawing.Size(25, 24)
         Me.PictureBox5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
         Me.PictureBox5.TabIndex = 57
-        Me.PictureBox5.TabStop = false
+        Me.PictureBox5.TabStop = False
         Me.ToolTip1.SetToolTip(Me.PictureBox5, "Autoextract last tournament decks by format.")
         '
         'PictureBox6
         '
-        Me.PictureBox6.Image = CType(resources.GetObject("PictureBox6.Image"),System.Drawing.Image)
+        Me.PictureBox6.Image = CType(resources.GetObject("PictureBox6.Image"), System.Drawing.Image)
         Me.PictureBox6.Location = New System.Drawing.Point(16, 23)
         Me.PictureBox6.Name = "PictureBox6"
         Me.PictureBox6.Size = New System.Drawing.Size(25, 24)
         Me.PictureBox6.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
         Me.PictureBox6.TabIndex = 52
-        Me.PictureBox6.TabStop = false
+        Me.PictureBox6.TabStop = False
         Me.ToolTip1.SetToolTip(Me.PictureBox6, "Other formats. User submmited decks. No top available.")
         '
         'PictureBox1
         '
-        Me.PictureBox1.Image = CType(resources.GetObject("PictureBox1.Image"),System.Drawing.Image)
+        Me.PictureBox1.Image = CType(resources.GetObject("PictureBox1.Image"), System.Drawing.Image)
         Me.PictureBox1.Location = New System.Drawing.Point(9, 21)
         Me.PictureBox1.Name = "PictureBox1"
         Me.PictureBox1.Size = New System.Drawing.Size(25, 24)
         Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
         Me.PictureBox1.TabIndex = 48
-        Me.PictureBox1.TabStop = false
-        Me.ToolTip1.SetToolTip(Me.PictureBox1, "Select metagame and number of decks to download. Put #top number (by default) for"& _ 
+        Me.PictureBox1.TabStop = False
+        Me.ToolTip1.SetToolTip(Me.PictureBox1, "Select metagame and number of decks to download. Put #top number (by default) for" &
         " get the number in the top in the deck file.")
         '
         'Label1
         '
-        Me.Label1.AutoSize = true
+        Me.Label1.AutoSize = True
         Me.Label1.Location = New System.Drawing.Point(12, 455)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(0, 13)
@@ -245,42 +246,42 @@ Partial Class ft
         '
         'insertedition
         '
-        Me.insertedition.AutoSize = true
+        Me.insertedition.AutoSize = True
         Me.insertedition.Location = New System.Drawing.Point(328, 25)
         Me.insertedition.Name = "insertedition"
         Me.insertedition.Size = New System.Drawing.Size(97, 17)
         Me.insertedition.TabIndex = 49
         Me.insertedition.Text = "insert |EDITION"
-        Me.insertedition.UseVisualStyleBackColor = true
-        Me.insertedition.Visible = false
+        Me.insertedition.UseVisualStyleBackColor = True
+        Me.insertedition.Visible = False
         '
         'extract1
         '
-        Me.extract1.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.2!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
+        Me.extract1.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.2!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.extract1.ForeColor = System.Drawing.Color.Black
         Me.extract1.Location = New System.Drawing.Point(447, 21)
         Me.extract1.Name = "extract1"
         Me.extract1.Size = New System.Drawing.Size(204, 26)
         Me.extract1.TabIndex = 45
         Me.extract1.Text = "Extract Decks"
-        Me.extract1.UseVisualStyleBackColor = true
+        Me.extract1.UseVisualStyleBackColor = True
         '
         'chktopnumber
         '
-        Me.chktopnumber.AutoSize = true
-        Me.chktopnumber.Checked = true
+        Me.chktopnumber.AutoSize = True
+        Me.chktopnumber.Checked = True
         Me.chktopnumber.CheckState = System.Windows.Forms.CheckState.Checked
         Me.chktopnumber.Location = New System.Drawing.Point(242, 25)
         Me.chktopnumber.Name = "chktopnumber"
         Me.chktopnumber.Size = New System.Drawing.Size(85, 17)
         Me.chktopnumber.TabIndex = 44
         Me.chktopnumber.Text = "#top number"
-        Me.chktopnumber.UseVisualStyleBackColor = true
+        Me.chktopnumber.UseVisualStyleBackColor = True
         '
         'howmuch
         '
         Me.howmuch.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.howmuch.FormattingEnabled = true
+        Me.howmuch.FormattingEnabled = True
         Me.howmuch.Location = New System.Drawing.Point(171, 23)
         Me.howmuch.Name = "howmuch"
         Me.howmuch.Size = New System.Drawing.Size(65, 21)
@@ -289,8 +290,8 @@ Partial Class ft
         'metagame
         '
         Me.metagame.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.metagame.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.8!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
-        Me.metagame.FormattingEnabled = true
+        Me.metagame.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.8!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.metagame.FormattingEnabled = True
         Me.metagame.Items.AddRange(New Object() {"Standard", "Modern", "Pioneer", "Pauper", "Legacy", "Vintage", "Historic", "Alchemy", "Penny Dreadful", "Commander 1v1", "Commander", "Brawl", "Historic Brawl"})
         Me.metagame.Location = New System.Drawing.Point(40, 23)
         Me.metagame.Name = "metagame"
@@ -300,6 +301,7 @@ Partial Class ft
         'AetherHub_Top2
         '
         Me.AetherHub_Top2.BackColor = System.Drawing.Color.WhiteSmoke
+        Me.AetherHub_Top2.Controls.Add(Me.howmuch3)
         Me.AetherHub_Top2.Controls.Add(Me.Button1)
         Me.AetherHub_Top2.Controls.Add(Me.puttopaetherhub)
         Me.AetherHub_Top2.Controls.Add(Me.ComboBox1)
@@ -310,36 +312,45 @@ Partial Class ft
         Me.AetherHub_Top2.TabIndex = 7
         Me.AetherHub_Top2.Text = "AetherHub Top"
         '
+        'howmuch3
+        '
+        Me.howmuch3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.howmuch3.FormattingEnabled = True
+        Me.howmuch3.Location = New System.Drawing.Point(171, 23)
+        Me.howmuch3.Name = "howmuch3"
+        Me.howmuch3.Size = New System.Drawing.Size(65, 21)
+        Me.howmuch3.TabIndex = 49
+        '
         'Button1
         '
-        Me.Button1.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.2!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
+        Me.Button1.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.2!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Button1.ForeColor = System.Drawing.Color.Black
-        Me.Button1.Location = New System.Drawing.Point(437, 25)
+        Me.Button1.Location = New System.Drawing.Point(447, 21)
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(204, 26)
         Me.Button1.TabIndex = 48
         Me.Button1.Text = "Extract Decks"
-        Me.Button1.UseVisualStyleBackColor = true
+        Me.Button1.UseVisualStyleBackColor = True
         '
         'puttopaetherhub
         '
-        Me.puttopaetherhub.AutoSize = true
-        Me.puttopaetherhub.Checked = true
+        Me.puttopaetherhub.AutoSize = True
+        Me.puttopaetherhub.Checked = True
         Me.puttopaetherhub.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.puttopaetherhub.Location = New System.Drawing.Point(232, 29)
+        Me.puttopaetherhub.Location = New System.Drawing.Point(242, 25)
         Me.puttopaetherhub.Name = "puttopaetherhub"
         Me.puttopaetherhub.Size = New System.Drawing.Size(85, 17)
         Me.puttopaetherhub.TabIndex = 47
         Me.puttopaetherhub.Text = "#top number"
-        Me.puttopaetherhub.UseVisualStyleBackColor = true
+        Me.puttopaetherhub.UseVisualStyleBackColor = True
         '
         'ComboBox1
         '
         Me.ComboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.ComboBox1.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.8!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
-        Me.ComboBox1.FormattingEnabled = true
-        Me.ComboBox1.Items.AddRange(New Object() {"Standard BO1", "Traditional Standard", "Alchemy BO1", "Traditional Alchemy", "Historic BO1", "Traditional Historic", "Brawl", "Historic Brawl", "Pioneer", "Modern", "Legacy", "Vintage", "Commander"})
-        Me.ComboBox1.Location = New System.Drawing.Point(30, 27)
+        Me.ComboBox1.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.8!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ComboBox1.FormattingEnabled = True
+        Me.ComboBox1.Items.AddRange(New Object() {"Standard BO1", "Traditional Standard", "Alchemy BO1", "Traditional Alchemy", "Historic BO1", "Traditional Historic", "Brawl", "Historic Brawl", "Pioneer", "Modern", "Legacy", "Vintage"})
+        Me.ComboBox1.Location = New System.Drawing.Point(40, 23)
         Me.ComboBox1.Name = "ComboBox1"
         Me.ComboBox1.Size = New System.Drawing.Size(123, 21)
         Me.ComboBox1.TabIndex = 46
@@ -365,7 +376,7 @@ Partial Class ft
         'maxtournamentsdecks
         '
         Me.maxtournamentsdecks.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.maxtournamentsdecks.FormattingEnabled = true
+        Me.maxtournamentsdecks.FormattingEnabled = True
         Me.maxtournamentsdecks.Items.AddRange(New Object() {"Limit 8", "Limit 12", "Limit 16", "Limit 25", "Limit 50", "Limit 99"})
         Me.maxtournamentsdecks.Location = New System.Drawing.Point(367, 23)
         Me.maxtournamentsdecks.Name = "maxtournamentsdecks"
@@ -376,7 +387,7 @@ Partial Class ft
         '
         Me.fromweb.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.fromweb.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.8!)
-        Me.fromweb.FormattingEnabled = true
+        Me.fromweb.FormattingEnabled = True
         Me.fromweb.Items.AddRange(New Object() {"mtgtop8", "mtggoldfish"})
         Me.fromweb.Location = New System.Drawing.Point(47, 22)
         Me.fromweb.Name = "fromweb"
@@ -386,7 +397,7 @@ Partial Class ft
         'maxtournm
         '
         Me.maxtournm.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.maxtournm.FormattingEnabled = true
+        Me.maxtournm.FormattingEnabled = True
         Me.maxtournm.Items.AddRange(New Object() {"Last One", "Last 2", "Last 3 ", "Last 4", "Last 5", "Last 6", "Last 7", "Last 8", "Last 9", "Last 10"})
         Me.maxtournm.Location = New System.Drawing.Point(281, 22)
         Me.maxtournm.Name = "maxtournm"
@@ -400,13 +411,13 @@ Partial Class ft
         Me.extract4.Size = New System.Drawing.Size(211, 26)
         Me.extract4.TabIndex = 55
         Me.extract4.Text = "Extract Decks"
-        Me.extract4.UseVisualStyleBackColor = true
+        Me.extract4.UseVisualStyleBackColor = True
         '
         'ComboBox2
         '
         Me.ComboBox2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.ComboBox2.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.8!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
-        Me.ComboBox2.FormattingEnabled = true
+        Me.ComboBox2.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.8!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ComboBox2.FormattingEnabled = True
         Me.ComboBox2.Items.AddRange(New Object() {"Standard", "Modern", "Pioneer", "Pauper", "Legacy", "Vintage"})
         Me.ComboBox2.Location = New System.Drawing.Point(133, 22)
         Me.ComboBox2.Name = "ComboBox2"
@@ -415,7 +426,7 @@ Partial Class ft
         '
         'LinkLabel1
         '
-        Me.LinkLabel1.AutoSize = true
+        Me.LinkLabel1.AutoSize = True
         Me.LinkLabel1.Location = New System.Drawing.Point(795, 249)
         Me.LinkLabel1.Name = "LinkLabel1"
         Me.LinkLabel1.Size = New System.Drawing.Size(0, 13)
@@ -423,7 +434,7 @@ Partial Class ft
         '
         'Label5
         '
-        Me.Label5.AutoSize = true
+        Me.Label5.AutoSize = True
         Me.Label5.Location = New System.Drawing.Point(39, 144)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(0, 13)
@@ -448,7 +459,7 @@ Partial Class ft
         Me.Button3.Size = New System.Drawing.Size(94, 23)
         Me.Button3.TabIndex = 55
         Me.Button3.Text = "Extract from URL"
-        Me.Button3.UseVisualStyleBackColor = true
+        Me.Button3.UseVisualStyleBackColor = True
         '
         'TextBox1
         '
@@ -481,9 +492,9 @@ Partial Class ft
         Me.GroupBox1.Name = "GroupBox1"
         Me.GroupBox1.Size = New System.Drawing.Size(675, 102)
         Me.GroupBox1.TabIndex = 54
-        Me.GroupBox1.TabStop = false
+        Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Decks Tools for Top Formats Selected Metagame"
-        Me.GroupBox1.Visible = false
+        Me.GroupBox1.Visible = False
         '
         'cardtofind
         '
@@ -494,39 +505,39 @@ Partial Class ft
         '
         'Button7
         '
-        Me.Button7.Font = New System.Drawing.Font("Microsoft Sans Serif", 7!)
+        Me.Button7.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.0!)
         Me.Button7.Location = New System.Drawing.Point(357, 17)
         Me.Button7.Name = "Button7"
         Me.Button7.Size = New System.Drawing.Size(298, 19)
         Me.Button7.TabIndex = 51
         Me.Button7.Text = "Find Card in Selected Metagame Decks"
-        Me.Button7.UseVisualStyleBackColor = true
+        Me.Button7.UseVisualStyleBackColor = True
         '
         'Button9
         '
-        Me.Button9.Font = New System.Drawing.Font("Microsoft Sans Serif", 7!)
+        Me.Button9.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.0!)
         Me.Button9.Location = New System.Drawing.Point(225, 59)
         Me.Button9.Name = "Button9"
         Me.Button9.Size = New System.Drawing.Size(204, 23)
         Me.Button9.TabIndex = 53
         Me.Button9.Text = "Zip Selected Metagame Decks"
-        Me.Button9.UseVisualStyleBackColor = true
+        Me.Button9.UseVisualStyleBackColor = True
         '
         'extract3
         '
-        Me.extract3.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.2!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
+        Me.extract3.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.2!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.extract3.ForeColor = System.Drawing.Color.Black
         Me.extract3.Location = New System.Drawing.Point(387, 21)
         Me.extract3.Name = "extract3"
         Me.extract3.Size = New System.Drawing.Size(268, 26)
         Me.extract3.TabIndex = 51
         Me.extract3.Text = "Extract Decks"
-        Me.extract3.UseVisualStyleBackColor = true
+        Me.extract3.UseVisualStyleBackColor = True
         '
         'howmuch2
         '
         Me.howmuch2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.howmuch2.FormattingEnabled = true
+        Me.howmuch2.FormattingEnabled = True
         Me.howmuch2.Items.AddRange(New Object() {"last 8", "last 16", "last 25", "last 50", "last 99", "all"})
         Me.howmuch2.Location = New System.Drawing.Point(288, 23)
         Me.howmuch2.Name = "howmuch2"
@@ -536,8 +547,8 @@ Partial Class ft
         'metag2
         '
         Me.metag2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.metag2.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.8!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
-        Me.metag2.FormattingEnabled = true
+        Me.metag2.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.8!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.metag2.FormattingEnabled = True
         Me.metag2.Items.AddRange(New Object() {"Budget Standard", "Budget Modern", "Budget Commander", "Duel Commander", "Arena Singleton", "Historic Brawl", "Artisan Historic", "Cascade", "Oathbreaker", "Canadian Highlander", "Old School", "No Banned List Modern", "Frontier", "Tiny Leaders", "Limited", "Block", "Free Form"})
         Me.metag2.Location = New System.Drawing.Point(47, 23)
         Me.metag2.Name = "metag2"
@@ -564,7 +575,7 @@ Partial Class ft
         Me.GroupBox2.Name = "GroupBox2"
         Me.GroupBox2.Size = New System.Drawing.Size(675, 53)
         Me.GroupBox2.TabIndex = 55
-        Me.GroupBox2.TabStop = false
+        Me.GroupBox2.TabStop = False
         Me.GroupBox2.Text = "File Generation"
         '
         'Button2
@@ -574,7 +585,7 @@ Partial Class ft
         Me.Button2.Size = New System.Drawing.Size(219, 23)
         Me.Button2.TabIndex = 49
         Me.Button2.Text = "Generate Cards File Without Edition"
-        Me.Button2.UseVisualStyleBackColor = true
+        Me.Button2.UseVisualStyleBackColor = True
         '
         'Button4
         '
@@ -583,7 +594,7 @@ Partial Class ft
         Me.Button4.Size = New System.Drawing.Size(143, 23)
         Me.Button4.TabIndex = 47
         Me.Button4.Text = "Generate Sets File"
-        Me.Button4.UseVisualStyleBackColor = true
+        Me.Button4.UseVisualStyleBackColor = True
         '
         'Button5
         '
@@ -592,7 +603,7 @@ Partial Class ft
         Me.Button5.Size = New System.Drawing.Size(219, 23)
         Me.Button5.TabIndex = 48
         Me.Button5.Text = "Generate Cards File With Last Edition"
-        Me.Button5.UseVisualStyleBackColor = true
+        Me.Button5.UseVisualStyleBackColor = True
         '
         'Timer1
         '
@@ -691,4 +702,5 @@ End Sub
     Friend WithEvents Button1 As Button
     Friend WithEvents puttopaetherhub As CheckBox
     Friend WithEvents ComboBox1 As ComboBox
+    Friend WithEvents howmuch3 As ComboBox
 End Class

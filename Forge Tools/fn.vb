@@ -36,13 +36,13 @@ Public Class fn
         Return True
     End Function
 
-    Public Shared Function NormalizeName(name As String) As String
+    Public Shared Function Normalize(name As String) As String
         name = "" & name
         Try
             name = Replace(name, "\", " ")
             name = Replace(name, "/", " ")
             name = Replace(name, """", "'")
-            Dim reg As New Regex("[^a-zA-Z0-9 ]")
+            Dim reg As New Regex("[^a-zA-Z0-9' ]")
             name = reg.Replace(name, "")
             name = Replace(name, "    ", " ")
             name = Replace(name, "   ", " ")
@@ -58,39 +58,13 @@ Public Class fn
             name = Replace(name, "ü", "u")
             name = Replace(name, "ñ", "n")
             name = LTrim(RTrim(name))
-            NormalizeName = name
+            Normalize = name
             reg = Nothing
         Catch
-            NormalizeName = name
+            Normalize = name
         End Try
     End Function
 
-    Public Shared Function Normalize(name As String) As String
-        name = "" & name
-        Try
-            name = Replace(name, "\", " ")
-            name = Replace(name, "/", " ")
-            name = Replace(name, "-", " ")
-            name = Replace(name, """", "'")
-            Dim reg As New Regex("[^a-zA-Z0-9 ]")
-            name = reg.Replace(name, "")
-            name = Replace(name, " ", "_")
-            name = Replace(name, "--", "-")
-            name = Replace(name, "---", "-")
-            name = Replace(name, "á", "a")
-            name = Replace(name, "é", "e")
-            name = Replace(name, "í", "i")
-            name = Replace(name, "ó", "o")
-            name = Replace(name, "ú", "u")
-            name = Replace(name, "ú", "u")
-            name = Replace(name, "ü", "u")
-            name = Replace(name, "ñ", "n")
-            Normalize = name
-            reg = Nothing
-        Catch
-            Normalize = name
-        End Try
-    End Function
 
     Public Shared Function RemoveWhitespace(fs As String) As String
         fs = Regex.Replace(fs, "[ ]{2,}", " ")
@@ -99,58 +73,6 @@ Public Class fn
         Return fs
     End Function
 
-    Public Shared Sub DeleteDownloaded()
-        Try
-            Directory.Delete("fldata/unsupportedcards.txt", True)
-        Catch
-        End Try
-        Try
-            Directory.Delete("fltmp", True)
-        Catch
-        End Try
-        Try
-            Directory.Delete("tmp", True)
-        Catch
-        End Try
-        Try
-            File.Delete("forge*.tar")
-        Catch
-        End Try
-        Try
-            File.Delete(Environment.CurrentDirectory & "/" & vars.MyDll & ".zip")
-        Catch
-        End Try
-
-        Try
-            Dim files =
-                    Directory.GetFiles(Environment.CurrentDirectory, "forge*", SearchOption.AllDirectories).Where(
-                        Function(s) s.EndsWith(".tar.bz") OrElse s.EndsWith(".bz2"))
-            For Each afile As String In files
-                File.Delete(afile)
-            Next
-        Catch ex As Exception
-            ex = ex
-        End Try
-
-        Try
-            Dim x As Integer
-            Dim paths() As String = Directory.GetFiles(vars.UserDir, "forge*.tar")
-            If paths.Length > 0 Then
-                For x = 0 To paths.Length - 1
-                    File.Delete(paths(x))
-                Next
-            End If
-        Catch
-
-        End Try
-    End Sub
-
-    Public Shared Sub ShowingWhatsNew()
-        If ReadLogUser("showwhatsnew") = "yes" Then
-            Dim box = New whatsnew()
-            box.Show()
-        End If
-    End Sub
 
     Public Shared Function removeshit(s As String) As String
         s = Replace(s, "?", "")
@@ -160,69 +82,8 @@ Public Class fn
     End Function
 
     Public Shared Sub checkunsupportedcards()
-        'Dim myLastDate = fn.ReadLogUser("lastupdate")
-        'If myLastDate <> DateTime.Now.ToString("dd'/'MM'/'yyyy") Then
-        'WriteUserLog("Downloading unsupportedcards.txt..." & vbCrLf)
         'UnsupportedCards()
-        'End If
     End Sub
-
-    Public Shared Sub HitToLauncherUpdates(Optional ByVal forzar As Boolean = False)
-        Try
-            'compruebo sí existe
-            If File.Exists(vars.UserDir & "\fldata\" & vars.ServerLogName) Then
-                'si, compruebo ultima fecha
-                Dim myLastDate = ReadLogUser("lastupdate")
-                If myLastDate <> DateTime.Now.ToString("dd'/'MM'/'yyyy") Then
-                    forzar = True
-                End If
-                forzar = True
-
-                If forzar Then
-                    If CheckAddress(vars.BaseUrl & vars.ServerLogName) Then
-                        Try
-                            File.Delete(vars.UserDir & "\fldata\" & vars.ServerLogName)
-                        Catch
-                        End Try
-                        'fn.WriteUserLog("Checking for updates..." & vbCrLf)
-                        'descargar y actualizar
-                        DownloadFile(vars.BaseUrl & vars.ServerLogName, vars.UserDir & "\fldata\" & vars.ServerLogName)
-                        'UpdateLog("lastupdate", DateTime.Now.ToString("dd'/'MM'/'yyyy"))
-                    End If
-
-                End If
-            Else
-                'no existe
-                If CheckAddress(vars.BaseUrl & vars.ServerLogName) Then
-                    DownloadFile(vars.BaseUrl & vars.ServerLogName, vars.UserDir & "\fldata\" & vars.ServerLogName)
-                End If
-            End If
-
-            Try
-                vars.MyLogServer = File.ReadAllText(vars.UserDir & "\fldata\" & vars.ServerLogName).ToString & ""
-            Catch ex As Exception
-            End Try
-
-            If vars.MyLogServer = "" Then
-                Try
-                    vars.MyLogServer = File.ReadAllText(vars.UserDir & "\fldata\" & vars.ServerLogName)
-                Catch ex As Exception
-
-                End Try
-            End If
-        Catch
-        End Try
-    End Sub
-
-    Public Shared Function CheckAddress(URL As String) As Boolean
-        Try
-            Dim request As WebRequest = WebRequest.Create(URL)
-            Dim response As WebResponse = request.GetResponse()
-        Catch ex As Exception
-            Return False
-        End Try
-        Return True
-    End Function
 
     Public Shared Sub DownloadFile(address As String, fileName As String, Optional force_download As Boolean = False)
         If File.Exists(fileName) And force_download = False Then Exit Sub
@@ -232,14 +93,11 @@ Public Class fn
             instance.DownloadFile(address, fileName)
         Catch
             PrintError(Err.Description)
-            'Application.ExitThread()
         End Try
     End Sub
 
-    Public Shared Function ReadLogUser(idlog As String, Optional ShowMsg As Boolean = False,
-                                       Optional ByVal CompareWithServer As Boolean = True) As String
+    Public Shared Function ReadLogUser(idlog As String, Optional ShowMsg As Boolean = False, Optional ByVal CompareWithServer As Boolean = True) As String
         If idlog = "profileproperties" Then CompareWithServer = False
-
         If CompareWithServer Then
             If File.Exists("\fldata\" & vars.ServerLogName) = False Then
                 Try
@@ -315,76 +173,8 @@ Public Class fn
             Exit Function
         End If
 
-        MsgBox("File forge.log doesn't exist.")
+        MsgBox("Cant'f find forge.log file.")
     End Function
-
-    Public Shared Function CopyIPtoClipboard()
-        Dim t As String = GetExternalIP() & ":36743"
-        Clipboard.SetText(t)
-        MsgBox("IP Adress " & t & " was copied to clipboard")
-    End Function
-
-    Public Shared Function UninstallForgeLauncher()
-        Dim m As String
-        m = "Are you sure to uninstall Forge Launcher and generated files? (Forge files will not be deleted)"
-        If MsgBox(m, MsgBoxStyle.YesNoCancel, "Warning!") = MsgBoxResult.Yes Then
-            Try
-                File.Delete("fldata/fl_whatsnew.txt")
-            Catch
-            End Try
-
-            Try
-                File.Delete("fldata/version.txt")
-            Catch
-            End Try
-
-            'Try
-            '    IO.Directory.Delete("backups", True)
-            'Catch
-            'End Try
-            Try
-                File.Delete("fldata/updates.txt")
-            Catch
-            End Try
-            Try
-                Uninstall()
-            Catch ex As Exception
-                WriteUserLog(ex.Message.ToString)
-            End Try
-        End If
-    End Function
-
-    Public Shared Sub Uninstall()
-        Process.Start("cmd.exe", "/C choice /C Y /N /D Y /T 3 & Del " + Application.ExecutablePath)
-        Dim p As New ProcessStartInfo("cmd.exe")
-        p.Arguments = "/C choice /C Y /N /D Y /T 3 & Del  " & ControlChars.Quote & Application.ExecutablePath &
-                      ControlChars.Quote
-        p.CreateNoWindow = True
-        p.ErrorDialog = False
-        p.WindowStyle = ProcessWindowStyle.Hidden
-        Process.Start(p)
-        Application.Exit()
-        Try
-            Environment.Exit(1)
-        Catch
-        End Try
-    End Sub
-
-    Public Shared Sub RestoreForgePreferences()
-        Dim m As String
-        m =
-            "If Forge does not load or freeze in the start screen, try restoring preferences (previous preferences will be removed) " &
-            vbCrLf & " Are you sure?"
-        If MsgBox(m, MsgBoxStyle.YesNoCancel, "Warning!") = MsgBoxResult.Yes Then
-            Try
-                Dim dir As String = Replace(ReadLogUser("decks_dir"), "decks", "preferences")
-                File.Delete(dir & "/forge.preferences")
-                MsgBox("Done!")
-            Catch ex As Exception
-                WriteUserLog(ex.Message.ToString)
-            End Try
-        End If
-    End Sub
 
     Public Shared Sub UpdateLog(idlog, myvalue)
         Dim mylog As String = My.Computer.FileSystem.ReadAllText(vars.LogName)
@@ -440,67 +230,6 @@ Public Class fn
         ReadLogServer = LogServer_data
     End Function
 
-    Public Shared Sub CheckLauncherUpdates()
-        Try
-            WriteUserLog("Checking for Launcher updates..." & vbCrLf)
-
-            Dim logu, logse As String
-            logu = ReadLogUser("launcher_version", False, True)
-            logse = ReadLogServer("launcher_version", False)
-            If logse = "" Then Exit Sub
-
-            If logu <> logse Then
-                If _
-                    MsgBox("Forge Launcher New version Available. Update now?", MsgBoxStyle.YesNoCancel, logse) =
-                    MsgBoxResult.Yes Then
-                    Try
-                        WriteUserLog("Downloading " & logse & vbCrLf)
-                        DownloadFile(vars.BaseUrl & "Forge Launcher.zip", "Forge Launcher.zip")
-                        WriteUserLog("Unpacking " & logse & " In " & Directory.GetCurrentDirectory() & "..." & vbCrLf)
-                        UnzipFile(Directory.GetCurrentDirectory() & "/" & "Forge Launcher.zip",
-                                  Directory.GetCurrentDirectory() & "/fltmp")
-                        UpdateLog("showwhatsnew", "yes")
-                        File.Delete("Forge Launcher.zip")
-                        File.Move("Forge Launcher.exe", "fltmp/Forge Launcher.bak")
-                        File.Copy("fltmp/Forge Launcher.exe", "Forge Launcher.exe")
-                        UpdateLog("showwhatsnew", "yes")
-                    Catch
-                    End Try
-
-                    Try
-                        File.Delete("fldata/fl_whatsnew.txt")
-                    Catch
-                    End Try
-                    Try
-                        UpdateLog("launcher_version", logse)
-                    Catch
-                    End Try
-
-                    Application.Restart()
-                End If
-            Else
-                WriteUserLog("Your Launcher is up to date:" & logu & vbCrLf)
-            End If
-        Catch
-
-        End Try
-    End Sub
-
-    Public Shared Sub CheckIfICSharpCodeExist()
-        'If File.Exists(vars.MyDll) = False Then
-        '    Try
-        '        DownloadFile(vars.BaseUrl & vars.MyDll & ".zip", vars.MyDll & ".zip")
-        '        Using archive As ZipArchive = System.IO.Compression.ZipFile.OpenRead(vars.MyDll & ".zip")
-        '            For Each entry As ZipArchiveEntry In archive.Entries
-        '                entry.ExtractToFile(Path.Combine(vars.UserDir & "\", entry.FullName), True)
-        '                WriteUserLog(vars.MyDll & " Downloaded." & vbCrLf)
-        '                File.Delete(vars.UserDir & vars.MyDll & ".zip")
-        '            Next
-        '        End Using
-        '    Catch
-        '    End Try
-        'End If
-    End Sub
 
     Public Shared Sub ExtractToDirectory(archive As ZipArchive, destinationDirectoryName As String,
                                          overwrite As Boolean)
@@ -571,480 +300,14 @@ Public Class fn
         ReadWeb = res
     End Function
 
-    Public Shared Function GetCheckAutomatic()
 
-        'atencion, debido al problema de KRAZY cambio de función
-        Return GetCheckAutomatic2()
 
-        Exit Function
 
-        Dim LineLink = ""
-        Dim LineLink2 = ""
 
-        Dim alltext = ""
-        Dim MyTx As String = ReadWeb(vars.SnapshotUrl)
-        Dim prelink As String = LineLink
-        Dim abr() As String = Split(MyTx, Environment.NewLine)
-        For Each MyLines As String In abr
-            If InStr(MyLines, "tar.bz2", CompareMethod.Text) > 0 Then
-                MyTx = Replace(MyLines, """", "'")
-                MyTx = FindIt(MyTx, "<a href='", ".tar.bz2'>")
-                If LineLink = "" Then
-                    LineLink = vars.SnapshotUrl & prelink & MyTx & ".tar.bz2"
-                Else
-                    LineLink2 = vars.SnapshotUrl & prelink & MyTx & ".tar.bz2"
-                End If
-                'Exit For
-            End If
-        Next
-        If LineLink <> "" Then
-            Return LineLink
-        Else
-            Return LineLink2
-        End If
-    End Function
 
-    Public Shared Function GetCheckAutomatic2()
-        Dim LineLink = ""
-        Dim alltext = ""
-        Dim MyTx As String = ReadWeb("https://downloads.cardforge.org/dailysnapshots/")
-        Dim mytxfind As String = MyTx
-        Dim prelink As String = LineLink
-        Dim abr() As String = Split(MyTx, Environment.NewLine)
-        For Each MyLines As String In abr
-            If InStr(MyLines, "tar.bz2", CompareMethod.Text) > 0 Then
-                MyTx = Replace(MyLines, """", "'")
-                MyTx = FindIt(MyTx, "<a href='", ".tar.bz2'>")
-                LineLink = "https://downloads.cardforge.org/dailysnapshots/" & MyTx & ".tar.bz2"
-                'Exit For
-            End If
-        Next
 
-        Dim lafecha As String = FindIt(mytxfind, ".tar.bz2</a>", "</pre><hr></body>")
-        lafecha = Split(lafecha, "           ")(0).ToString
-        lafecha = Trim(lafecha)
-        Dim l As String = FindIt(LineLink, "forge-gui-desktop-", ".tar")
-        Dim devuelve As String = "Forge " & l & " " & lafecha & "#" & LineLink
 
-        Return devuelve
-    End Function
 
-    Public Shared Function GetCheckAutomaticKlaxnek()
-
-        Dim LineLink = ""
-        Dim alltext = ""
-        Dim MyTx As String = ReadWeb("https://www.pduran.net/forgespanish/")
-        Dim mytxfind As String = MyTx
-        Dim prelink As String = LineLink
-        Dim abr() As String = Split(MyTx, vbCrLf)
-        LineLink = "https://www.pduran.net/forgespanish/forge-gui-desktop" &
-                   FindIt(MyTx, "forge-gui-desktop", "SNAPSHOT.tar.bz2") & "SNAPSHOT.tar.bz2"
-        Dim lafecha As String = FindIt(mytxfind, "-SNAPSHOT.tar.bz2</a></td><td align=""right"">", "</body></html>")
-        lafecha = Split(lafecha, "</td>")(0).ToString
-        lafecha = Trim(lafecha)
-        Dim l As String = FindIt(LineLink, "forge-gui-desktop-", ".tar")
-        Dim devuelve As String = "Forge " & l & " " & lafecha & "#" & LineLink
-        Return devuelve
-    End Function
-
-    Public Shared Function CheckForgeVersion(Optional ShowMsg As Boolean = True, Optional ShowText As Boolean = False)
-
-        Dim typeofupdate As String = ReadLogUser("typeofupdate")
-        Select Case typeofupdate
-            Case "snapshot"
-                vars.LinkLine = GetCheckAutomatic()
-            Case "release"
-                vars.LinkLine = CheckRelease()
-            Case "spanish snapshot"
-                vars.LinkLine = GetCheckAutomaticKlaxnek()
-        End Select
-
-
-        If vars.LinkLine = "" Then
-            vars.LinkLine = CheckRelease()
-        End If
-
-        Dim compara = ""
-
-        If vars.LinkLine <> "" Then
-
-            If InStr(vars.LinkLine, "#") > 0 Then
-                vars.LinkLine = Split(vars.LinkLine, "#")(0).ToString
-            End If
-
-            Select Case typeofupdate
-                Case "release"
-                    compara = ReadLogUser("forge_version", False)
-                Case "snapshot"
-                    compara = ReadLogUser("release_version", False)
-                Case "spanish snapshot"
-                    compara = ReadLogUser("other_version", False)
-            End Select
-
-        End If
-
-        Dim leer, urltoshow As String
-
-        Select Case typeofupdate
-            Case "snapshot"
-                leer = "forge_version"
-                urltoshow = vars.SnapshotUrl
-                urltoshow = "https://downloads.cardforge.org/dailysnapshots"
-            Case "release"
-                leer = "release_version"
-                urltoshow = vars.url_release
-            Case "spanish snapshot"
-                leer = "other_version"
-                urltoshow = "https://www.pduran.net/forgespanish"
-        End Select
-
-
-        If ShowMsg Or ShowText Then
-            Dim UserVersion = ReadLogUser(leer, False)
-            Dim versionlocal = compara
-            Try
-                If versionlocal.Contains("#") Then versionlocal = Split(versionlocal, "#")(0)
-            Catch
-            End Try
-            Dim x = typeofupdate & " "
-            If Not IsNothing(UserVersion) Then
-                If UserVersion.Contains("#") Then UserVersion = Split(UserVersion, "#")(0)
-            End If
-            If UserVersion <> vars.LinkLine Then
-                If Trim(x) = "release" Then
-                    'WriteUserLog("Founded Forge release " & Replace(vars.LinkLine, urltoshow, "") & "." & vbCrLf & "You're running " & Replace(versionlocal, urltoshow, "") & vbCrLf)
-                    WriteUserLog(
-                        "Founded Forge release " & Replace(vars.LinkLine, urltoshow, "") & "." & vbCrLf &
-                        "You're running " & UserVersion & vbCrLf)
-                Else
-                    'WriteUserLog("New Forge " & x & "version available! " & Replace(vars.LinkLine, urltoshow, "") & "." & vbCrLf & "You're running " & Replace(versionlocal, urltoshow, "") & vbCrLf)
-                    WriteUserLog(
-                        "New Forge " & x & "version available! " & Replace(vars.LinkLine, urltoshow, "") & "." & vbCrLf &
-                        "You're running " & UserVersion & vbCrLf)
-
-                End If
-
-            Else
-                If UserVersion.Contains("#") Then UserVersion = Split(UserVersion, "#")(0)
-                If UserVersion <> Nothing And vars.LinkLine <> Nothing Then
-                    WriteUserLog(
-                        "Your Forge " & x & "version is up to date: " & Replace(vars.LinkLine, urltoshow, "") & "." &
-                        vbCrLf)
-                    If _
-                        MsgBox(
-                            "Your Forge " & x & "version is up to date." & vbCrLf &
-                            "Do you want to start Forge and close Launcher?", MsgBoxStyle.YesNo, "Forge is up to date") =
-                        MsgBoxResult.Yes Then
-
-                        Application.Exit()
-                        Try
-                            Environment.Exit(1)
-                        Catch
-                        End Try
-                        Exit Function
-                    End If
-                End If
-            End If
-        Else
-            If vars.LinkLine = "" Or vars.LinkLine = "not found" Then
-                Return ""
-                Exit Function
-            End If
-
-            Dim UserVersion = ReadLogUser("forge_version", False)
-            If ShowMsg Or ShowText Then
-                If UserVersion <> vars.LinkLine Then
-                    WriteUserLog("Can't connect to downloads.cardforge.org/dailysnapshots!" & vbCrLf)
-                Else
-                    WriteUserLog(
-                        "Your Forge version is up to date: " & Replace(vars.LinkLine, vars.SnapshotUrl, "") & "." &
-                        vbCrLf)
-                End If
-            End If
-        End If
-        Return vars.LinkLine
-    End Function
-
-    Public Shared Function CheckRelease()
-        'all this part of code have a way to get automatly a release link, but i think it's not working by the dates and formats
-        Dim LinkLine = ""
-        Dim alltext = ""
-        Dim url_snap = "https://snapshots.cardforge.org/"
-        Try
-
-            'Dim client As WebClient = New WebClient()
-            'Dim reader As StreamReader = New StreamReader(client.OpenRead(url_snap))
-
-            Dim client2 = New WebClient()
-            Dim reader2 = New StreamReader(client2.OpenRead(vars.url_release))
-
-            'alltext = reader.ReadToEnd
-            alltext += reader2.ReadToEnd
-            Dim alltext2() = Split(alltext, "  ")
-            Dim betterdate As DateTime = DateTime.Now.AddYears(- 1)
-
-            For i = 0 To alltext2.Length - 1
-
-                If IsDate(alltext2(i)) Then
-                    If CDate(alltext2(i)) > CDate(betterdate) Then
-                        betterdate = alltext2(i)
-                    End If
-                End If
-            Next i
-
-            ' MsgBox(betterdate)
-
-            Dim betterdatetxt = betterdate.ToString
-
-            'damos formato
-            Dim ar() As String = Split(betterdatetxt, "/")
-            Dim fdef = ""
-            For i = 0 To ar.Length
-                'MsgBox(ar(i))
-            Next i
-            Dim mes = ""
-            Select Case ar(1)
-                Case "01"
-                    mes = "Jan"
-                Case "02"
-                    mes = "Feb"
-                Case "03"
-                    mes = "Mar"
-                Case "04"
-                    mes = "Apr"
-                Case "05"
-                    mes = "May"
-                Case "06"
-                    mes = "Jun"
-                Case "07"
-                    mes = "Jul"
-                Case "08"
-                    mes = "Aug"
-                Case "09"
-                    mes = "Sep"
-                Case "10"
-                    mes = "Oct"
-                Case "11"
-                    mes = "Nov"
-                Case "12"
-                    mes = "Dec"
-            End Select
-            'Jan/Feb/Mar/Apr/May/Jun/Jul/Aug/Sept/Oct/Nov/Dec 
-            If Len(ar(0)) = 1 Then ar(0) = "0" & ar(0)
-            Dim horiqui = ar(2)
-            Dim ano = Split(ar(2), " ")(0)
-            horiqui = Replace(horiqui, DateTime.Now.Year.ToString, "")
-            horiqui = Replace(horiqui, DateTime.Now.AddYears(- 1).ToString, "")
-            horiqui = Replace(horiqui, DateTime.Now.AddYears(+ 1).ToString, "")
-            horiqui = Replace(horiqui, "2020", "")
-            horiqui = Trim(horiqui)
-
-            Dim hora() = Split(horiqui, ":")
-            For i = 0 To hora.Length - 1
-                If Len(hora(i)) = 1 Then hora(i) = "0" & hora(i)
-            Next i
-
-            fdef = ar(0) & "-" & mes & "-" & ano & " " & hora(0) & ":" & hora(1)
-
-            fdef = Replace(fdef, ":00 ", "")
-
-            File.WriteAllText("fltx.txt", alltext)
-
-            Using reader3 As New StreamReader("fltx.txt")
-
-                While Not reader3.EndOfStream
-                    Dim line As String = reader3.ReadLine()
-                    If InStr(line.ToString, fdef) > 0 Then
-                        'MsgBox(line)
-                        LinkLine = line
-                        Exit While
-                    End If
-                End While
-            End Using
-            Try
-                File.Delete("fltx.txt")
-
-            Catch ex As Exception
-
-            End Try
-            LinkLine = Replace(LinkLine, """", "'")
-            LinkLine = FindIt(LinkLine, "href='", "'>")
-        Catch
-        End Try
-
-        If InStr(LinkLine, "tar.bz2", CompareMethod.Text) > 0 Then
-            LinkLine = url_snap & LinkLine
-            CheckRelease = LinkLine
-            Exit Function
-        Else
-            'ES UNA RELEASE
-            'navego a esa URL busco el tar.bz
-            Dim abrir As String = ReadWeb(vars.url_release & LinkLine)
-            Dim prelink As String = LinkLine
-            'para encontrar la linea tengo que recorrer las lineas del string
-
-            Dim abr() As String = Split(abrir, Environment.NewLine)
-            For Each linea As String In abr
-                If InStr(linea, "tar.bz2", CompareMethod.Text) > 0 Then
-                    abrir = Replace(linea, """", "'")
-                    abrir = FindIt(abrir, "<a href='", ".tar.bz2'>")
-                    LinkLine = vars.url_release & prelink & abrir & ".tar.bz2"
-                    Exit For
-                End If
-            Next
-            CheckRelease = LinkLine
-        End If
-        CheckRelease = LinkLine
-    End Function
-
-    Public Shared Function CheckRelease2()
-        'all this part of code have a way to get automatly a release link, but i think it's not working by the dates and formats
-        Dim LinkLine = ""
-        Dim alltext = ""
-        Dim url_snap = "https://snapshots.cardforge.org/"
-        Try
-
-            'Dim client As WebClient = New WebClient()
-            'Dim reader As StreamReader = New StreamReader(client.OpenRead(url_snap))
-
-            Dim client2 = New WebClient()
-            Dim reader2 =
-                    New StreamReader(client2.OpenRead("https://downloads.cardforge.org/dailysnapshot"))
-
-
-            'AHORA LA VERSIÓN ES SÍ LA FECHA ES DIFERENTE
-
-
-            'alltext = reader.ReadToEnd
-            alltext += reader2.ReadToEnd
-            Dim alltext2() = Split(alltext, "  ")
-            Dim betterdate As DateTime = DateTime.Now.AddYears(- 1)
-
-            For i = 0 To alltext2.Length - 1
-
-                If IsDate(alltext2(i)) Then
-                    If CDate(alltext2(i)) > CDate(betterdate) Then
-                        betterdate = alltext2(i)
-                    End If
-                End If
-            Next i
-
-            ' MsgBox(betterdate)
-
-            Dim betterdatetxt = betterdate.ToString
-
-            'damos formato
-            Dim ar() As String = Split(betterdatetxt, "/")
-            Dim fdef = ""
-            For i = 0 To ar.Length
-                'MsgBox(ar(i))
-            Next i
-            Dim mes = ""
-            Select Case ar(1)
-                Case "01"
-                    mes = "Jan"
-                Case "02"
-                    mes = "Feb"
-                Case "03"
-                    mes = "Mar"
-                Case "04"
-                    mes = "Apr"
-                Case "05"
-                    mes = "May"
-                Case "06"
-                    mes = "Jun"
-                Case "07"
-                    mes = "Jul"
-                Case "08"
-                    mes = "Aug"
-                Case "09"
-                    mes = "Sep"
-                Case "10"
-                    mes = "Oct"
-                Case "11"
-                    mes = "Nov"
-                Case "12"
-                    mes = "Dec"
-            End Select
-            'Jan/Feb/Mar/Apr/May/Jun/Jul/Aug/Sept/Oct/Nov/Dec 
-            If Len(ar(0)) = 1 Then ar(0) = "0" & ar(0)
-
-            ar(2) = Replace(ar(2), DateTime.Now.Year.ToString, "")
-            ar(2) = Trim(ar(2))
-
-            Dim hora() = Split(ar(2), ": ")
-            For i = 0 To hora.Length - 1
-                If Len(hora(i)) = 1 Then hora(i) = "0" & hora(i)
-            Next i
-
-            fdef = ar(0) & "-" & mes & "-" & DateTime.Now.Year.ToString & " " & hora(0) & ":" & hora(1)
-
-            fdef = Replace(fdef, ":00 ", "")
-
-            File.WriteAllText("fltx.txt", alltext)
-
-            Using reader3 As New StreamReader("fltx.txt")
-
-                While Not reader3.EndOfStream
-                    Dim line As String = reader3.ReadLine()
-                    If InStr(line.ToString, fdef) > 0 Then
-                        'MsgBox(line)
-                        LinkLine = line
-                        Exit While
-                    End If
-                End While
-            End Using
-            Try
-                File.Delete("fltx.txt")
-
-            Catch ex As Exception
-
-            End Try
-            LinkLine = Replace(LinkLine, """", "'")
-            LinkLine = FindIt(LinkLine, "href='", "'>")
-        Catch
-        End Try
-
-        If InStr(LinkLine, "tar.bz2", CompareMethod.Text) > 0 Then
-            LinkLine = url_snap & LinkLine
-            Return LinkLine
-            Exit Function
-        Else
-            'ES UNA RELEASE
-            'navego a esa URL busco el tar.bz
-            Dim abrir As String = ReadWeb(vars.url_release & LinkLine)
-            Dim prelink As String = LinkLine
-            'para encontrar la linea tengo que recorrer las lineas del string
-
-            Dim abr() As String = Split(abrir, Environment.NewLine)
-            For Each linea As String In abr
-                If InStr(linea, "tar.bz2", CompareMethod.Text) > 0 Then
-                    abrir = Replace(linea, """", "'")
-                    abrir = FindIt(abrir, "<a href='", ".tar.bz2'>")
-                    LinkLine = vars.url_release & prelink & abrir & ".tar.bz2"
-                    Exit For
-                End If
-            Next
-            Return LinkLine
-        End If
-        Return LinkLine
-    End Function
-
-
-
-    Public Shared Sub UpdateForge(vtoupdate)
-        ft.MenuGeneral.Enabled = False
-        ft.GroupExtras.Enabled = False
-        'Try
-        If vtoupdate = "" Then vtoupdate = CheckForgeVersion(False)
-        Dim urlcomplete = vtoupdate
-        Dim myfile = Path.GetFileName(urlcomplete)
-        If File.Exists(myfile) = True Then File.Delete(myfile)
-        WriteUserLog(vbCrLf & "Downloading update... please wait!" & vbCrLf)
-        If InStr(urlcomplete, "http") > 0 Then
-        End If
-        DownloadStart(urlcomplete, Path.GetFileName(urlcomplete))
-    End Sub
 
     Public Shared Sub DownloadStart(dwl, fn)
         downloader = New WebClient
@@ -1077,13 +340,7 @@ Public Class fn
         End If
     End Function
 
-    Public Shared Function GetForgePicsDir()
-        If vars.ForgePicsDir = "" Then
-            Return SearchPicsFolders()
-        Else
-            Return vars.ForgePicsDir
-        End If
-    End Function
+
 
     Public Shared Function SearchFolders(Optional ShowMsg As Boolean = True, Optional idlog As String = "decks_dir")
 
@@ -1151,58 +408,6 @@ Public Class fn
 
     Public Shared Function CheckIfForgeExists()
         Return IIf(File.Exists("forge.exe"), True, False)
-    End Function
-
-    Public Shared Function SearchPicsFolders()
-        Dim lafolder As String = ReadLogUser("pics_dir", False)
-        If lafolder <> "" Then
-            Return lafolder
-            Exit Function
-        End If
-
-        Dim MyFolder = ""
-        Dim files() As String = Directory.GetFiles(vars.UserDir)
-        Dim lines As String() = {}
-        For Each file As String In files
-            If file = vars.UserDir & "\forge.profile.properties" Then
-                'CUSTOM FOLDERS!
-                Dim text As String = IO.File.ReadAllText(vars.UserDir & "\forge.profile.properties")
-                lines = IO.File.ReadAllLines(vars.UserDir & "\forge.profile.properties")
-                For Each line As String In lines
-                    If InStr(LCase(line.ToString), "cachedir") > 0 Then
-                        Try
-                            Dim posibledir = Split(line, "=")(1).ToString
-                            'ESTE IF LO HE DESCOMENTADO
-                            If posibledir <> "" And Directory.Exists(posibledir) Then
-                                If posibledir <> "" Then
-                                    posibledir = posibledir & "/pics"
-                                    'If Directory.Exists(posibledir) Then
-                                    If CheckIfForgeExists() Then
-                                        'If ShowMsg Then
-                                        '    WriteUserLog("Detected " & posibledir & " As Custom User Directory (You can change the directories In Settings)" & vbCrLf)
-                                        'End If
-                                    End If
-                                    MyFolder = posibledir
-                                    Return posibledir
-                                    Exit Function
-                                End If
-                            End If
-                        Catch
-                        End Try
-
-                    End If
-                Next
-            Else
-            End If
-            'normal FOLDERS!
-        Next
-
-        MyFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) & "\Forge\Cache\pics"
-        SearchPicsFolders = MyFolder
-
-        If MyFolder <> "" Then
-            UpdateLog("pics_dir", MyFolder)
-        End If
     End Function
 
     Public Shared Function HTMLToText(HTMLCode As String) As String
@@ -1278,10 +483,8 @@ Public Class fn
             Exit Function
         End If
 
-        ' tx = Replace(tx, "// //", "//")
         tx = Replace(tx, "  //  ", " // ")
         tx = Replace(tx, vbCrLf & vbCrLf, vbCrLf)
-
 
         Try
             If Not IsValidFileNameOrPath(FinalName) Then FinalName = Normalize(FinalName)
@@ -1290,8 +493,9 @@ Public Class fn
             FinalName = Replace(FinalName, "*", "")
             FinalName = Replace(FinalName, ":", " ")
             FinalName = Replace(FinalName, "&#39;", "'")
-            FinalName = Replace(FinalName, "&#39;", "'")
-            NormalizeName(FinalName)
+            FinalName = Replace(FinalName, "&#x27;", "'")
+
+            Normalize(FinalName)
 
             If (Not Directory.Exists(mypath)) Then
                 Directory.CreateDirectory(mypath)
@@ -1311,8 +515,6 @@ Public Class fn
             tx = Replace(tx, vbCrLf & vbCrLf, vbCrLf)
             tx = Replace(tx, vbLf & vbLf, vbLf)
 
-
-            'Dim delcardordeck = ReadLogUser("delcardordeck")
             Dim delcardordeck = ""
             Dim msg As String = validatecards(tx, FinalName, delcardordeck)
             If msg <> "" Then
@@ -1368,98 +570,19 @@ Public Class fn
             Dim existpp As String = IIf(File.Exists("forge.profile.properties"), "yes", "no")
             If File.Exists(vars.LogName) = False Then
                 Dim t As String
-                t = "<forge_version>Not found</forge_version>" & vbCrLf
-                t = "<release_version>Not found</release_version>" & vbCrLf
-                t = "<other_version>Not found</other_version>" & vbCrLf
-                t = "<forge_previous_version></forge_previous_version>" & vbCrLf
-                t = t & "<launcher_version>Not found</launcher_version>" & vbCrLf
-                t = t & "<gauntlets_version>Not found</gauntlets_version>" & vbCrLf
                 t = t & "<decks_dir>" & GetForgeDecksDir() & "</decks_dir>" & vbCrLf
-                t = t & "<gauntlet_dir>" & Directory.GetCurrentDirectory() & "\res\defaults\gauntlet</gauntlet_dir>" &
-                    vbCrLf
-                t = t & "<pics_dir>" & GetForgePicsDir() & "</pics_dir>" & vbCrLf
                 t = t & "<preserve_decks>no</preserve_decks>" & vbCrLf
                 t = t & "<preserve_decks_number>1</preserve_decks_number>" & vbCrLf
                 t = t & "<tournamentsdecks_dir>Tournaments</tournamentsdecks_dir>" & vbCrLf
-                t = t & "<showwhatsnew>yes</showwhatsnew>" & vbCrLf
                 t = t & "<profileproperties>" & existpp & "</profileproperties>" & vbCrLf
-                t = t & "<lastupdate>" & hoy & "</lastupdate>" & vbCrLf
-                t = t & "<removepreviousjarfiles>no</removepreviousjarfiles>" & vbCrLf
-                t = t & "<typeofupdate>snapshot</typeofupdate>" & vbCrLf
-                t = t & "<launchforgeafterupdate>yes</launchforgeafterupdate>" & vbCrLf
-                t = t & "<getarchetype>no</getarchetype>" & vbCrLf
-                t = t & "<delcardordeck>no</delcardordeck>" & vbCrLf
-                t = t & "<launchmode>normal</launchmode>" & vbCrLf
-                t = t & "<launchline></launchline>" & vbCrLf
-                t = t & "<fllog>no</fllog>" & vbCrLf
-                t = t & "<checklauncherupdates>yes</checklauncherupdates>" & vbCrLf
-                t = t & "<enableprompt>no</enableprompt>" & vbCrLf
-
                 File.WriteAllText(vars.LogName, t)
             Else
 
                 Dim readText As String = File.ReadAllText(vars.UserDir & "\" & vars.LogName)
                 Dim WriteLog = False
 
-                'lo arreglo
-                Dim tx = Split(readText, vbCrLf)
-                Dim resufi = ""
-                Dim cuenta = 0
-                For i = 0 To tx.Length - 1
-
-                    If tx(i) = "<checklauncherupdates>no</checklauncherupdates>" Then
-                        cuenta = cuenta + 1
-                        If cuenta > 1 Then
-                            tx(i) = ""
-                        End If
-                    End If
-                    If tx(i) = "<checklauncherupdates>yes</checklauncherupdates>" Then
-                        cuenta = cuenta + 1
-                        If cuenta > 1 Then
-                            tx(i) = ""
-                        End If
-                    End If
-
-                    If tx(i) <> "" Then
-                        resufi = resufi & tx(i) & vbCrLf
-                    End If
-                Next
 
 
-                'fin de arreglo
-
-                readText = resufi
-
-                If InStr(readText, "<forge_version>", CompareMethod.Text) = 0 Then
-                    readText = readText & "<forge_version>Not found</forge_version>" & Environment.NewLine
-                    WriteLog = True
-                End If
-
-                If InStr(readText, "<release_version>", CompareMethod.Text) = 0 Then
-                    readText = readText & "<release_version>Not found</release_version>" & Environment.NewLine
-                    WriteLog = True
-                End If
-
-                If InStr(readText, "<other_version>", CompareMethod.Text) = 0 Then
-                    readText = readText & "<other_version>Not found</other_version>" & Environment.NewLine
-                    WriteLog = True
-                End If
-
-                If InStr(readText, "<forge_previous_version>", CompareMethod.Text) = 0 Then
-                    readText = readText & "<forge_previous_version></forge_previous_version>" & Environment.NewLine
-                    WriteLog = True
-                End If
-
-                If InStr(readText, "<launcher_version>", CompareMethod.Text) = 0 Then
-                    readText = readText & "<launcher_version>Forge Launcher V.1.1</launcher_version>" &
-                               Environment.NewLine
-                    WriteLog = True
-                End If
-
-                If InStr(readText, "<gauntlets_version>", CompareMethod.Text) = 0 Then
-                    readText = readText & "<gauntlets_version>Not found</gauntlets_version>" & Environment.NewLine
-                    WriteLog = True
-                End If
 
                 If InStr(readText, "<profileproperties>", CompareMethod.Text) = 0 Then
                     readText = readText & "<profileproperties>" & existpp & "</profileproperties>" & Environment.NewLine
@@ -1470,23 +593,10 @@ Public Class fn
                     readText = readText & "<decks_dir>" & GetForgeDecksDir() & "</decks_dir>" & Environment.NewLine
                     WriteLog = True
                 End If
-
-                If InStr(readText, "<pics_dir>", CompareMethod.Text) = 0 Then
-                    readText = readText & "<pics_dir>" & GetForgePicsDir() & "</pics_dir>" & Environment.NewLine
-                    WriteLog = True
-                End If
-
-                If InStr(readText, "<gauntlet_dir>", CompareMethod.Text) = 0 Then
-                    readText = readText & "<gauntlet_dir>" & Directory.GetCurrentDirectory() &
-                               "\res\defaults\gauntlet</gauntlet_dir>" & Environment.NewLine
-                    WriteLog = True
-                End If
-
                 If InStr(readText, "<preserve_decks>", CompareMethod.Text) = 0 Then
                     readText = readText & "<preserve_decks>no</preserve_decks>" & Environment.NewLine
                     WriteLog = True
                 End If
-
 
                 If InStr(readText, "<preserve_decks_number>", CompareMethod.Text) = 0 Then
                     readText = readText & "<preserve_decks_number>1</preserve_decks_number>" & Environment.NewLine
@@ -1496,69 +606,6 @@ Public Class fn
                 If InStr(readText, "<tournamentsdecks_dir>", CompareMethod.Text) = 0 Then
                     readText = readText & "<tournamentsdecks_dir>Tournaments</tournamentsdecks_dir>" &
                                Environment.NewLine
-                    WriteLog = True
-                End If
-
-                If InStr(readText, "<showwhatsnew>", CompareMethod.Text) = 0 Then
-                    readText = readText & "<showwhatsnew>yes</showwhatsnew>" & Environment.NewLine
-                    WriteLog = True
-                End If
-
-
-                If InStr(readText, "<lastupdate>", CompareMethod.Text) = 0 Then
-                    readText = readText & "<lastupdate>" & hoy & "</lastupdate>" & Environment.NewLine
-                    WriteLog = True
-                End If
-
-                If InStr(readText, "<removepreviousjarfiles>", CompareMethod.Text) = 0 Then
-                    readText = readText & "<removepreviousjarfiles>no</removepreviousjarfiles>" & Environment.NewLine
-                    WriteLog = True
-                End If
-
-                If InStr(readText, "<typeofupdate>", CompareMethod.Text) = 0 Then
-                    readText = readText & "<typeofupdate>snapshot</typeofupdate>" & Environment.NewLine
-                    WriteLog = True
-                End If
-
-
-                If InStr(readText, "<launchforgeafterupdate>", CompareMethod.Text) = 0 Then
-                    readText = readText & "<launchforgeafterupdate>yes</launchforgeafterupdate>" & Environment.NewLine
-                    WriteLog = True
-                End If
-
-                If InStr(readText, "<getarchetype>", CompareMethod.Text) = 0 Then
-                    readText = readText & "<getarchetype>no</getarchetype>" & Environment.NewLine
-                    WriteLog = True
-                End If
-
-                If InStr(readText, "<delcardordeck>", CompareMethod.Text) = 0 Then
-                    readText = readText & "<delcardordeck>no</delcardordeck>" & Environment.NewLine
-                    WriteLog = True
-                End If
-
-                If InStr(readText, "<launchmode>", CompareMethod.Text) = 0 Then
-                    readText = readText & "<launchmode>normal</launchmode>" & Environment.NewLine
-                    WriteLog = True
-                End If
-
-
-                If InStr(readText, "<launchline>", CompareMethod.Text) = 0 Then
-                    readText = readText & "<launchline></launchline>" & Environment.NewLine
-                    WriteLog = True
-                End If
-
-                If InStr(readText, "<fllog>", CompareMethod.Text) = 0 Then
-                    readText = readText & "<fllog>no</fllog>" & Environment.NewLine
-                    WriteLog = True
-                End If
-
-                If InStr(readText, "<checklauncherupdates>", CompareMethod.Text) = 0 Then
-                    readText = readText & "<checklauncherupdates>yes</checklauncherupdates>" & Environment.NewLine
-                    WriteLog = True
-                End If
-
-                If InStr(readText, "<enableprompt>", CompareMethod.Text) = 0 Then
-                    readText = readText & "<enableprompt>no</enableprompt>" & Environment.NewLine
                     WriteLog = True
                 End If
 
@@ -1603,67 +650,6 @@ Public Class fn
         End Try
     End Sub
 
-    Public Shared Sub getgauntlets()
-
-        Dim message = ""
-        Dim vserver, vclient As String
-        vserver = ReadLogServer("gauntlets_version", False)
-        vclient = ReadLogUser("gauntlets_version", False)
-        If vserver = vclient Then
-            message = "Your content version is up to date: " & vclient & ". Do you want to download again?"
-        End If
-
-        If message <> "" Then
-            If MsgBox(message, MsgBoxStyle.YesNoCancel, "Warning") = MsgBoxResult.Yes Then
-            Else
-                Exit Sub
-            End If
-        End If
-
-        Try
-            File.Delete("gauntlet.zip")
-        Catch
-            'PrintError(Err.Description)
-        End Try
-        Try
-            DownloadFile(vars.BaseUrl & "gauntlet.zip", "gauntlet.zip", True)
-        Catch
-            'PrintError(Err.Description)
-        End Try
-        Try
-            Dim mycount As Long = 0
-            vars.UserDir = Directory.GetCurrentDirectory()
-            vars.UserDir = Replace(vars.UserDir, "/user", "")
-            vars.UserDir = Replace(vars.UserDir, "\user", "")
-            Using archive As ZipArchive = System.IO.Compression.ZipFile.OpenRead("gauntlet.zip")
-                For Each entry As ZipArchiveEntry In archive.Entries
-                    'If IO.File.Exists(UserDir & "\res\defaults\gauntlet\" & entry.FullName) = False Then
-                    entry.ExtractToFile(Path.Combine(ReadLogUser("gauntlet_dir", False) & "\", entry.FullName), True)
-                    WriteUserLog("Extracting Gauntlet " & entry.Name & vbCrLf)
-                    mycount += 1
-                    'End If
-                Next
-            End Using
-            Select Case mycount
-                Case 0
-                    WriteUserLog("No New Gauntlet Contests extracted." & vbCrLf)
-                    UpdateLog("gauntlets_version", ReadLogServer("gauntlets_version", False))
-                Case 1
-                    WriteUserLog(mycount & " New Gauntlet Contest Extracted!. (re)start Forge!." & vbCrLf)
-                    UpdateLog("gauntlets_version", ReadLogServer("gauntlets_version", False))
-                Case > 1
-                    WriteUserLog(mycount & " New Gauntlet Contests Extracted!. (re)start Forge!." & vbCrLf)
-                    UpdateLog("gauntlets_version", ReadLogServer("gauntlets_version", False))
-            End Select
-        Catch
-            PrintError(Err.Description)
-        End Try
-        Try
-            File.Delete("gauntlet.zip")
-        Catch
-        End Try
-        UpdateLog("gauntlets_version", ReadLogServer("gauntlets_version", False))
-    End Sub
 
     Public Shared Function UnzipFile(sZipFile As String, sDestPath As String) As Boolean
 
@@ -1730,19 +716,9 @@ Public Class fn
 
         bResult = True
 
-        Problem:
+Problem:
         Return bResult
     End Function
-
-    Public Shared Function GetExternalIP() As String
-        Dim lol = New WebClient()
-        Dim str As String = lol.DownloadString("http://www.ip-adress.com/")
-        str = FindIt(str, "<h1>What Is My IP Address? Your IP address is: <strong>", "</strong></h1>")
-        Return str
-    End Function
-
-
-
 
 
     Public Shared Function CheckFolder(DestinationFolder As String) As String
@@ -1759,18 +735,18 @@ Public Class fn
         If mydir.Exists = False Then
             mydir.Create()
         End If
-
         Return DestinationFolder
     End Function
 
     Public Shared Function FormatDeck(tx As String, Optional name As String = "", Optional commander As String = "")
-
         If tx = "" Then
             FormatDeck = ""
             Exit Function
         End If
         tx = Replace(tx, vbCr, "")
         tx = Replace(tx, "&#39;", "'")
+        tx = Replace(tx, "&#27;", "'")
+
         tx = Replace(tx, "  ", " ")
         'igual esta aqui el problema de las /////// comento el if commander
         'If commander = "" Then
@@ -1838,124 +814,10 @@ Public Class fn
         FormatDeck = tx
     End Function
 
-    '    Shared Function PonerEdicion(tx, name)
-    '        'Return "[metadata]" & vbCrLf & "Name = " & name & vbCrLf & "[Main]" & vbCrLf & tx
-
-    '        '*******funcion nueva con los nuevos sets**********
-    ''        '/////////AQUI METEMOS LA EDICION DE A CARTA
-
-    '            Dim listado = Split(tx, vbLf)
-    '            Dim r = ""
-
-    '            For a = 0 To listado.Count - 1
-    '                If listado(a) <> vbCr then
-
-    '                Dim ed = ext.searchforedition(listado(a), ext.todaslascartas, ext.todoslossets)
-    '                ed = ed
-    '                If Trim(listado(a)) <> "" Then
-    '                    If Not IsNothing(ed) Or ed <> "" Then
-    '                        r = r & listado(a) & "|" & ed & vbCrLf
-    '                    Else
-    '                        r = r & listado(a) & vbCrLf
-    '                    End If
-    '                End If
-    '              end if
-
-    '            Next a
-    '            tx = r
-
-    '            tx = Replace(tx, "]|", "]")
-
-    '            'arreglo algunas que no encuentra
-    '            If tx.Contains("|" & vbCrLf) Then
-    '                tx = Replace(tx, "|" & vbCrLf, vbCrLf)
-    '            End If
-    '        tx = Replace(tx, vbCr & vbCrLf, vbCrLf)
-    '            tx = "[metadata]" & vbCrLf & "Name = " & name & vbCrLf & "[Main]" & vbCrLf & tx
-    '        Return tx
-    '    End Function
-
     Public Shared Sub WriteUserLog(msg)
         ft.txlog.SelectedText = msg
         ft.txlog.SelectionStart = ft.txlog.Text.Length
         ft.txlog.ScrollToCaret()
-    End Sub
-
-    Public Shared Sub UnsupportedCards()
-        ''si existe el backup lo borro
-        'If File.Exists("fldata\unsupportedcards_bu.txt") Then File.Delete("fldata\unsupportedcards_bu.txt")
-        ''si existe el normal renombro a backup antes de descargar
-        'If File.Exists("fldata\unsupportedcards.txt") Then FileSystem.Rename("fldata\unsupportedcards.txt", "fldata\unsupportedcards_bu.txt"
-        'Dim ok As Boolean = False
-        ''pruebo a descargar
-        'Try
-        '    DownloadFile(vars.BaseUrl & "unsupportedcards.txt", "fldata\unsupportedcards.txt", True)
-        '    'ok = True
-        'Catch
-        'End Try
-
-        'If ok Then
-        '    Try
-        '        File.Delete("fldata\unsupportedcards_bu.txt")
-        '    Catch
-        '    End Try
-        '    fn.WriteUserLog("unsupportedcards.txt downloaded." & vbCrLf)
-        'Else
-        '    Try
-        '        FileSystem.Rename("fldata\unsupportedcards_bu.txt", "fldata\unsupportedcards.txt")
-        '    Catch
-        '    End Try
-        '    fn.WriteUserLog("Can't fetch unsupportedcards.txt from server, please try later." & vbCrLf)
-        'End If
-    End Sub
-
-    Public Shared Sub MaintainVersionInAdvancedLaunchMode()
-
-        Dim TypeOfUpdate = ReadLogUser("typeofupdate", False, False)
-
-        Dim ForgeVersion = ""
-
-        Dim LaunchLine = ReadLogUser("launchline", False, False)
-
-        Select Case TypeOfUpdate
-            Case "release"
-                ForgeVersion = ReadLogUser("release_version", False, False)
-                Dim CForgeVersion = FindIt(ForgeVersion, "forge-gui-desktop-", ".tar.bz2")
-                Dim CLaunchLine = FindIt(LaunchLine, "forge-gui-desktop-", "-jar-with-dependencies.jar")
-                If CForgeVersion <> CLaunchLine Then
-                    Dim r As String = LaunchLine
-                    r = Replace(LaunchLine, CLaunchLine, CForgeVersion)
-                    UpdateLog("launchline", r)
-                End If
-
-            Case Else
-                ForgeVersion = ReadLogUser("forge_version", False, False)
-                Dim CForgeVersion = FindIt(ForgeVersion, "forge-", "-SNAPSHOT")
-                Dim CLaunchLine = FindIt(LaunchLine, "forge-gui-desktop-", "-SNAPSHOT")
-                If CLaunchLine = Nothing Then
-                    CLaunchLine = FindIt(LaunchLine, "forge-gui-desktop-", "-jar-with-dependencies.jar")
-                End If
-
-                If Not IsNothing(CLaunchLine) Then
-
-                    If CForgeVersion <> CLaunchLine Then
-                        Dim r = ""
-                        r = LaunchLine
-                        r = Replace(r, CLaunchLine, CForgeVersion)
-                        UpdateLog("launchline", r)
-
-                        'CREO EL BAT O LO BORRO ANTES Y ESO
-                        Dim sTextFile As New StringBuilder
-                        sTextFile.AppendLine(Trim(r))
-                        Dim sFileName As String = Environment.CurrentDirectory & "\PlayForge.bat"
-                        If File.Exists(sFileName) Then File.Delete(sFileName)
-                        File.AppendAllText(sFileName, sTextFile.ToString)
-
-                    End If
-                End If
-
-
-        End Select
     End Sub
 
     Public Shared Function validatecards(tx, titdeck, delcardordeck) As String
@@ -1978,14 +840,12 @@ Public Class fn
             Dim contador = 0
             'recorro cada carta del mazo
 
-
             While contador < b.Length
                 'doy formato a la carta
 
                 Dim nombrecarta = b(contador) & ""
                 If nombrecarta.contains("|") Then nombrecarta = Split(nombrecarta, "|")(0)
                 If InStr(nombrecarta, "|") Then nombrecarta = Split(nombrecarta, "|")(0)
-
 
                 'nombre de la carta que viene en el mazo
                 nombrecarta = nombrecarta
@@ -2001,14 +861,12 @@ Public Class fn
                     nombrecarta = Replace(nombrecarta, vbCr, Nothing)
                     nombrecarta = Replace(nombrecarta, vbCrLf, Nothing)
 
-
                     Dim cartaprohibida As String = a(contador2)
                     If nombrecarta = "Gemrazer" Or nombrecarta = "Dirge Bat" Or nombrecarta = "Auspicious Starrix" Then
                         nombrecarta = nombrecarta
                     End If
 
                     If LCase(nombrecarta) = LCase(cartaprohibida) Then
-
 
                         Return _
                             ("Forge unsupported card '" & cartaprohibida & "' in " & titdeck & ". Deck not saved." &
@@ -2023,7 +881,7 @@ Public Class fn
             End While
 
         Catch ex As Exception
-            'Return tx
+
         End Try
         Return ""
     End Function

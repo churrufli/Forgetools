@@ -23,8 +23,6 @@ Public Class ft
     End Sub
 
     Private Sub Fl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        ' tal()
-        'TabControl1.TabPages.Remove(TabControl1.TabPages(1))
         GroupExtras.TabPages.Remove(GroupExtras.TabPages(1))
 
     End Sub
@@ -32,7 +30,7 @@ Public Class ft
     Private Sub Fl_Shown(sender As Object, e As EventArgs) Handles Me.Shown
         fn.WriteUserLog("Loading data..." & vbCrLf)
         Timer1.Interval = 10
-        Timer1.Start() 'Timer starts functioning
+        Timer1.Start()
     End Sub
 
     Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
@@ -47,49 +45,9 @@ Public Class ft
     End Sub
 
     Sub InitProgram()
-
-        Dim basico As Boolean = False
-
-        'basico = True
-        If basico = True Then
-            SetComboboxes()
-            Exit Sub
-
-        End If
-
-        fn.movefilestofldata()
-        'fn.CheckIfICSharpCodeExist()
-        'fn.WriteUserLog("Checking Forge Version..." & vbCrLf)
-        'fn.RewriteLog()
         fn.CheckLog()
-
-        'fn.MaintainVersionInAdvancedLaunchMode()
         SetComboboxes()
-        ' fn.CheckIfPreviousProfileProperties()
-        'DisableStuffs()
-
-        'fn.HitToLauncherUpdates()
-        'fn.CheckLauncherUpdates()
-
-        'fn.CheckForgeVersion(False, True)
-        'Dim resulta = fn.ReadLogUser("enableprompt", False, False)
-        'If resulta = "yes" Then
-
-        '    fn.AlertAboutVersion(True)
-        'End If
-
-        'Dim result = fn.ReadLogUser("checklauncherupdates", False, False)
-        'If result = "yes" Or result = Nothing Then
-        'End If
-
-        'fn.ShowingWhatsNew()
-        'todas = ext.tenertodas()
-
         fn.SearchFolders(True)
-        'Try
-        'Catch
-        'End Try
-        'fn.checkunsupportedcards()
     End Sub
 
     Sub SetComboboxes()
@@ -123,13 +81,16 @@ Public Class ft
         howmuch.DisplayMember = "Value"
         howmuch.ValueMember = "Key"
 
+        howmuch3.DataSource = New BindingSource(comboSource, Nothing)
+        howmuch3.DisplayMember = "Value"
+        howmuch3.ValueMember = "Key"
+
+
         metagame.SelectedIndex = 0
         metag2.SelectedIndex = 0
-        'metag3.SelectedIndex = 0
 
         ComboBox1.SelectedItem = ComboBox1.Items(0)
         ComboBox2.SelectedItem = ComboBox2.Items(0)
-        'ComboBox3.SelectedItem = ComboBox3.Items(0)
 
         maxtournm.SelectedItem = maxtournm.Items(0)
         fromweb.SelectedItem = fromweb.Items(0)
@@ -139,28 +100,10 @@ Public Class ft
 
     Sub DisableStuffs()
         If fn.CheckIfForgeExists() = False Then
-
             GroupExtras.Enabled = False
-            'GroupBox3.Enabled = False
         Else
-
             GroupExtras.Enabled = True
-            'GroupBox3.Enabled = True
         End If
-        'GroupExtras.TabPages(46).Visible = False
-        'quito lo de descargar gauntlets
-        'GroupExtras.TabPages.Remove(GroupExtras.TabPages(1))
-        'GroupExtras.TabPages.Remove(GroupExtras.TabPages(1))
-    End Sub
-
-    Private Sub Button3_Click(sender As Object, e As EventArgs)
-        fn.getgauntlets()
-    End Sub
-    Private Sub update_Click(sender As Object, e As EventArgs)
-    End Sub
-
-    Private Sub fl_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
-        fn.DeleteDownloaded()
     End Sub
 
     Private Sub extract_Click(sender As Object, e As EventArgs) Handles extract1.Click
@@ -187,10 +130,6 @@ Public Class ft
 
     Private Sub Button5_Click(sender As Object, e As EventArgs)
         Ext.ExtractTournamentMtgtop8()
-    End Sub
-
-    Private Sub Button3_Click_1(sender As Object, e As EventArgs)
-        fn.getgauntlets()
     End Sub
 
     Private Sub ForgeDiscordChannelToolStripMenuItem_Click(sender As Object, e As EventArgs)
@@ -260,9 +199,7 @@ Public Class ft
         Application.Restart()
     End Sub
 
-    Private Sub CheckForLauncherUpdatesToolStripMenuItem_Click(sender As Object, e As EventArgs)
-        fn.CheckLauncherUpdates()
-    End Sub
+
 
     Private Sub CancelButton1_Click(sender As Object, e As EventArgs)
         vars.continueLooping = True
@@ -289,9 +226,6 @@ Public Class ft
         Return t
     End Function
 
-    Private Sub CheckForUpdatesToolStripMenuItem_Click(sender As Object, e As EventArgs)
-        fn.CheckLauncherUpdates()
-    End Sub
 
     Private Sub OpenToolStripMenuItem_Click(sender As Object, e As EventArgs)
         Try
@@ -311,26 +245,7 @@ Public Class ft
         End Try
     End Sub
 
-    Private Sub Button3_Click_2(sender As Object, e As EventArgs)
-        fn.getgauntlets()
-    End Sub
 
-    Private Sub fl_Closed(sender As Object, e As EventArgs) Handles Me.Closed
-        'fn.DeleteDownloaded()
-    End Sub
-
-    Private Sub LogFileToolStripMenuItem_Click(sender As Object, e As EventArgs)
-        fn.OpenLogFile()
-    End Sub
-
-    Private Sub CopyMyExternalIPToClipboardToolStripMenuItem1_Click(sender As Object, e As EventArgs)
-        fn.CopyIPtoClipboard()
-    End Sub
-
-    Private Sub RestoreForgePreferencesToolStripMenuItem_Click(sender As Object, e As EventArgs)
-
-        fn.RestoreForgePreferences()
-    End Sub
 
     Private Sub ReadForgeLogFileToolStripMenuItem_Click(sender As Object, e As EventArgs)
 
@@ -447,7 +362,7 @@ Public Class ft
         End While
 
         If tourname Is Nothing Then tourname = ""
-        tourname = fn.NormalizeName(tourname)
+        tourname = fn.Normalize(tourname)
         tourname = tourname.Trim()
         tourname = Replace(tourname, ":", "")
         'CREAMOS UNA MyFolder CON EL name DEL TORNEO
@@ -811,20 +726,8 @@ Public Class ft
         Next i
     End Sub
 
-    Private Sub CccToolStripMenuItem_Click(sender As Object, e As EventArgs)
-        'Dim result = fn.ReadLogUser("checklauncherupdates", False, False)
-        'If result = "yes" Or result = Nothing Then
-        '    fn.HitToLauncherUpdates()
-        '    fn.CheckLauncherUpdates()
-        'End If
 
-        fn.CheckLauncherUpdates()
-    End Sub
 
-    Private Sub CccToolStripMenuItem_Click_1(sender As Object, e As EventArgs)
-
-        fn.CheckLauncherUpdates()
-    End Sub
 
     'Private Sub Button1_Click_3(sender As Object, e As EventArgs) Handles Button1.Click
 
@@ -918,6 +821,7 @@ Public Class ft
     Private Sub CheckForForgeLauncherUpdatesToolStripMenuItem_Click(sender As Object, e As EventArgs) _
         Handles CheckForForgeLauncherUpdatesToolStripMenuItem.Click
 
+        CheckLauncherUpdates()
 
 
 
@@ -925,7 +829,76 @@ Public Class ft
 
 
 
+    End Sub
 
+    Public Shared Function GetDelimitedText(Text As String, OpenDelimiter As String,
+  CloseDelimiter As String, index As Long) As String
+        Dim i As Long, j As Long
+
+        If index = 0 Then index = 1
+
+        ' search the opening mark
+        i = InStr(index, Text, OpenDelimiter, vbTextCompare)
+        If i = 0 Then
+            index = 0
+            Exit Function
+        End If
+        i = i + Len(OpenDelimiter)
+
+        ' search the closing mark
+        j = InStr(i + 1, Text, CloseDelimiter, vbTextCompare)
+        If j = 0 Then
+            index = 0
+            Exit Function
+        End If
+
+        ' get the text between the two Delimiters
+        GetDelimitedText = Mid$(Text, i, j - i)
+
+        ' advanced the index after the closing Delimiter
+        index = j + Len(CloseDelimiter)
+
+    End Function
+    Public Shared Sub DownloadFile(address As String, fileName As String, Optional force_download As Boolean = False)
+        If File.Exists(fileName) And force_download = False Then Exit Sub
+        Try
+            Dim instance As New WebClient
+            If File.Exists(fileName) Then File.Delete(fileName)
+            instance.DownloadFile(address, fileName)
+        Catch
+            fn.PrintError(Err.Description)
+        End Try
+    End Sub
+    Public Shared Sub CheckLauncherUpdates()
+        Try
+            fn.WriteUserLog("Checking for updates..." & vbCrLf)
+            Dim x As String = fn.ReadWeb("https://github.com/churrufli/myforgetools/releases/")
+
+            If _
+                     MsgBox("Forge Tools update, update now?", MsgBoxStyle.YesNo, "") =
+                    MsgBoxResult.Yes Then
+                Try
+                    fn.WriteUserLog("Downloading new version from GitHub..." & vbCrLf)
+                    Dim myUrl = "https://github.com/churrufli/myforgetools/releases/download/0.2/Forge.Tools.zip"
+                    DownloadFile(myUrl, "Forge Tools New Version.zip")
+                    fn.WriteUserLog("Unpacking new version in " & Directory.GetCurrentDirectory() & "..." & vbCrLf)
+                    fn.UnzipFile(Directory.GetCurrentDirectory() & "/" & "Forge Tools New Version.zip",
+                                  Directory.GetCurrentDirectory() & "/fltmp")
+                    File.Delete("Forge Tools New Version.zip")
+                    File.Move("Forge Tools.exe", "fltmp/Forge Tools.bak")
+                    File.Copy("fltmp/Forge Tools.exe", "Forge Tools.exe")
+                Catch
+                End Try
+                Try
+                    Directory.Delete("fltmp", True)
+                Catch
+                End Try
+                Application.Restart()
+            End If
+
+        Catch
+
+        End Try
     End Sub
 
     Private Sub chkenableprompt_CheckedChanged(sender As Object, e As EventArgs)
@@ -935,10 +908,6 @@ Public Class ft
         Else
             shit = False
         End If
-    End Sub
-
-    Private Sub fl_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
-        fn.DeleteDownloaded()
     End Sub
 
     Private Sub Button5_Click_1(sender As Object, e As EventArgs)
@@ -1367,96 +1336,13 @@ Public Class ft
     End Sub
 
     Public Sub Button3_Click_4(sender As Object, e As EventArgs) Handles Button3.Click
-        ExtractfromAetherhub(TextBox1.Text.ToString, False, "")
+        Ext.ExtractfromAetherhub(TextBox1.Text.ToString, False, "", howmuch3.SelectedValue)
     End Sub
 
     Private Sub Button1_Click_4(sender As Object, e As EventArgs) Handles Button1.Click
         Dim metag = Replace(ComboBox1.Text, " ", "-")
-        ExtractfromAetherhub("https://aetherhub.com/Metagame/" & metag & "/", IIf(puttopaetherhub.Checked, True, False), metag)
+        Ext.ExtractfromAetherhub("https://aetherhub.com/Metagame/" & metag & "/", IIf(puttopaetherhub.Checked, True, False), metag, howmuch3.SelectedValue)
     End Sub
-
-    Public Shared Function ExtractfromAetherhub(myUrl As String, puttop As Boolean, metag As String)
-        'ExtractfromAetherhub(Trim(TextBox1.Text.ToString)
-        '    Exit Sub
-        'If myUrl = "" Then myUrl = "https://aetherhub.com/Metagame/Standard-BO1/"
-        Dim doc As HtmlAgilityPack.HtmlDocument = New HtmlAgilityPack.HtmlDocument()
-        doc.LoadHtml(fn.ReadWeb(Trim(myUrl)))
-        Dim MyFolderName = doc.DocumentNode.SelectSingleNode("//head/title").InnerText
-        'Dim div = doc.DocumentNode.SelectSingleNode("//div[@class='card-body d-flex flex-column pr-0 pl-0 pb-0']")
-        Dim div = doc.DocumentNode.SelectSingleNode("//div[@class='inner-content']")
-
-        Dim links
-        If div IsNot Nothing Then
-            links = div.Descendants("a").[Select](Function(a) a.GetAttributeValue("href", "")).ToList()
-        End If
-
-        Try
-            fn.DeleteDecks(fn.NormalizeName(MyFolderName), "*")
-        Catch
-        End Try
-
-        'aqui mejor voy a tomar todos los links y los voy a filtrar por la palabra Deck
-
-        Dim filteredLinks As New List(Of String)
-        Dim counter As Integer = 0
-        For Each li2 In links
-            If li2.contains("/Deck/") And Not li2.contains("comment") Then
-                If Not filteredLinks.Contains(li2) Then
-                    filteredLinks.Add(li2)
-                    counter = counter + 1
-                End If
-            End If
-        Next li2
-
-
-        Dim MyName
-        Dim i = 0
-        For Each l In filteredLinks
-            'leo la web
-            Dim doc2 As HtmlAgilityPack.HtmlDocument = New HtmlAgilityPack.HtmlDocument()
-            doc2.LoadHtml(fn.ReadWeb("https://aetherhub.com" & filteredLinks(i).ToString))
-            Dim TitDeck = doc2.DocumentNode.SelectSingleNode("//head/title").InnerText
-            Dim div2 = doc2.DocumentNode.SelectSingleNode("//div[@class='row pt-2']")
-            Dim links2
-            If div2 IsNot Nothing Then
-                links2 = div2.Descendants("a").[Select](Function(b) b.GetAttributeValue("href", "")).ToList()
-            End If
-            links2 = links2
-            Dim mylink
-            For Each li2 In links2
-                If li2.Contains("/Deck/MtgoDeckExport/") Then
-                    mylink = li2
-                    Exit For
-                End If
-            Next li2
-            i = i + 1
-
-            If puttop Then
-                Dim num As String = i
-                If Len(num) <= 1 Then
-                    num = "0" & num
-                End If
-                TitDeck = "#" & num & " - " & TitDeck
-            End If
-            Dim metag2 = Replace(metag, "-", " ") & " Metagame"
-
-            If TitDeck.Contains(metag2) Then
-                TitDeck = Replace(TitDeck, metag2, "")
-                TitDeck = Trim(TitDeck)
-                TitDeck = Replace(TitDeck, "  ", " ")
-
-            End If
-
-            'ya tengo el link me falta el tituli
-            Dim Deck As String = "[metadata]" & vbCrLf & "Name=" & TitDeck & vbCrLf & "[Main]" & vbCrLf & fn.ReadWeb("https://aetherhub.com" & mylink)
-            Deck = Replace(Deck, vbCrLf & vbCrLf, vbCrLf & "[sideboard]" & vbCrLf)
-            Deck = Replace(Deck, vbLf & vbLf, vbLf & "[sideboard]" & vbCrLf)
-            Deck = Replace(Deck, "Commander" & vbCrLf, "[Commander]" & vbCrLf)
-            fn.WriteUserLog(fn.StringToDeck(Directory.GetCurrentDirectory & "/aetherhub/" & fn.NormalizeName(MyFolderName) & "/", Deck, TitDeck))
-        Next
-    End Function
-
-
 
 
     'Public Shared Function ExtractfromAetherhub(myUrl)
@@ -1474,6 +1360,5 @@ Public Class ft
     '    'Dim elements As IList(Of IWebElement) = driverOne.FindElements(By.ClassName("green"))
 
     'End Function
-
 
 End Class
