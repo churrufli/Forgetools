@@ -52,26 +52,25 @@ Public Class ft
 
     Sub SetComboboxes()
         Dim comboSource As New Dictionary(Of String, String)()
-        comboSource.Add("8", "Top 8")
-        comboSource.Add("12", "Top 12")
-        comboSource.Add("16", "Top 16")
-        comboSource.Add("25", "Top 25")
-        comboSource.Add("50", "Top 50")
+        comboSource.Add("8", "8")
+        comboSource.Add("12", "12")
+        comboSource.Add("16", "16")
+        comboSource.Add("25", "25")
+        comboSource.Add("50", "50")
 
         Dim comboSource2 As New Dictionary(Of String, String)()
-        comboSource2.Add("8", "Last 8")
-        comboSource2.Add("12", "Last 12")
-        comboSource2.Add("16", "Last 16")
-        comboSource2.Add("25", "Last 25")
-        comboSource2.Add("50", "Last 50")
-
-        comboSource.Add("99", "Top 99")
-        comboSource.Add("120", "Top 120")
-        comboSource.Add("150", "Top 150")
-        comboSource.Add("200", "Top 200")
-        comboSource2.Add("99", "Last 99")
-        comboSource2.Add("120", "Last 120")
-        comboSource2.Add("200", "Last 200")
+        comboSource2.Add("8", "8")
+        comboSource2.Add("12", "12")
+        comboSource2.Add("16", "16")
+        comboSource2.Add("25", "25")
+        comboSource2.Add("50", "50")
+        comboSource2.Add("75", "75")
+        comboSource.Add("99", "99")
+        comboSource.Add("125", "125")
+        comboSource.Add("150", "150")
+        comboSource.Add("175", "175")
+        comboSource2.Add("200", "200")
+        comboSource2.Add("999", "999")
 
         howmuch2.DataSource = New BindingSource(comboSource2, Nothing)
         howmuch2.DisplayMember = "Value"
@@ -84,7 +83,6 @@ Public Class ft
         howmuch3.DataSource = New BindingSource(comboSource, Nothing)
         howmuch3.DisplayMember = "Value"
         howmuch3.ValueMember = "Key"
-
 
         metagame.SelectedIndex = 0
         metag2.SelectedIndex = 0
@@ -1185,7 +1183,7 @@ Public Class ft
         End Try
     End Sub
 
-    Private Sub Button9_Click(sender As Object, e As EventArgs) Handles Button9.Click
+    Private Sub Button9_Click(sender As Object, e As EventArgs)
 
         Dim metajuego = metagame.SelectedItem.ToString()
         Dim carpeta = ""
@@ -1342,6 +1340,30 @@ Public Class ft
     Private Sub Button1_Click_4(sender As Object, e As EventArgs) Handles Button1.Click
         Dim metag = Replace(ComboBox1.Text, " ", "-")
         Ext.ExtractfromAetherhub("https://aetherhub.com/Metagame/" & metag & "/", IIf(puttopaetherhub.Checked, True, False), metag, howmuch3.SelectedValue)
+    End Sub
+
+    Private Sub Button9_Click_1(sender As Object, e As EventArgs) Handles Button9.Click
+        Dim metajuego = metagame.SelectedItem.ToString()
+        Dim carpeta = ""
+
+        If metajuego.Contains("Commander") Then
+            carpeta = Directory.GetCurrentDirectory() & "\user\decks\commander\"
+        End If
+
+        If metajuego.Contains("Brawl") Then
+            carpeta = Directory.GetCurrentDirectory() & "\user\decks\brawl\"
+        End If
+
+        If carpeta = "" Then carpeta = Directory.GetCurrentDirectory() & "\user\decks\constructed\mtggoldfish\" & metajuego
+
+        Dim elfichero = carpeta & "\current" & LCase(fn.RemoveWhitespace(Replace(metajuego, " ", "")) & "metagame.zip")
+        If File.Exists(elfichero) Then
+            File.Delete(elfichero)
+        End If
+
+        compressDirectory(carpeta, elfichero)
+        fn.WriteUserLog("Zipped " & elfichero & vbCrLf)
+
     End Sub
 
 

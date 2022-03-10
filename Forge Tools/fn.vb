@@ -1,4 +1,5 @@
 ﻿Imports System.ComponentModel
+Imports System.Globalization
 Imports System.Net
 Imports System.Text
 Imports System.Text.RegularExpressions
@@ -64,7 +65,18 @@ Public Class fn
             Normalize = name
         End Try
     End Function
+    Public Shared Function RemoveDiacritics(s As String) As String
+        Dim normalizedString As String = s.Normalize(NormalizationForm.FormD)
+        Dim stringBuilder As New StringBuilder()
 
+        For Each c As Char In normalizedString
+            If CharUnicodeInfo.GetUnicodeCategory(c) <> UnicodeCategory.NonSpacingMark Then
+                stringBuilder.Append(c)
+            End If
+        Next
+
+        Return stringBuilder.ToString()
+    End Function
 
     Public Shared Function RemoveWhitespace(fs As String) As String
         fs = Regex.Replace(fs, "[ ]{2,}", " ")
@@ -288,14 +300,14 @@ Public Class fn
 
         Try
 
-                Dim client As WebClient = New WebClient()
-                System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12
-                Dim reply As String = client.DownloadString(MyUrl)
+            Dim client As WebClient = New WebClient()
+            System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12
+            Dim reply As String = client.DownloadString(MyUrl)
             Return reply
             Exit Function
         Catch ex As Exception
 
-            End Try
+        End Try
 
         ReadWeb = res
     End Function
@@ -788,7 +800,7 @@ Problem:
 
             commander = Replace(commander, "1 1 ", "1 ")
 
-            If ft.insertedition.checked = true Then
+            If ft.insertedition.Checked = True Then
                 'tx = PonerEdicion(tx, name)
             Else
                 tx = "[metadata]" & vbCrLf & "Name = " & name & vbCrLf & "[Main]" & vbCrLf & tx
@@ -799,7 +811,7 @@ Problem:
 
         Else
 
-            If ft.insertedition.checked = true Then
+            If ft.insertedition.Checked = True Then
                 'tx = PonerEdicion(tx, name)
             Else
                 tx = "[metadata]" & vbCrLf & "Name = " & name & vbCrLf & "[Main]" & vbCrLf & tx

@@ -60,6 +60,22 @@ Public Class Ext
             'End If
         Next
 
+        TitDeck = Replace(TitDeck, "   ", " ")
+        TitDeck = Replace(TitDeck, "  ", " ")
+        TitDeck = Trim(TitDeck)
+        TitDeck = Replace(TitDeck, "  ", " ")
+
+        TitDeck = fn.RemoveWhitespace(TitDeck)
+        TitDeck = Trim(TitDeck)
+        TitDeck = fn.removeshit(TitDeck)
+        If TitDeck.EndsWith("-") Then
+            TitDeck = TitDeck.Substring(0, TitDeck.Length - 1)
+        End If
+        If TitDeck.EndsWith("|") Then
+            TitDeck = TitDeck.Substring(0, TitDeck.Length - 1)
+        End If
+        TitDeck = Trim(TitDeck)
+
         GetTitDeck = TitDeck
     End Function
 
@@ -107,7 +123,7 @@ Public Class Ext
         Select Case metag
             Case "Standard", "Modern", "Pioneer", "Pauper", "Legacy", "Vintage", "Historic", "Penny Dreadful",
                 "Budget Modern", "Budget Standard"
-                MyDir = fn.GetForgeDecksDir() & "\mtggoldfish\"
+                MyDir = fn.GetForgeDecksDir() & "\constructed\mtggoldfish\"
                 If fn.ReadLogUser("preserve_decks", False) = "yes" Then
                     MyFolder = MyDir & "\" & metag & "\" & (Replace(DateTime.Today.ToShortDateString, "/", "-")) &
                                "\"
@@ -158,8 +174,11 @@ Public Class Ext
         End Select
         MyFolder = Replace(MyFolder, "\\", "\")
 
-        'BORRO MAZOS ANTERIORES
-        fn.DeleteDecks(MyFolder, "[" & metag & "] *")
+
+        If ft.mtggoldfishfrom.Text = "1" Then
+            'BORRO MAZOS ANTERIORES
+            fn.DeleteDecks(MyFolder, "[" & metag & "] *")
+        End If
 
         fn.CheckFolder(MyFolder)
 
@@ -278,7 +297,7 @@ Public Class Ext
                                 Case Else
                                     tx2 =
                                         fn.ReadWeb(
-                                            "https: //www.mtggoldfish.com/archetype/" & LCase(metag) & "-other-znr#paper")
+                                            "https://www.mtggoldfish.com/archetype/" & LCase(metag) & "-other-znr#paper")
                             End Select
 
                             tx2 = extmtggoldfish(tx2, "/deck/", "", "custom")
@@ -311,12 +330,28 @@ Public Class Ext
         End Try
         Dim urls()
         urls = Split(lasurls, vbCrLf)
+        Dim desdecual As Integer
+        If ft.mtggoldfishfrom.Text = "1" Then
+            desdecual = 0
+        Else
+            desdecual = CInt(ft.mtggoldfishfrom.Text) - 1
+        End If
 
-        For i = 0 To urls.Length - 1
+
+        Dim my2counter = 0
+
+        For i = desdecual To urls.Length - 1
 
             If urls(i).ToString <> "" Then
 
                 If i >= CInt(hm) Then Exit For
+                If CInt(ft.mtggoldfishfrom.Text) <> 1 Then
+                    my2counter = my2counter + 1
+                End If
+                If CInt(ft.mtggoldfishfrom.Text) <> 1 Then
+                    Dim quedan = CInt(my2counter + CInt(ft.mtggoldfishfrom.Text)) - 1
+                    If quedan > hm Then Exit Sub
+                End If
 
                 Dim DeckPage = ""
                 Dim UrlDeck = ""
@@ -347,6 +382,23 @@ Public Class Ext
                 'ESTABLEZCO EL TÍTULO DEL MAZO
                 If TitDeck = "" Then
                     TitDeck = GetTitDeck(DeckPage)
+                    If TitDeck.Contains(metag) = True Then
+                        TitDeck = Replace(TitDeck, metag, "")
+                    End If
+                    TitDeck = fn.RemoveWhitespace(TitDeck)
+                    TitDeck = Trim(TitDeck)
+                    TitDeck = fn.removeshit(TitDeck)
+                    If TitDeck.EndsWith("-") Then
+                        TitDeck = TitDeck.Substring(0, TitDeck.Length - 1)
+                    End If
+                    If TitDeck.EndsWith("|") Then
+                        TitDeck = TitDeck.Substring(0, TitDeck.Length - 1)
+                    End If
+                    TitDeck = Trim(TitDeck)
+                    'TitDeck = Regex.Replace(TitDeck, "(?:(?![a-zA-Z0-9])(?:[\0-\t\x0B\f\x0E-\u2027\u202A-\uD7FF\uE000-\uFFFF]|[\uD800-\uDBFF][\uDC00-\uDFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF]))+", "")
+                    TitDeck = Regex.Replace(TitDeck, "[^\u0000-\u007F]", String.Empty)
+                    'TitDeck = Trim(TitDeck)
+
                 End If
 
                 Dim pasar = False
@@ -1020,18 +1072,21 @@ Public Class Ext
         'If myUrl = "" Then myUrl = "https://aetherhub.com/Metagame/Standard-BO1/"
         Dim doc As HtmlAgilityPack.HtmlDocument = New HtmlAgilityPack.HtmlDocument()
         doc.LoadHtml(fn.ReadWeb(Trim(myUrl)))
-        Dim MyFolderName = doc.DocumentNode.SelectSingleNode("//head/title").InnerText
+        'Dim MyFolderName = doc.DocumentNode.SelectSingleNode("//head/title").InnerText
+        Dim MyDir = fn.GetForgeDecksDir() & "\constructed\aetherhub\" & metag & "\"
+
         Dim div = doc.DocumentNode.SelectSingleNode("//div[@class='inner-content']")
 
         Dim links
         If div IsNot Nothing Then
             links = div.Descendants("a").[Select](Function(a) a.GetAttributeValue("href", "")).ToList()
         End If
-
-        Try
-            fn.DeleteDecks(fn.Normalize(MyFolderName), "*")
-        Catch
-        End Try
+        If ft.aetherhubfrom.Text = "1" Then
+            Try
+                fn.DeleteDecks(MyDir, "[*] *")
+            Catch
+            End Try
+        End If
 
         Dim filteredLinks As New List(Of String)
         Dim counter As Integer = 0
@@ -1046,14 +1101,34 @@ Public Class Ext
 
         Dim i = 0
         Dim mycounter = 0
-        For Each l In filteredLinks
+        Dim my2counter = 0
+        Dim desdecual As Integer
+
+        If ft.aetherhubfrom.Text = "1" Then
+            desdecual = 1
+        Else
+            desdecual = CInt(ft.aetherhubfrom.Text)
+        End If
+
+        For i = desdecual To filteredLinks.Count - 1
+
             mycounter = mycounter + 1
             If mycounter > hm Then Exit Function
 
+            If CInt(ft.aetherhubfrom.Text) <> 1 Then
+                my2counter = my2counter + 1
+            End If
+
+            If CInt(ft.aetherhubfrom.Text) <> 1 Then
+                Dim quedan = CInt(my2counter + CInt(ft.aetherhubfrom.Text)) - 1
+                If quedan > hm Then Exit Function
+            End If
+
             'leo la web
             Dim doc2 As HtmlAgilityPack.HtmlDocument = New HtmlAgilityPack.HtmlDocument()
-            doc2.LoadHtml(fn.ReadWeb("https://aetherhub.com" & filteredLinks(i).ToString))
-            Dim TitDeck = doc2.DocumentNode.SelectSingleNode("//head/title").InnerText
+            Dim mypagetxt = fn.ReadWeb("https://aetherhub.com" & filteredLinks(i).ToString)
+            doc2.LoadHtml(mypagetxt)
+            Dim TitDeck = GetTitDeck(mypagetxt)
             Dim div2 = doc2.DocumentNode.SelectSingleNode("//div[@class='row pt-2']")
             Dim links2
             If div2 IsNot Nothing Then
@@ -1067,7 +1142,7 @@ Public Class Ext
                     Exit For
                 End If
             Next li2
-            i = i + 1
+
 
             If puttop Then
                 Dim num As String = i
@@ -1082,19 +1157,34 @@ Public Class Ext
             If TitDeck.Contains("Arena Standard Metagame") Then TitDeck = Replace(TitDeck, "Arena Standard Metagame", "")
             If TitDeck.Contains("Arena Standard") Then TitDeck = Replace(TitDeck, "Arena Standard", "")
             If TitDeck.Contains("Standard Metagame") Then TitDeck = Replace(TitDeck, "Standard Metagame", "")
-
+            If TitDeck.Contains(metag) = True Then
+                TitDeck = Replace(TitDeck, metag, "")
+            End If
             TitDeck = Replace(TitDeck, "   ", " ")
             TitDeck = Replace(TitDeck, "  ", " ")
             TitDeck = Trim(TitDeck)
-                TitDeck = Replace(TitDeck, "  ", " ")
-                TitDeck = "[" & metag & "] " & TitDeck
-            'TitDeck = fn.Normalize(TitDeck)
-            Dim MyDir = fn.GetForgeDecksDir() & "\aetherhub\" & metag & "\" & fn.Normalize(MyFolderName)
+            TitDeck = Replace(TitDeck, "  ", " ")
+            If TitDeck.Contains(metag) = True Then
+                TitDeck = Replace(TitDeck, metag, "")
+            End If
+            TitDeck = fn.RemoveWhitespace(TitDeck)
+            TitDeck = Trim(TitDeck)
+            TitDeck = fn.removeshit(TitDeck)
+            If TitDeck.EndsWith("-") Then
+                TitDeck = TitDeck.Substring(0, TitDeck.Length - 1)
+            End If
+            If TitDeck.EndsWith("|") Then
+                TitDeck = TitDeck.Substring(0, TitDeck.Length - 1)
+            End If
+            TitDeck = Trim(TitDeck)
+            TitDeck = Regex.Replace(TitDeck, "[^\u0000-\u007F]", String.Empty)
+            TitDeck = "[" & metag & "] " & TitDeck
+
             Dim Deck As String = "[metadata]" & vbCrLf & "Name=" & TitDeck & vbCrLf & "[Main]" & vbCrLf & fn.ReadWeb("https://aetherhub.com" & mylink)
             Deck = Replace(Deck, vbCrLf & vbCrLf, vbCrLf & "[sideboard]" & vbCrLf)
             Deck = Replace(Deck, vbLf & vbLf, vbLf & "[sideboard]" & vbCrLf)
             Deck = Replace(Deck, "Commander" & vbCrLf, "[Commander]" & vbCrLf)
-            fn.WriteUserLog(fn.StringToDeck(Directory.GetCurrentDirectory & "/aetherhub/" & fn.Normalize(MyFolderName) & "/", Deck, TitDeck))
+            fn.WriteUserLog(fn.StringToDeck(MyDir & "/", Deck, TitDeck))
         Next
     End Function
 End Class
