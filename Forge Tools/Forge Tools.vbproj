@@ -140,12 +140,6 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="fn.vb" />
-    <Compile Include="lm.Designer.vb">
-      <DependentUpon>lm.vb</DependentUpon>
-    </Compile>
-    <Compile Include="lm.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -169,19 +163,10 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="vars.vb" />
-    <Compile Include="whatsnew.Designer.vb">
-      <DependentUpon>whatsnew.vb</DependentUpon>
-    </Compile>
-    <Compile Include="whatsnew.vb">
-      <SubType>Form</SubType>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ft.resx">
       <DependentUpon>ft.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="lm.resx">
-      <DependentUpon>lm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
@@ -191,9 +176,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="preferences.resx">
       <DependentUpon>preferences.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="whatsnew.resx">
-      <DependentUpon>whatsnew.vb</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

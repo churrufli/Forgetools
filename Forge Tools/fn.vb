@@ -94,7 +94,37 @@ Public Class fn
     End Function
 
     Public Shared Sub checkunsupportedcards()
-        'UnsupportedCards()
+        UnsupportedCards()
+    End Sub
+    Public Shared Sub UnsupportedCards()
+        ''si existe el backup lo borro
+        'If File.Exists("fldata\unsupportedcards_bu.txt") Then File.Delete("fldata\unsupportedcards_bu.txt")
+        ''si existe el normal renombro a backup antes de descargar
+        'If File.Exists("fldata\unsupportedcards.txt") Then FileSystem.Rename("fldata\unsupportedcards.txt", "fldata\unsupportedcards_bu.txt"
+        'Dim ok As Boolean = False
+        ''pruebo a descargar
+        Try
+
+            fn.DownloadFile(vars.BaseUrl & "unsupportedcards.txt", "fldata\unsupportedcards.txt", True)
+            fn.WriteUserLog("unsupportedcards.txt downloaded." & vbCrLf)
+            'ok = True
+        Catch
+            fn.WriteUserLog("Can't fetch unsupportedcards.txt from server, please try later." & vbCrLf)
+        End Try
+
+        'If ok Then
+        '    Try
+        '        File.Delete("fldata\unsupportedcards_bu.txt")
+        '    Catch
+        '    End Try
+        '    fn.WriteUserLog("unsupportedcards.txt downloaded." & vbCrLf)
+        'Else
+        '    Try
+        '        FileSystem.Rename("fldata\unsupportedcards_bu.txt", "fldata\unsupportedcards.txt")
+        '    Catch
+        '    End Try
+        '    fn.WriteUserLog("Can't fetch unsupportedcards.txt from server, please try later." & vbCrLf)
+        'End If
     End Sub
 
     Public Shared Sub DownloadFile(address As String, fileName As String, Optional force_download As Boolean = False)

@@ -1187,4 +1187,6 @@ Public Class Ext
             fn.WriteUserLog(fn.StringToDeck(MyDir & "/", Deck, TitDeck))
         Next
     End Function
+
+
 End Class

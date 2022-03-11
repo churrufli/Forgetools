@@ -165,22 +165,6 @@ Public Class ft
         Ext.ExtractTournamentMtgtop8()
     End Sub
 
-    Private Sub WhatsNewToolStripMenuItem_Click_2(sender As Object, e As EventArgs)
-
-
-        Dim opened = False
-        For Each frm As Form In Application.OpenForms
-            If frm.Name.Equals("whatsnew") Then
-                frm.Show()
-                opened = True
-            End If
-        Next
-
-        If Not opened Then
-            Dim box = New whatsnew()
-            box.Show()
-        End If
-    End Sub
 
     Private Sub PicsFolderToolStripMenuItem_Click(sender As Object, e As EventArgs)
         Try
@@ -478,25 +462,6 @@ Public Class ft
     End Sub
 
 
-    Private Sub btnlaunchmode_Click(sender As Object, e As EventArgs)
-        Dim opened = False
-
-        For Each frm As Form In Application.OpenForms
-            If frm.Name.Equals("lm") Then
-                frm.Show()
-                opened = True
-            End If
-        Next
-
-        If opened = False Then
-            Dim box = New lm()
-            box.Show()
-        End If
-
-
-        'Dim box = New lm()
-        'box.Show()
-    End Sub
 
     Public Shared Function IsFormOpen(FormType As Type) As Boolean
         For Each OpenForm In Application.OpenForms
@@ -818,15 +783,7 @@ Public Class ft
 
     Private Sub CheckForForgeLauncherUpdatesToolStripMenuItem_Click(sender As Object, e As EventArgs) _
         Handles CheckForForgeLauncherUpdatesToolStripMenuItem.Click
-
         CheckLauncherUpdates()
-
-
-
-
-
-
-
     End Sub
 
     Public Shared Function GetDelimitedText(Text As String, OpenDelimiter As String,
@@ -870,10 +827,10 @@ Public Class ft
     Public Shared Sub CheckLauncherUpdates()
         Try
             fn.WriteUserLog("Checking for updates..." & vbCrLf)
-            Dim x As String = fn.ReadWeb("https://github.com/churrufli/myforgetools/releases/")
+            'Dim x As String = fn.ReadWeb("https://github.com/churrufli/myforgetools/releases/")
 
             If _
-                     MsgBox("Forge Tools update, update now?", MsgBoxStyle.YesNo, "") =
+                     MsgBox("Update Forge Tools auto-getting last version from GitHub?", MsgBoxStyle.YesNo, "") =
                     MsgBoxResult.Yes Then
                 Try
                     fn.WriteUserLog("Downloading new version from GitHub..." & vbCrLf)
@@ -908,21 +865,6 @@ Public Class ft
         End If
     End Sub
 
-    Private Sub Button5_Click_1(sender As Object, e As EventArgs)
-        Dim opened = False
-
-        For Each frm As Form In Application.OpenForms
-            If frm.Name.Equals("lm") Then
-                frm.Show()
-                opened = True
-            End If
-        Next
-
-        If opened = False Then
-            Dim box = New lm()
-            box.Show()
-        End If
-    End Sub
 
     Private Sub Button4_Click_1(sender As Object, e As EventArgs)
         CreateCardsBySetFile()
