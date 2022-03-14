@@ -47,7 +47,9 @@ Public Class ft
     Sub InitProgram()
         fn.CheckLog()
         SetComboboxes()
-        fn.SearchFolders(True)
+        'fn.SearchFolders(True)
+        fn.UnsupportedCards()
+
     End Sub
 
     Sub SetComboboxes()
@@ -108,8 +110,8 @@ Public Class ft
         fn.checkunsupportedcards()
 
         If InStr(metagame.SelectedItem.ToString, "-") = 0 Then
-            Ext.ExtractTopMtggoldfish(metagame.SelectedItem.ToString, howmuch.SelectedValue, chktopnumber.Checked,
-                                      Nothing)
+            Ext.ExtractTopMtggoldfish(metagame.SelectedItem.ToString, howmuch.Text, chktopnumber.Checked,
+                                      Nothing, "", False)
             Exit Sub
         End If
 
@@ -188,7 +190,7 @@ Public Class ft
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles extract3.Click
         fn.checkunsupportedcards()
         If InStr(metag2.SelectedItem.ToString, "-") = 0 Then
-            Ext.ExtractTopMtggoldfish(metag2.SelectedItem.ToString, howmuch2.SelectedValue, False, Nothing)
+            Ext.ExtractTopMtggoldfish(metag2.SelectedItem.ToString, howmuch2.SelectedValue, False, "", "", True)
         End If
     End Sub
 
@@ -310,7 +312,7 @@ Public Class ft
                                             Optional ByVal maxdecks As Integer = 100)
 
         'aqui saco el link del torneo OK, debería de crear la carpeta
-        Dim eldir As String = fn.GetForgeDecksDir() & "\constructed\" & fn.ReadLogUser("tournamentsdecks_dir", False) &
+        Dim eldir As String = "netdecks\mtggoldfish\" & fn.ReadLogUser("tournamentsdecks_dir", False) &
                               "\"
 
         Dim tx1 As String
@@ -1257,12 +1259,12 @@ Public Class ft
     End Sub
 
     Public Sub Button3_Click_4(sender As Object, e As EventArgs) Handles Button3.Click
-        Ext.ExtractfromAetherhub(TextBox1.Text.ToString, False, "", howmuch3.SelectedValue)
+        Ext.ExtractfromAetherhub(TextBox1.Text.ToString, False, "", "100", True)
     End Sub
 
     Private Sub Button1_Click_4(sender As Object, e As EventArgs) Handles Button1.Click
         Dim metag = Replace(ComboBox1.Text, " ", "-")
-        Ext.ExtractfromAetherhub("https://aetherhub.com/Metagame/" & metag & "/", IIf(puttopaetherhub.Checked, True, False), metag, howmuch3.SelectedValue)
+        Ext.ExtractfromAetherhub("https://aetherhub.com/Metagame/" & metag & "/", IIf(puttopaetherhub.Checked, True, False), metag, howmuch3.Text, False)
     End Sub
 
     Private Sub Button9_Click_1(sender As Object, e As EventArgs) Handles Button9.Click

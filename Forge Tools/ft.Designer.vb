@@ -289,6 +289,7 @@ Partial Class ft
         Me.Button9.TabIndex = 54
         Me.Button9.Text = "Zip Selected Metagame Decks"
         Me.Button9.UseVisualStyleBackColor = True
+        Me.Button9.Visible = False
         '
         'insertedition
         '
@@ -553,7 +554,7 @@ Partial Class ft
         Me.metag2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.metag2.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.8!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.metag2.FormattingEnabled = True
-        Me.metag2.Items.AddRange(New Object() {"Standard", "Modern", "Pioneer", "Historic", "Alchemy", "Pauper", "Legacy", "Vintage", "Penny Dreadful", "Commander", "Brawl", "Duel Commander", "Alchemy", "Arena Singleton", "Historic Braw", "Gladiator", "Artisan Historic", "Cascade", "Oathbreaker", "Canadian Highlander", "Old School", "Premodern", "No Banned List Modern", "Frontier", "Tiny Leaders", "Limited", "Block", "Free Form"})
+        Me.metag2.Items.AddRange(New Object() {"Standard", "Modern", "Pioneer", "Historic", "Alchemy", "Pauper", "Legacy", "Vintage", "Penny Dreadful", "Commander", "Brawl", "Duel Commander", "Alchemy", "Arena Singleton", "Historic Brawl", "Gladiator", "Artisan Historic", "Cascade", "Oathbreaker", "Canadian Highlander", "Old School", "Premodern", "No Banned List Modern", "Frontier", "Tiny Leaders", "Limited", "Block", "Free Form"})
         Me.metag2.Location = New System.Drawing.Point(47, 23)
         Me.metag2.Name = "metag2"
         Me.metag2.Size = New System.Drawing.Size(231, 21)

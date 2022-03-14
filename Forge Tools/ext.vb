@@ -5,10 +5,9 @@ Imports System.Text
 Imports System.Text.RegularExpressions
 
 Public Class Ext
-
     Public Shared Sub Cardsdata()
-        Dim todaslascartas As String = IO.File.ReadAllText(Directory.GetCurrentDirectory() & "/fldata/allcardsandsets.txt")
-        Dim todoslossets As String = IO.File.ReadAllText(Directory.GetCurrentDirectory() & "/fldata/allsets.txt")
+        'Dim todaslascartas As String = IO.File.ReadAllText(Directory.GetCurrentDirectory() & "/fldata/allcardsandsets.txt")
+        'Dim todoslossets As String = IO.File.ReadAllText(Directory.GetCurrentDirectory() & "/fldata/allsets.txt")
     End Sub
     Public Shared Function GetTitDeck(tx) As String
         Dim TitDeck = ""
@@ -36,28 +35,21 @@ Public Class Ext
             TitDeck = TitDeck
         End If
 
-
         tempParts = startString.Split(" ")
 
         For Each testValue In tempParts
             Try
                 testValue = Replace(testValue, "-", "/")
                 testValue = Replace(testValue, """", "")
-                'DateTime.Parse(testValue)
-                Dim resultado = DateTime.ParseExact(Convert.ToString(testValue), "d/MMM/yyyy", CultureInfo.CreateSpecificCulture("es-US"))
+                Try
+                    Dim resultado = DateTime.ParseExact(Convert.ToString(testValue), "d/MMM/yyyy", CultureInfo.CreateSpecificCulture("es-US"))
+                Catch
+                End Try
+
                 TitDeck.Replace(testValue, Nothing)
             Catch ex As Exception
             End Try
             testValue = Replace(testValue, "/", "-")
-
-
-            'If DateTime.TryParse(testValue, tempDate) = True Then
-            '    MessageBox.Show(String.Format("Date in string: {0}", tempDate))
-
-            'End If
-            'If DateTime.TryParse(testValue, tempDate) = True Then
-            '    MessageBox.Show(String.Format("Date in string: {0}", tempDate))
-            'End If
         Next
 
         TitDeck = Replace(TitDeck, "   ", " ")
@@ -85,7 +77,7 @@ Public Class Ext
         IsaDate = IsaDate
     End Function
 
-    Public Shared Sub ExtractTopMtggoldfish(metag As String, hm As Object, puttop As Object, customurl As String, Optional customfolder As String = "")
+    Public Shared Sub ExtractTopMtggoldfish(metag As String, hm As Object, puttop As Object, customurl As String, Optional customfolder As String = "", Optional fromuser As Boolean = False)
         'se usa para el top de los decks y para los custom decks 
         ft.txlog.Text = ""
 
@@ -95,19 +87,15 @@ Public Class Ext
         If url = "" Then
             Select Case (metag)
                 ', "Pioneer"
-                Case "Duel Commander", "Arena Singleton", "Historic Brawl", "Artisan Historic", "Cascade", "Oathbreaker",
-                    "Canadian Highlander", "Old School", "No Banned List Modern", "Frontier", "Tiny Leaders", "Limited",
-                    "Block", "Free Form"
-                    url = vars.mtggf & "/deck/custom/" & LCase(Replace(metag, " ", "_")) & "#paper"
                 Case "Budget Modern", "Budget Standard"
                     url = vars.mtggf & "/decks/budget/" & LCase(Replace(Replace(metag, "Budget ", ""), " ", "/")) &
                           "#paper"
                 Case "Budget Commander"
                     url = vars.mtggf & "/decks/budget/commander/" & "#paper"
-                Case "Standard", "Modern", "Pioneer", "Pauper", "Legacy", "Vintage", "Historic", "Penny Dreadful"
+                Case "Standard", "Modern", "Pioneer", "Historic", "Alchemy", "Pauper", "Legacy", "Vintage", "Penny Dreadful", "Commander 1v1", "Commander", "Historic Brawl", "Brawl"
                     url = vars.mtggf & "/metagame/" & LCase(fn.Normalize(metag)) & "/full#paper"
                 Case Else
-                    url = vars.mtggf & "/metagame/" & LCase(fn.Normalize(metag)) & "/full#paper"
+                    url = vars.mtggf & "/deck/custom/" & LCase(Replace(metag, " ", "_")) & "#paper"
             End Select
         End If
 
@@ -116,64 +104,18 @@ Public Class Ext
 
         'meto el contenido de esa url en una variable
         tx1 = fn.ReadWeb(url)
-        Dim MyDir = ""
-        Dim MyFolder = ""
+        Dim MyDir
+        If url.Contains("/custom/") Then
+            MyDir = "netdecks\mtggoldfish\usersdecks\" & metag & "\"
+        Else
+            MyDir = "netdecks\mtggoldfish\" & metag & "\"
+        End If
+
+        fn.CheckFolder(MyDir)
+        Dim MyFolder = MyDir
 
         'creo la carpeta 
-        Select Case metag
-            Case "Standard", "Modern", "Pioneer", "Pauper", "Legacy", "Vintage", "Historic", "Penny Dreadful",
-                "Budget Modern", "Budget Standard"
-                MyDir = fn.GetForgeDecksDir() & "\constructed\mtggoldfish\"
-                If fn.ReadLogUser("preserve_decks", False, False) = "yes" Then
-                    MyFolder = MyDir & "\" & metag & "\" & (Replace(DateTime.Today.ToShortDateString, "/", "-")) &
-                               "\"
-                    Dim ruta As String = MyDir & "\" & metag & "\"
-                    Try
-
-                        Dim counter =
-                                New DirectoryInfo(ruta).GetDirectories().OrderBy(Function(x) x.CreationTime)
-
-                        Dim s = ""
-                        For Each f As DirectoryInfo In counter
-                            s = s & f.Name & ","
-                        Next
-
-                        Dim s1() As String = Split(s, ",")
-
-                        Dim mycount As Integer = CStr(counter.Count)
-                        Dim x1 = 0
-                        Dim total As Integer = fn.ReadLogUser("preserve_decks_number")
-                        While mycount > CStr(total)
-                            Try
-                                Directory.Delete(ruta & s1(x1), True)
-                            Catch
-                            End Try
-                            x1 = x1 + 1
-                            counter =
-                                New DirectoryInfo(ruta).GetDirectories().OrderBy(Function(x) x.CreationTime)
-                            mycount = CStr(counter.Count)
-                        End While
-                    Catch
-                    End Try
-                Else
-                    MyFolder = MyDir & "\" & metag & "\"
-                End If
-                MyFolder = Replace(MyFolder, "//", "/")
-            Case "Commander", "Commander 1v1", "Budget Commander"
-                MyDir = fn.GetForgeDecksDir() & "\commander\"
-                MyFolder = MyDir
-            Case "Tiny Leaders"
-                MyDir = fn.GetForgeDecksDir() & "\tiny_leaders\"
-                MyFolder = MyDir
-            Case "Brawl", "Historic Brawl"
-                MyDir = fn.GetForgeDecksDir() & "\brawl\"
-                MyFolder = MyDir
-            Case Else
-                MyDir = fn.GetForgeDecksDir() & "\constructed\mtggoldfish\"
-                MyFolder = MyDir
-        End Select
         MyFolder = Replace(MyFolder, "\\", "\")
-
 
         If ft.mtggoldfishfrom.Text = "1" Then
             'BORRO MAZOS ANTERIORES
@@ -182,7 +124,7 @@ Public Class Ext
 
         fn.CheckFolder(MyFolder)
 
-        fn.WriteUserLog("Extracting " & metag & " Decks in " & MyFolder & vbCrLf)
+        fn.WriteUserLog("Extracting " & metag & " Decks In " & MyFolder & vbCrLf)
 
         Select Case metag
             'oficiales
@@ -200,7 +142,7 @@ Public Class Ext
             Case "Commander 1v1", "Commander", "Brawl"
                 tx1 = extmtggoldfish(tx1, "/archetype/", "#paper")
             Case Else
-                tx1 = extmtggoldfish(tx1, "/deck/", "#paper")
+                tx1 = extmtggoldfish(tx1, "/deck/", "#paper", "/deck/custom")
         End Select
 
         Dim num As String
@@ -229,7 +171,7 @@ Public Class Ext
                                 Case "legacy"
                                     tx2 =
                                         fn.ReadWeb(
-                                            "https://www.mtggoldfish.com/archetype/other-315fcdf4-70d6-41b8-bd39-699032073591#paper")
+                                            "https: //www.mtggoldfish.com/archetype/other-315fcdf4-70d6-41b8-bd39-699032073591#paper")
                                 Case "vintage"
                                     tx2 =
                                         fn.ReadWeb(
@@ -910,7 +852,7 @@ Public Class Ext
 
 
         'Dim eldir As String = GetForgeDecksDir() & "\constructed\" & fn.ReadLogUser("downloadeddecks_dir", False) & "\" & fn.ReadLogUser("tournamentsdecks_dir", False) & "\"
-        Dim eldir As String = fn.GetForgeDecksDir() & "\constructed\" & fn.ReadLogUser("tournamentsdecks_dir", False) &
+        Dim eldir As String = "netdecks\mtgtop8\" & fn.ReadLogUser("tournamentsdecks_dir", False) &
                               "\"
 
         ft.extract1.Enabled = False
@@ -1066,14 +1008,19 @@ Public Class Ext
             ExtractTournamentMtgtop8(MyUrl)
         Next
     End Sub
-    Public Shared Function ExtractfromAetherhub(myUrl As String, puttop As Boolean, metag As String, hm As Object)
+    Public Shared Function ExtractfromAetherhub(myUrl As String, puttop As Boolean, metag As String, hm As Object, fromuser As Boolean)
         'ExtractfromAetherhub(Trim(TextBox1.Text.ToString)
         '    Exit Sub
         'If myUrl = "" Then myUrl = "https://aetherhub.com/Metagame/Standard-BO1/"
         Dim doc As HtmlAgilityPack.HtmlDocument = New HtmlAgilityPack.HtmlDocument()
         doc.LoadHtml(fn.ReadWeb(Trim(myUrl)))
         'Dim MyFolderName = doc.DocumentNode.SelectSingleNode("//head/title").InnerText
-        Dim MyDir = fn.GetForgeDecksDir() & "\constructed\aetherhub\" & metag & "\"
+        Dim MyDir = "netdecks\aetherhub\" & metag & "\"
+        If fromuser = True Then
+            MyDir = "netdecks\aetherhub\" & doc.DocumentNode.SelectSingleNode("//head/title").InnerText & "\"
+        End If
+        MyDir = Regex.Replace(MyDir, "[^\u0000-\u007F]", String.Empty)
+        MyDir = Replace(MyDir, "&#x27;s", "'s")
 
         Dim div = doc.DocumentNode.SelectSingleNode("//div[@class='inner-content']")
 
@@ -1170,6 +1117,9 @@ Public Class Ext
             TitDeck = fn.RemoveWhitespace(TitDeck)
             TitDeck = Trim(TitDeck)
             TitDeck = fn.removeshit(TitDeck)
+            If TitDeck.StartsWith("-") Then
+                TitDeck = TitDeck.Substring(1)
+            End If
             If TitDeck.EndsWith("-") Then
                 TitDeck = TitDeck.Substring(0, TitDeck.Length - 1)
             End If

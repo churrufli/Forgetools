@@ -94,8 +94,8 @@ Public Class fn
     End Function
 
     Public Shared Sub checkunsupportedcards()
-        UnsupportedCards()
     End Sub
+
     Public Shared Sub UnsupportedCards()
         Try
             fn.DownloadFile(vars.BaseUrlUnsupportedCards, "fldata\unsupportedcards.txt", True)
@@ -114,7 +114,7 @@ Public Class fn
         Try
             If File.Exists(fileName) Then My.Computer.FileSystem.RenameFile(fileName, Replace(fileName, extn, ".bak"))
         Catch
-            PrintError(Err.Description)
+            'PrintError(Err.Description)
 
         End Try
         Try
@@ -135,7 +135,7 @@ Public Class fn
             myfile.Close()
             success = True
         Catch
-            PrintError(Err.Description)
+            ' PrintError(Err.Description)
         End Try
 
         Try
@@ -147,7 +147,6 @@ Public Class fn
             End If
         Catch
         End Try
-
 
     End Sub
 
