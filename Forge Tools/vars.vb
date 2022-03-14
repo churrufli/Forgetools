@@ -4,6 +4,7 @@ Public Class vars
     Public Shared MyDll As String = "ICSharpCode.SharpZipLib.dll"
     Public Shared ServerLogName As String = "updates.txt"
     Public Shared BaseUrl As String = "https://github.com/churrufli/Forgetools/releases/tag/0.2/"
+    Public Shared BaseUrlUnsupportedCards = "https://downloads.cardforge.org/decks/archive/unsupportedcards.txt"
     Public Shared MyLogServer As String = ""
     Public Shared LogName As String = "fldata/version.txt"
     Public Shared UserDir As String = Directory.GetCurrentDirectory()

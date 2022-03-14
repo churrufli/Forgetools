@@ -97,46 +97,67 @@ Public Class fn
         UnsupportedCards()
     End Sub
     Public Shared Sub UnsupportedCards()
-        ''si existe el backup lo borro
-        'If File.Exists("fldata\unsupportedcards_bu.txt") Then File.Delete("fldata\unsupportedcards_bu.txt")
-        ''si existe el normal renombro a backup antes de descargar
-        'If File.Exists("fldata\unsupportedcards.txt") Then FileSystem.Rename("fldata\unsupportedcards.txt", "fldata\unsupportedcards_bu.txt"
-        'Dim ok As Boolean = False
-        ''pruebo a descargar
         Try
-
-            fn.DownloadFile(vars.BaseUrl & "unsupportedcards.txt", "fldata\unsupportedcards.txt", True)
+            fn.DownloadFile(vars.BaseUrlUnsupportedCards, "fldata\unsupportedcards.txt", True)
             fn.WriteUserLog("unsupportedcards.txt downloaded." & vbCrLf)
             'ok = True
         Catch
             fn.WriteUserLog("Can't fetch unsupportedcards.txt from server, please try later." & vbCrLf)
         End Try
-
-        'If ok Then
-        '    Try
-        '        File.Delete("fldata\unsupportedcards_bu.txt")
-        '    Catch
-        '    End Try
-        '    fn.WriteUserLog("unsupportedcards.txt downloaded." & vbCrLf)
-        'Else
-        '    Try
-        '        FileSystem.Rename("fldata\unsupportedcards_bu.txt", "fldata\unsupportedcards.txt")
-        '    Catch
-        '    End Try
-        '    fn.WriteUserLog("Can't fetch unsupportedcards.txt from server, please try later." & vbCrLf)
-        'End If
     End Sub
 
     Public Shared Sub DownloadFile(address As String, fileName As String, Optional force_download As Boolean = False)
+        Dim fi As New IO.FileInfo(fileName)
+        Dim success As Boolean = False
+        Dim extn As String = fi.Extension
         If File.Exists(fileName) And force_download = False Then Exit Sub
         Try
+            If File.Exists(fileName) Then My.Computer.FileSystem.RenameFile(fileName, Replace(fileName, extn, ".bak"))
+        Catch
+            PrintError(Err.Description)
+
+        End Try
+        Try
             Dim instance As New WebClient
-            If File.Exists(fileName) Then File.Delete(fileName)
             instance.DownloadFile(address, fileName)
+            success = True
+        Catch
+            'PrintError(Err.Description)
+        End Try
+
+        Try
+            Dim client As WebClient = New WebClient()
+            System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12
+            Dim reply As String = client.DownloadString(address)
+            Dim myfile As System.IO.StreamWriter
+            myfile = My.Computer.FileSystem.OpenTextFileWriter(fileName, True)
+            myfile.WriteLine(reply)
+            myfile.Close()
+            success = True
         Catch
             PrintError(Err.Description)
         End Try
+
+        Try
+            If success = True Then
+                File.Delete(Replace(fileName, extn, ".bak"))
+            Else
+                My.Computer.FileSystem.RenameFile(Replace(fileName, extn, ".bak"), Replace(fileName, ".bak", extn))
+
+            End If
+        Catch
+        End Try
+
+
     End Sub
+
+    Function ReadWebAlt(myurl As String)
+        Dim client As WebClient = New WebClient()
+        System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12
+        Dim reply As String = client.DownloadString(myurl)
+        Return reply
+    End Function
+
 
     Public Shared Function ReadLogUser(idlog As String, Optional ShowMsg As Boolean = False, Optional ByVal CompareWithServer As Boolean = True) As String
         If idlog = "profileproperties" Then CompareWithServer = False

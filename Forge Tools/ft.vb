@@ -141,12 +141,10 @@ Public Class ft
     End Sub
 
     Private Sub ForgeWikiToolStripMenuItem_Click(sender As Object, e As EventArgs)
-
         Process.Start("https://www.slightlymagic.net/wiki/Forge")
     End Sub
 
     Private Sub RestartForgeLauncherToolStripMenuItem_Click(sender As Object, e As EventArgs)
-
         Application.Restart()
     End Sub
 
@@ -444,23 +442,6 @@ Public Class ft
     Private Sub Button1_Click_1(sender As Object, e As EventArgs)
         'extracttournamentmtggoldfish("https://www.mtggoldfish.com/decks/budget/Modern#paper", 100)
     End Sub
-
-    Private Sub LinkLabel4_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs)
-        Process.Start("https://drive.google.com/file/d/18WT3KM7byQIkkcK-ow7FidYmBoZYHpxi/view?usp=sharing")
-    End Sub
-
-    Private Sub LinkLabel3_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs)
-        Process.Start("https://mega.nz/#F!nhUXAYiJ!ddZy_z7Aq6nF4hCnNNestg")
-    End Sub
-
-    Private Sub LinkLabel2_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs)
-        Process.Start("https://mega.nz/#F!sEgi1A6S!l8ye2iwWDrTPHlgDp36UCw")
-    End Sub
-
-    Private Sub LinkLabel5_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs)
-        Process.Start("https://mega.nz/#F!8Mx1xaZZ!PATKOBXq0IaLNaGFsIAJ6g")
-    End Sub
-
 
 
     Public Shared Function IsFormOpen(FormType As Type) As Boolean

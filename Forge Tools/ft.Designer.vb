@@ -44,6 +44,7 @@ Partial Class ft
         Me.TabPage1 = New System.Windows.Forms.TabPage()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.by_metagame = New System.Windows.Forms.TabPage()
+        Me.Button9 = New System.Windows.Forms.Button()
         Me.insertedition = New System.Windows.Forms.CheckBox()
         Me.extract1 = New System.Windows.Forms.Button()
         Me.chktopnumber = New System.Windows.Forms.CheckBox()
@@ -66,9 +67,6 @@ Partial Class ft
         Me.Button3 = New System.Windows.Forms.Button()
         Me.TextBox1 = New System.Windows.Forms.TextBox()
         Me.Other_Formats = New System.Windows.Forms.TabPage()
-        Me.GroupBox1 = New System.Windows.Forms.GroupBox()
-        Me.cardtofind = New System.Windows.Forms.TextBox()
-        Me.Button7 = New System.Windows.Forms.Button()
         Me.extract3 = New System.Windows.Forms.Button()
         Me.howmuch2 = New System.Windows.Forms.ComboBox()
         Me.metag2 = New System.Windows.Forms.ComboBox()
@@ -77,9 +75,11 @@ Partial Class ft
         Me.Button2 = New System.Windows.Forms.Button()
         Me.Button4 = New System.Windows.Forms.Button()
         Me.Button5 = New System.Windows.Forms.Button()
+        Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.cardtofind = New System.Windows.Forms.TextBox()
+        Me.Button7 = New System.Windows.Forms.Button()
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
         Me.BackgroundWorker1 = New System.ComponentModel.BackgroundWorker()
-        Me.Button9 = New System.Windows.Forms.Button()
         Me.MenuGeneral.SuspendLayout()
         CType(Me.PictureBox5, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox6, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -93,9 +93,9 @@ Partial Class ft
         Me.By_Tournament.SuspendLayout()
         Me.AetherHub_User.SuspendLayout()
         Me.Other_Formats.SuspendLayout()
-        Me.GroupBox1.SuspendLayout()
         Me.TabPage3.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
+        Me.GroupBox1.SuspendLayout()
         Me.SuspendLayout()
         '
         'txlog
@@ -279,6 +279,16 @@ Partial Class ft
         Me.by_metagame.Size = New System.Drawing.Size(671, 77)
         Me.by_metagame.TabIndex = 2
         Me.by_metagame.Text = "MTGGoldfish Top"
+        '
+        'Button9
+        '
+        Me.Button9.Font = New System.Drawing.Font("Microsoft Sans Serif", 6.0!)
+        Me.Button9.Location = New System.Drawing.Point(447, 53)
+        Me.Button9.Name = "Button9"
+        Me.Button9.Size = New System.Drawing.Size(204, 18)
+        Me.Button9.TabIndex = 54
+        Me.Button9.Text = "Zip Selected Metagame Decks"
+        Me.Button9.UseVisualStyleBackColor = True
         '
         'insertedition
         '
@@ -518,35 +528,6 @@ Partial Class ft
         Me.Other_Formats.TabIndex = 5
         Me.Other_Formats.Text = "MTGGoldfish Users Formats"
         '
-        'GroupBox1
-        '
-        Me.GroupBox1.Controls.Add(Me.cardtofind)
-        Me.GroupBox1.Controls.Add(Me.Button7)
-        Me.GroupBox1.Location = New System.Drawing.Point(73, 235)
-        Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(675, 102)
-        Me.GroupBox1.TabIndex = 54
-        Me.GroupBox1.TabStop = False
-        Me.GroupBox1.Text = "Decks Tools for Top Formats Selected Metagame"
-        Me.GroupBox1.Visible = False
-        '
-        'cardtofind
-        '
-        Me.cardtofind.Location = New System.Drawing.Point(13, 18)
-        Me.cardtofind.Name = "cardtofind"
-        Me.cardtofind.Size = New System.Drawing.Size(338, 18)
-        Me.cardtofind.TabIndex = 50
-        '
-        'Button7
-        '
-        Me.Button7.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.0!)
-        Me.Button7.Location = New System.Drawing.Point(357, 17)
-        Me.Button7.Name = "Button7"
-        Me.Button7.Size = New System.Drawing.Size(298, 19)
-        Me.Button7.TabIndex = 51
-        Me.Button7.Text = "Find Card in Selected Metagame Decks"
-        Me.Button7.UseVisualStyleBackColor = True
-        '
         'extract3
         '
         Me.extract3.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.2!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -628,19 +609,37 @@ Partial Class ft
         Me.Button5.Text = "Generate Cards File With Last Edition"
         Me.Button5.UseVisualStyleBackColor = True
         '
+        'GroupBox1
+        '
+        Me.GroupBox1.Controls.Add(Me.cardtofind)
+        Me.GroupBox1.Controls.Add(Me.Button7)
+        Me.GroupBox1.Location = New System.Drawing.Point(73, 235)
+        Me.GroupBox1.Name = "GroupBox1"
+        Me.GroupBox1.Size = New System.Drawing.Size(675, 102)
+        Me.GroupBox1.TabIndex = 54
+        Me.GroupBox1.TabStop = False
+        Me.GroupBox1.Text = "Decks Tools for Top Formats Selected Metagame"
+        Me.GroupBox1.Visible = False
+        '
+        'cardtofind
+        '
+        Me.cardtofind.Location = New System.Drawing.Point(13, 18)
+        Me.cardtofind.Name = "cardtofind"
+        Me.cardtofind.Size = New System.Drawing.Size(338, 18)
+        Me.cardtofind.TabIndex = 50
+        '
+        'Button7
+        '
+        Me.Button7.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.0!)
+        Me.Button7.Location = New System.Drawing.Point(357, 17)
+        Me.Button7.Name = "Button7"
+        Me.Button7.Size = New System.Drawing.Size(298, 19)
+        Me.Button7.TabIndex = 51
+        Me.Button7.Text = "Find Card in Selected Metagame Decks"
+        Me.Button7.UseVisualStyleBackColor = True
+        '
         'Timer1
         '
-        '
-        'Button9
-        '
-        Me.Button9.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.0!)
-        Me.Button9.Location = New System.Drawing.Point(447, 53)
-        Me.Button9.Name = "Button9"
-        Me.Button9.Size = New System.Drawing.Size(204, 18)
-        Me.Button9.TabIndex = 54
-        Me.Button9.Text = "Zip Selected Metagame Decks"
-        Me.Button9.UseVisualStyleBackColor = True
-        Me.Button9.Visible = False
         '
         'ft
         '
@@ -659,7 +658,7 @@ Partial Class ft
         Me.MaximizeBox = False
         Me.Name = "ft"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
-        Me.Text = "Forge Tools - Deck Extractor for Devs"
+        Me.Text = "Forge Tools - Deck Extractor for Devs - 14 March"
         Me.MenuGeneral.ResumeLayout(False)
         Me.MenuGeneral.PerformLayout()
         CType(Me.PictureBox5, System.ComponentModel.ISupportInitialize).EndInit()
@@ -678,10 +677,10 @@ Partial Class ft
         Me.AetherHub_User.ResumeLayout(False)
         Me.AetherHub_User.PerformLayout()
         Me.Other_Formats.ResumeLayout(False)
-        Me.GroupBox1.ResumeLayout(False)
-        Me.GroupBox1.PerformLayout()
         Me.TabPage3.ResumeLayout(False)
         Me.GroupBox2.ResumeLayout(False)
+        Me.GroupBox1.ResumeLayout(False)
+        Me.GroupBox1.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout
 

@@ -124,7 +124,7 @@ Public Class Ext
             Case "Standard", "Modern", "Pioneer", "Pauper", "Legacy", "Vintage", "Historic", "Penny Dreadful",
                 "Budget Modern", "Budget Standard"
                 MyDir = fn.GetForgeDecksDir() & "\constructed\mtggoldfish\"
-                If fn.ReadLogUser("preserve_decks", False) = "yes" Then
+                If fn.ReadLogUser("preserve_decks", False, False) = "yes" Then
                     MyFolder = MyDir & "\" & metag & "\" & (Replace(DateTime.Today.ToShortDateString, "/", "-")) &
                                "\"
                     Dim ruta As String = MyDir & "\" & metag & "\"
@@ -1178,7 +1178,9 @@ Public Class Ext
             End If
             TitDeck = Trim(TitDeck)
             TitDeck = Regex.Replace(TitDeck, "[^\u0000-\u007F]", String.Empty)
-            TitDeck = "[" & metag & "] " & TitDeck
+            If puttop Then
+                TitDeck = "[" & metag & "] " & TitDeck
+            End If
 
             Dim Deck As String = "[metadata]" & vbCrLf & "Name=" & TitDeck & vbCrLf & "[Main]" & vbCrLf & fn.ReadWeb("https://aetherhub.com" & mylink)
             Deck = Replace(Deck, vbCrLf & vbCrLf, vbCrLf & "[sideboard]" & vbCrLf)
