@@ -365,7 +365,6 @@ Partial Class preferences
     Friend WithEvents decksdirbutton As Button
     Friend WithEvents decks_dir As TextBox
     Friend WithEvents Label1 As Label
-    Friend WithEvents FolderBrowserDialog1 As FolderBrowserDialog
     Friend WithEvents gauntletsdirbutton As Button
     Friend WithEvents gauntlet_dir As TextBox
     Friend WithEvents Label2 As Label
@@ -390,4 +389,5 @@ Partial Class preferences
     Friend WithEvents GroupBox2 As GroupBox
     Friend WithEvents chk_delcardordeck As CheckBox
     Friend WithEvents checklauncherupdates As CheckBox
+    Public WithEvents FolderBrowserDialog1 As FolderBrowserDialog
 End Class

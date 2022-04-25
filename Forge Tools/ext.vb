@@ -3,6 +3,8 @@ Imports System.Globalization
 Imports System.Runtime.CompilerServices
 Imports System.Text
 Imports System.Text.RegularExpressions
+Imports OpenQA.Selenium
+Imports OpenQA.Selenium.Chrome
 
 Public Class Ext
     Public Shared Sub Cardsdata()
@@ -11,11 +13,21 @@ Public Class Ext
     End Sub
     Public Shared Function GetTitDeck(tx) As String
         Dim TitDeck = ""
-        TitDeck = fn.FindIt(tx, "<title>", "Deck for Magic: the Gathering")
+        If TitDeck = Nothing Then
+            fn.GetDelimitedText(tx, "<title>", "</title>", 1)
+        End If
+
+        If TitDeck = Nothing Then
+            TitDeck = fn.FindIt(tx, "<title>", "Deck for Magic: the Gathering")
+        End If
         If TitDeck = Nothing Then
             TitDeck = fn.FindIt(tx, "<title>", "</title>")
         End If
-        TitDeck = Replace(TitDeck, " &#39;", "'")
+
+        If TitDeck = Nothing Then
+            Return "Untitled"
+        End If
+        TitDeck = Replace(TitDeck, "&#39;", "'")
         If TitDeck = "" Then TitDeck = fn.FindIt(tx, "<title>", " Deck")
         TitDeck = Trim(TitDeck)
         TitDeck = Replace(TitDeck, """", "'")
@@ -32,8 +44,10 @@ Public Class Ext
             If TitDeck.Contains(" by ") Then TitDeck = Split(TitDeck, " by ")(0).ToString
             If TitDeck.Contains(" Deck") Then TitDeck = Split(TitDeck, " Deck")(0).ToString
         Else
-            TitDeck = TitDeck
+            Return Nothing
+            Exit Function
         End If
+
 
         tempParts = startString.Split(" ")
 
@@ -153,6 +167,9 @@ Public Class Ext
         Try
 
             Dim cuentaveces As Long = 2
+            Dim cuentacosas = CInt(checkurls.Length - (ft.mtggoldfishfrom.Text))
+            'If cuentacosas < hm Then
+            'antes era asi: 
             If checkurls.Length < hm Then
                 'si es menor que el total de la pagina voy a la otra y añado links
                 ' While hm > checkurls.Length
@@ -171,7 +188,7 @@ Public Class Ext
                                 Case "legacy"
                                     tx2 =
                                         fn.ReadWeb(
-                                            "https: //www.mtggoldfish.com/archetype/other-315fcdf4-70d6-41b8-bd39-699032073591#paper")
+                                            "https://www.mtggoldfish.com/archetype/other-315fcdf4-70d6-41b8-bd39-699032073591#paper")
                                 Case "vintage"
                                     tx2 =
                                         fn.ReadWeb(
@@ -324,6 +341,12 @@ Public Class Ext
                 'ESTABLEZCO EL TÍTULO DEL MAZO
                 If TitDeck = "" Then
                     TitDeck = GetTitDeck(DeckPage)
+                    If TitDeck = Nothing Then
+                        fn.WriteUserLog("Can't get more decks, not exists or try again between range of numbers." & vbCrLf)
+                        ft.extract1.Enabled = True
+                        Exit Sub
+
+                    End If
                     If TitDeck.Contains(metag) = True Then
                         TitDeck = Replace(TitDeck, metag, "")
                     End If
@@ -1046,6 +1069,12 @@ Public Class Ext
             End If
         Next li2
 
+        Dim paginacion = doc.DocumentNode.SelectSingleNode("//ul[@class='pagination']")
+        If paginacion IsNot Nothing Then
+            links = paginacion.Descendants("a").[Select](Function(a) a.GetAttributeValue("href", "")).ToList()
+        End If
+
+
         Dim i = 0
         Dim mycounter = 0
         Dim my2counter = 0
@@ -1140,5 +1169,16 @@ Public Class Ext
         Next
     End Function
 
+    Public Shared Function ExtractfromAetherhubAlt(url)
+        Dim chromeDriver As OpenQA.Selenium.IWebDriver = New ChromeDriver()
+        chromeDriver.Navigate().GoToUrl(url.ToString)
+
+        Dim elements As IList(Of IWebElement) = chromeDriver.FindElements(By.Id("metaHubTable_wrapper"))
+
+
+        For i = 0 To elements.Count - 1
+            MsgBox(elements.Item(i))
+        Next
+    End Function
 
 End Class

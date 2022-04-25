@@ -107,7 +107,6 @@ Public Class ft
     End Sub
 
     Private Sub extract_Click(sender As Object, e As EventArgs) Handles extract1.Click
-        fn.checkunsupportedcards()
 
         If InStr(metagame.SelectedItem.ToString, "-") = 0 Then
             Ext.ExtractTopMtggoldfish(metagame.SelectedItem.ToString, howmuch.Text, chktopnumber.Checked,
@@ -414,7 +413,10 @@ Public Class ft
 
                 Deck = Replace(Deck, "[[", "[")
                 Deck = Replace(Deck, "]]", "]")
-                TitDeck = fn.FindIt(DeckPage, "<title>", "</title>")
+                TitDeck = Ext.GetTitDeck(DeckPage)
+                If TitDeck = "Untitled" Then
+                    Dim asssssa As String = ""
+                End If
                 TitDeck = fn.Normalize(TitDeck)
                 TitDeck = Replace(TitDeck, "_", " ")
                 TitDeck = Replace(TitDeck, """", "'")
@@ -1290,6 +1292,14 @@ Public Class ft
         fn.WriteUserLog("Zipped " & elfichero & vbCrLf)
 
     End Sub
+
+    Private Sub Button6_Click_1(sender As Object, e As EventArgs)
+        Dim metag = Replace(ComboBox1.Text, " ", "-")
+
+        Ext.ExtractfromAetherhubAlt("https://aetherhub.com/Metagame/" & metag & "/")
+    End Sub
+
+
 
 
     'Public Shared Function ExtractfromAetherhub(myUrl)

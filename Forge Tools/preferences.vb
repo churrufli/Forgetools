@@ -63,7 +63,6 @@
         fn.UpdateLog("removepreviousjarfiles", IIf(removepreviousjarfiles.Checked, "yes", "no"))
         fn.UpdateLog("delcardordeck", IIf(chk_delcardordeck.Checked, "yes", "no"))
         fn.UpdateLog("checklauncherupdates", IIf(checklauncherupdates.Checked, "yes", "no"))
-
         ft.txlog.Text = ""
         Application.Restart()
     End Sub

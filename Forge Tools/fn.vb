@@ -1003,4 +1003,33 @@ Problem:
         Catch
         End Try
     End Function
+
+    Public Shared Function GetDelimitedText(Text As String, OpenDelimiter As String,
+  CloseDelimiter As String, index As Long) As String
+        Dim i As Long, j As Long
+
+        If index = 0 Then index = 1
+
+        ' search the opening mark
+        i = InStr(index, Text, OpenDelimiter, vbTextCompare)
+        If i = 0 Then
+            index = 0
+            Exit Function
+        End If
+        i = i + Len(OpenDelimiter)
+
+        ' search the closing mark
+        j = InStr(i + 1, Text, CloseDelimiter, vbTextCompare)
+        If j = 0 Then
+            index = 0
+            Exit Function
+        End If
+
+        ' get the text between the two Delimiters
+        GetDelimitedText = Mid$(Text, i, j - i)
+
+        ' advanced the index after the closing Delimiter
+        index = j + Len(CloseDelimiter)
+
+    End Function
 End Class

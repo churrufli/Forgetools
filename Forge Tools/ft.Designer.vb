@@ -338,7 +338,7 @@ Partial Class ft
         Me.metagame.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.metagame.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.8!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.metagame.FormattingEnabled = True
-        Me.metagame.Items.AddRange(New Object() {"Standard", "Modern", "Pioneer", "Pauper", "Legacy", "Vintage", "Historic", "Alchemy", "Penny Dreadful", "Commander 1v1", "Commander", "Brawl", "Historic Brawl"})
+        Me.metagame.Items.AddRange(New Object() {"Standard", "Modern", "Pioneer", "Pauper", "Legacy", "Vintage", "Historic", "Alchemy", "Penny Dreadful", "Commander 1v1", "Commander", "Brawl", "Historic Brawl", "Explorer"})
         Me.metagame.Location = New System.Drawing.Point(40, 23)
         Me.metagame.Name = "metagame"
         Me.metagame.Size = New System.Drawing.Size(123, 21)
@@ -396,7 +396,7 @@ Partial Class ft
         Me.ComboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox1.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.8!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.ComboBox1.FormattingEnabled = True
-        Me.ComboBox1.Items.AddRange(New Object() {"Standard BO1", "Traditional Standard", "Alchemy BO1", "Traditional Alchemy", "Historic BO1", "Traditional Historic", "Brawl", "Historic Brawl", "Pioneer", "Modern", "Legacy", "Vintage"})
+        Me.ComboBox1.Items.AddRange(New Object() {"Standard BO1", "Traditional Standard", "Alchemy BO1", "Traditional Alchemy", "Historic BO1", "Traditional Historic", "Brawl", "Historic Brawl", "Pioneer", "Modern", "Legacy", "Vintage", "Traditional Explorer", "Explorer BO1"})
         Me.ComboBox1.Location = New System.Drawing.Point(40, 23)
         Me.ComboBox1.Name = "ComboBox1"
         Me.ComboBox1.Size = New System.Drawing.Size(123, 21)
@@ -659,7 +659,7 @@ Partial Class ft
         Me.MaximizeBox = False
         Me.Name = "ft"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
-        Me.Text = "Forge Tools - Deck Extractor for Devs - 14 March"
+        Me.Text = "Forge Tools - Deck Extractor for Devs - 16 March"
         Me.MenuGeneral.ResumeLayout(False)
         Me.MenuGeneral.PerformLayout()
         CType(Me.PictureBox5, System.ComponentModel.ISupportInitialize).EndInit()
@@ -683,9 +683,9 @@ Partial Class ft
         Me.GroupBox1.ResumeLayout(False)
         Me.GroupBox1.PerformLayout()
         Me.ResumeLayout(False)
-        Me.PerformLayout
+        Me.PerformLayout()
 
-End Sub
+    End Sub
     Friend WithEvents txlog As System.Windows.Forms.TextBox
     Friend WithEvents FolderBrowserDialog1 As System.Windows.Forms.FolderBrowserDialog
     Friend WithEvents FolderBrowserDialog2 As System.Windows.Forms.FolderBrowserDialog
