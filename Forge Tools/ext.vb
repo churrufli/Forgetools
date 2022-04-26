@@ -1146,17 +1146,24 @@ Public Class Ext
             If TitDeck.Contains(metag) = True Then
                 TitDeck = Replace(TitDeck, metag, "")
             End If
-            TitDeck = Replace(TitDeck, "   ", " ")
-            TitDeck = Replace(TitDeck, "  ", " ")
-            TitDeck = Replace(TitDeck, " - - ", " - ")
-            TitDeck = Trim(TitDeck)
+
             TitDeck = Replace(TitDeck, "  ", " ")
             If TitDeck.Contains(metag) = True Then
                 TitDeck = Replace(TitDeck, metag, "")
             End If
+            TitDeck = Replace(TitDeck, Replace(metag, " ", "-"), "")
+            Dim metag3 = Replace(metag, " ", "-")
+            TitDeck = Replace(TitDeck, metag3, "")
+            Dim metag4 = Replace(metag, "-", " ")
+            TitDeck = Replace(TitDeck, metag4, "")
+
             TitDeck = fn.RemoveWhitespace(TitDeck)
             TitDeck = Trim(TitDeck)
             TitDeck = fn.removeshit(TitDeck)
+            TitDeck = Replace(TitDeck, "   ", " ")
+            TitDeck = Replace(TitDeck, "  ", " ")
+            TitDeck = Replace(TitDeck, " - - ", " - ")
+            TitDeck = Trim(TitDeck)
             If TitDeck.StartsWith("-") Then
                 TitDeck = TitDeck.Substring(1)
             End If
@@ -1169,7 +1176,9 @@ Public Class Ext
             TitDeck = Regex.Replace(TitDeck, "[^\u0000-\u007F]", String.Empty)
             TitDeck = Replace(TitDeck, "Historic Metagame", "")
             TitDeck = Replace(TitDeck, "Alchemy Metagame", "")
-
+            TitDeck = Replace(TitDeck, " - Traditional", "")
+            TitDeck = Replace(TitDeck, " - Standard", "")
+            TitDeck = Replace(TitDeck, " - Historic", "")
 
             TitDeck = Trim(TitDeck)
             TitDeck = fn.RemoveWhitespace(TitDeck)
