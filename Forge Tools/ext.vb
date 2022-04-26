@@ -1130,7 +1130,6 @@ Public Class Ext
                 End If
             Next li2
 
-
             If puttop Then
                 Dim num As String = i
                 If Len(num) <= 1 Then
