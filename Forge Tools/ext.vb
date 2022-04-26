@@ -106,7 +106,7 @@ Public Class Ext
                           "#paper"
                 Case "Budget Commander"
                     url = vars.mtggf & "/decks/budget/commander/" & "#paper"
-                Case "Standard", "Modern", "Pioneer", "Historic", "Alchemy", "Pauper", "Legacy", "Vintage", "Penny Dreadful", "Commander 1v1", "Commander", "Historic Brawl", "Brawl"
+                Case "Standard", "Modern", "Pioneer", "Historic", "Alchemy", "Pauper", "Legacy", "Vintage", "Penny Dreadful", "Commander 1v1", "Commander", "Historic Brawl", "Brawl", "Explorer"
                     url = vars.mtggf & "/metagame/" & LCase(fn.Normalize(metag)) & "/full#paper"
                 Case Else
                     url = vars.mtggf & "/deck/custom/" & LCase(Replace(metag, " ", "_")) & "#paper"
@@ -1157,6 +1157,8 @@ Public Class Ext
             End If
             TitDeck = Trim(TitDeck)
             TitDeck = Regex.Replace(TitDeck, "[^\u0000-\u007F]", String.Empty)
+
+            metag = Replace(metag, "Traditional-", "")
             If puttop Then
                 TitDeck = "[" & metag & "] " & TitDeck
             End If
