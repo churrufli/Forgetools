@@ -13,6 +13,17 @@ Public Class Ext
     End Sub
     Public Shared Function GetTitDeck(tx) As String
         Dim TitDeck = ""
+        Try
+            If TitDeck = Nothing Then
+                TitDeck = fn.GetDelimitedText(tx, "class=""w-100 pb-2"">", "</div>", 1)
+                TitDeck = Split(TitDeck, "</h3>")(0).ToString
+                TitDeck = fn.HTMLToText(TitDeck)
+                TitDeck = fn.RemoveWhitespace(TitDeck)
+            End If
+        Catch
+        End Try
+
+
         If TitDeck = Nothing Then
             fn.GetDelimitedText(tx, "<title>", "</title>", 1)
         End If
@@ -1138,6 +1149,7 @@ Public Class Ext
             End If
             TitDeck = Replace(TitDeck, "   ", " ")
             TitDeck = Replace(TitDeck, "  ", " ")
+            TitDeck = Replace(TitDeck, " - - ", " - ")
             TitDeck = Trim(TitDeck)
             TitDeck = Replace(TitDeck, "  ", " ")
             If TitDeck.Contains(metag) = True Then
@@ -1172,7 +1184,11 @@ Public Class Ext
             Dim Deck As String = "[metadata]" & vbCrLf & "Name=" & TitDeck & vbCrLf & "[Main]" & vbCrLf & fn.ReadWeb("https://aetherhub.com" & mylink)
             Deck = Replace(Deck, vbCrLf & vbCrLf, vbCrLf & "[sideboard]" & vbCrLf)
             Deck = Replace(Deck, vbLf & vbLf, vbLf & "[sideboard]" & vbCrLf)
-            Deck = Replace(Deck, "Commander" & vbCrLf, "[Commander]" & vbCrLf)
+            Deck = Replace(Deck, vbCrLf & "Commander" & vbCrLf, vbCrLf & "[Commander]" & vbCrLf)
+            If metag.Contains("Brawl") = True Then
+                Deck = Replace(Deck, "[sideboard]", "[Commander]")
+            End If
+
             fn.WriteUserLog(fn.StringToDeck(MyDir & "/", Deck, TitDeck))
         Next
     End Function
