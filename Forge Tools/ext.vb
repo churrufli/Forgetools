@@ -1155,10 +1155,16 @@ Public Class Ext
             If TitDeck.EndsWith("|") Then
                 TitDeck = TitDeck.Substring(0, TitDeck.Length - 1)
             End If
-            TitDeck = Trim(TitDeck)
             TitDeck = Regex.Replace(TitDeck, "[^\u0000-\u007F]", String.Empty)
+            TitDeck = Replace(TitDeck, "Historic Metagame", "")
+            TitDeck = Replace(TitDeck, "Alchemy Metagame", "")
+
+
+            TitDeck = Trim(TitDeck)
+            TitDeck = fn.RemoveWhitespace(TitDeck)
 
             metag = Replace(metag, "Traditional-", "")
+
             If puttop Then
                 TitDeck = "[" & metag & "] " & TitDeck
             End If
