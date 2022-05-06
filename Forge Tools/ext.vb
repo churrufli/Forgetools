@@ -331,21 +331,21 @@ Public Class Ext
 
                 Dim laweb As String = vars.mtggf & urls(i)
                 DeckPage = fn.ReadWeb(laweb)
-
-                If _
-                    (InStr(metag, "Commander") > 0 Or InStr(metag, "Tiny") > 0) And
-                    InStr(DeckPage, "<h3>Similar Decks</h3>", CompareMethod.Text) > 0 Then
-                    'puede que no tenga similar decks 
-                    Dim t2 As String = Split(DeckPage, "<h3>Similar Decks</h3>")(1).ToString
-                    TitDeck = GetTitDeck(DeckPage)
-                    Dim links = extlinks(t2, "/deck/")
-                    Dim aurls() As String = Split(links, vbCrLf)
-                    For a = 0 To urls.Length - 1
-                        Dim web = ("https//www.mtggoldfish.com" & aurls(0))
-                        DeckPage = fn.ReadWeb(web)
-                        If a = 0 Then Exit For
-                    Next a
-                End If
+                'COMMENT HERE TO TRY TO GET COMMANDER LIST NOT FROM USERS
+                'If _
+                '    (InStr(metag, "Commander") > 0 Or InStr(metag, "Tiny") > 0) And
+                '    InStr(DeckPage, "<h3>Similar Decks</h3>", CompareMethod.Text) > 0 Then
+                '    'puede que no tenga similar decks 
+                '    Dim t2 As String = Split(DeckPage, "<h3>Similar Decks</h3>")(1).ToString
+                '    TitDeck = GetTitDeck(DeckPage)
+                '    Dim links = extlinks(t2, "/deck/")
+                '    Dim aurls() As String = Split(links, vbCrLf)
+                '    For a = 0 To urls.Length - 1
+                '        Dim web = ("https//www.mtggoldfish.com" & aurls(0))
+                '        DeckPage = fn.ReadWeb(web)
+                '        If a = 0 Then Exit For
+                '    Next a
+                'End If
 
                 UrlDeck = extmtggoldfish(DeckPage, "/deck/download/")
 
@@ -1179,6 +1179,8 @@ Public Class Ext
             TitDeck = Replace(TitDeck, " - Traditional", "")
             TitDeck = Replace(TitDeck, " - Standard", "")
             TitDeck = Replace(TitDeck, " - Historic", "")
+            TitDeck = Replace(TitDeck, " - Alchemy ", "")
+
 
             TitDeck = Trim(TitDeck)
             TitDeck = fn.RemoveWhitespace(TitDeck)

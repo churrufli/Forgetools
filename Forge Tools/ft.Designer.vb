@@ -554,7 +554,7 @@ Partial Class ft
         Me.metag2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.metag2.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.8!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.metag2.FormattingEnabled = True
-        Me.metag2.Items.AddRange(New Object() {"Standard", "Modern", "Pioneer", "Historic", "Alchemy", "Pauper", "Legacy", "Vintage", "Penny Dreadful", "Commander", "Brawl", "Duel Commander", "Alchemy", "Arena Singleton", "Historic Brawl", "Gladiator", "Artisan Historic", "Cascade", "Oathbreaker", "Canadian Highlander", "Old School", "Premodern", "No Banned List Modern", "Frontier", "Tiny Leaders", "Limited", "Block", "Free Form"})
+        Me.metag2.Items.AddRange(New Object() {"Standard", "Modern", "Pioneer", "Historic", "Alchemy", "Pauper", "Legacy", "Vintage", "Penny Dreadful", "Commander", "Brawl", "Duel Commander", "Alchemy", "Arena Singleton", "Historic Brawl", "Gladiator", "Artisan Historic", "Cascade", "Oathbreaker", "Canadian Highlander", "Old School", "Premodern", "No Banned List Modern", "Frontier", "Tiny Leaders", "Explorer", "Limited", "Block", "Free Form"})
         Me.metag2.Location = New System.Drawing.Point(47, 23)
         Me.metag2.Name = "metag2"
         Me.metag2.Size = New System.Drawing.Size(231, 21)
@@ -659,7 +659,7 @@ Partial Class ft
         Me.MaximizeBox = False
         Me.Name = "ft"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
-        Me.Text = "Forge Tools - Deck Extractor for Devs - 16 March"
+        Me.Text = "Forge Tools - Deck Extractor for Devs - 6 May"
         Me.MenuGeneral.ResumeLayout(False)
         Me.MenuGeneral.PerformLayout()
         CType(Me.PictureBox5, System.ComponentModel.ISupportInitialize).EndInit()
