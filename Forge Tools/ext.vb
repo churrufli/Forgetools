@@ -1180,7 +1180,7 @@ Public Class Ext
             TitDeck = Replace(TitDeck, " - Standard", "")
             TitDeck = Replace(TitDeck, " - Historic", "")
             TitDeck = Replace(TitDeck, " - Alchemy ", "")
-
+            TitDeck = Replace(TitDeck, " - Explorer ", "")
 
             TitDeck = Trim(TitDeck)
             TitDeck = fn.RemoveWhitespace(TitDeck)

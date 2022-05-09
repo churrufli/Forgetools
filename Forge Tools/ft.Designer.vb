@@ -335,7 +335,6 @@ Partial Class ft
         '
         'metagame
         '
-        Me.metagame.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.metagame.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.8!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.metagame.FormattingEnabled = True
         Me.metagame.Items.AddRange(New Object() {"Standard", "Modern", "Pioneer", "Pauper", "Legacy", "Vintage", "Historic", "Alchemy", "Penny Dreadful", "Commander 1v1", "Commander", "Brawl", "Historic Brawl", "Explorer"})
@@ -393,10 +392,9 @@ Partial Class ft
         '
         'ComboBox1
         '
-        Me.ComboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox1.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.8!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.ComboBox1.FormattingEnabled = True
-        Me.ComboBox1.Items.AddRange(New Object() {"Standard BO1", "Traditional Standard", "Alchemy BO1", "Traditional Alchemy", "Historic BO1", "Traditional Historic", "Brawl", "Historic Brawl", "Pioneer", "Modern", "Legacy", "Vintage", "Traditional Explorer", "Explorer BO1"})
+        Me.ComboBox1.Items.AddRange(New Object() {"Standard BO1", "Traditional Standard", "Alchemy BO1", "Traditional Alchemy", "Historic BO1", "Traditional Historic", "Brawl", "Historic Brawl", "Pioneer", "Modern", "Legacy", "Vintage", "Traditional Explorer", "Explorer", "Explorer BO1"})
         Me.ComboBox1.Location = New System.Drawing.Point(40, 23)
         Me.ComboBox1.Name = "ComboBox1"
         Me.ComboBox1.Size = New System.Drawing.Size(123, 21)
@@ -551,7 +549,6 @@ Partial Class ft
         '
         'metag2
         '
-        Me.metag2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.metag2.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.8!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.metag2.FormattingEnabled = True
         Me.metag2.Items.AddRange(New Object() {"Standard", "Modern", "Pioneer", "Historic", "Alchemy", "Pauper", "Legacy", "Vintage", "Penny Dreadful", "Commander", "Brawl", "Duel Commander", "Alchemy", "Arena Singleton", "Historic Brawl", "Gladiator", "Artisan Historic", "Cascade", "Oathbreaker", "Canadian Highlander", "Old School", "Premodern", "No Banned List Modern", "Frontier", "Tiny Leaders", "Explorer", "Limited", "Block", "Free Form"})
@@ -659,7 +656,7 @@ Partial Class ft
         Me.MaximizeBox = False
         Me.Name = "ft"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
-        Me.Text = "Forge Tools - Deck Extractor for Devs - 6 May"
+        Me.Text = "Forge Tools | 9 May"
         Me.MenuGeneral.ResumeLayout(False)
         Me.MenuGeneral.PerformLayout()
         CType(Me.PictureBox5, System.ComponentModel.ISupportInitialize).EndInit()
