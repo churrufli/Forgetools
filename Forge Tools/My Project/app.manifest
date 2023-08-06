@@ -5,14 +5,14 @@
     <security>
       <requestedPrivileges xmlns="urn:schemas-microsoft-com:asm.v3">
         <!-- Opciones del manifiesto UAC
-             Si quiere cambiar el nivel del Control de cuentas de usuario de Windows reemplace el 
+             Si quiere cambiar el nivel del Control de cuentas de usuario de Windows reemplace el
              nodo requestedExecutionLevel por uno de los siguientes.
 
         <requestedExecutionLevel  level="asInvoker" uiAccess="false" />
         <requestedExecutionLevel  level="requireAdministrator" uiAccess="false" />
         <requestedExecutionLevel  level="highestAvailable" uiAccess="false" />
 
-            Especificar el elemento requestedExecutionLevel deshabilitará la virtualización de archivos y registros. 
+            Especificar el elemento requestedExecutionLevel deshabilitará la virtualización de archivos y registros.
             Quite este elemento si la aplicación necesita esta virtualización para la compatibilidad
             con versiones anteriores.
         -->
@@ -27,7 +27,7 @@
   <compatibility xmlns="urn:schemas-microsoft-com:compatibility.v1">
     <application>
       <!-- Una lista de las versiones de Windows en la que se ha probado esta aplicación y
-           con la que se ha diseñado para que trabaje. Quite la marca de comentario de los elementos adecuados y Windows seleccionará 
+           con la que se ha diseñado para que trabaje. Quite la marca de comentario de los elementos adecuados y Windows seleccionará
            automáticamente el entorno más compatible. -->
       <!-- Windows Vista -->
       <!--<supportedOS Id="{e2011457-1546-43c5-a5fe-008deee3d3f0}" />-->
@@ -42,8 +42,8 @@
     </application>
   </compatibility>
   <!-- Indica que la aplicación tiene reconocimiento de PPP y Windows no la escalará de forma automática a
-       PPP superiores. Las aplicaciones de Windows Presentation Foundation (WPF) tienen reconocimiento de PPP automático y no necesitan 
-       participar. Las aplicaciones de Windows Forms que apuntan a .NET Framework 4.6 que participan en esta configuración, también 
+       PPP superiores. Las aplicaciones de Windows Presentation Foundation (WPF) tienen reconocimiento de PPP automático y no necesitan
+       participar. Las aplicaciones de Windows Forms que apuntan a .NET Framework 4.6 que participan en esta configuración, también
        deben establecer la configuración 'EnableWindowsFormsHighDpiAutoResizing' en 'true' en app.config. -->
   <!--
   <application xmlns="urn:schemas-microsoft-com:asm.v3">
@@ -62,8 +62,7 @@
           version="6.0.0.0"
           processorArchitecture="*"
           publicKeyToken="6595b64144ccf1df"
-          language="*"
-        />
+          language="*" />
     </dependentAssembly>
   </dependency>
   -->

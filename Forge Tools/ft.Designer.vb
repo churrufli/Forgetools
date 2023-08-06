@@ -656,7 +656,7 @@ Partial Class ft
         Me.MaximizeBox = False
         Me.Name = "ft"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
-        Me.Text = "Forge Tools | 9 May"
+        Me.Text = "Forge Tools | 7 August"
         Me.MenuGeneral.ResumeLayout(False)
         Me.MenuGeneral.PerformLayout()
         CType(Me.PictureBox5, System.ComponentModel.ISupportInitialize).EndInit()

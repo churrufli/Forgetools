@@ -1,14 +1,6 @@
-﻿
-Imports System.ComponentModel
-Imports System.Net
-Imports System.Runtime.CompilerServices
+﻿Imports System.Net
 Imports System.Timers
-Imports HtmlAgilityPack
 Imports ICSharpCode.SharpZipLib.Zip
-Imports System.Xml
-Imports System
-Imports OpenQA.Selenium
-Imports OpenQA.Selenium.Chrome
 
 Public Class ft
     Shared todas
@@ -164,7 +156,6 @@ Public Class ft
         Ext.ExtractTournamentMtgtop8()
     End Sub
 
-
     Private Sub PicsFolderToolStripMenuItem_Click(sender As Object, e As EventArgs)
         Try
             Process.Start(fn.ReadLogUser("pics_dir", False))
@@ -179,8 +170,6 @@ Public Class ft
         fn.UpdateLog("lastupdate", "")
         Application.Restart()
     End Sub
-
-
 
     Private Sub CancelButton1_Click(sender As Object, e As EventArgs)
         vars.continueLooping = True
@@ -207,7 +196,6 @@ Public Class ft
         Return t
     End Function
 
-
     Private Sub OpenToolStripMenuItem_Click(sender As Object, e As EventArgs)
         Try
             Dim lafolder = fn.ReadLogUser("decks_dir", False)
@@ -226,8 +214,6 @@ Public Class ft
         End Try
     End Sub
 
-
-
     Private Sub ReadForgeLogFileToolStripMenuItem_Click(sender As Object, e As EventArgs)
 
         fn.OpenLogFile()
@@ -242,8 +228,6 @@ Public Class ft
             fn.PrintError(Err.Description)
         End Try
     End Sub
-
-
 
     Private Sub SettingsToolStripMenuItem_Click(sender As Object, e As EventArgs)
 
@@ -349,8 +333,6 @@ Public Class ft
         'CREAMOS UNA MyFolder CON EL name DEL TORNEO
         Dim MyFolder As String = eldir & tourname & "\"
 
-
-
         If Directory.Exists(MyFolder) Then
             If _
                 MsgBox(
@@ -372,9 +354,7 @@ Public Class ft
 
         'SACAMOS LAS URLS DE LOS MAZOS
 
-
         tx1 = Ext.extlinks(tx1, "/deck/", "/deck/custom/standard") '"/visual/",
-
 
         'YA TENGO LAS URL, AHORA A EXTRAER UNA POR UNA
         Dim lasurls() As String = Split(tx1, vbCrLf)
@@ -382,13 +362,11 @@ Public Class ft
         Dim contadorposicion = 0
         For a = 0 To lasurls.Length - 1
 
-
             If _
                 lasurls(a).ToString <> "" And
                 lasurls(a).ToString <> "/deck/custom/" & LCase(ComboBox2.SelectedItem.ToString) Then
 
                 If a > mx Then Exit For
-
 
                 Dim DeckPage = ""
                 Dim UrlDeck = ""
@@ -404,7 +382,7 @@ Public Class ft
 
                 'formato del titulo del mazo
 
-                'sacamos el tx del 
+                'sacamos el tx del
                 Deck = fn.ReadWeb(vars.mtggf & "/" & UrlDeck)
 
                 'formato del mazo
@@ -420,7 +398,6 @@ Public Class ft
                 TitDeck = fn.Normalize(TitDeck)
                 TitDeck = Replace(TitDeck, "_", " ")
                 TitDeck = Replace(TitDeck, """", "'")
-
 
                 Dim num As String = (contadorposicion + 1).ToString
                 If Len(num) <= 1 Then num = "0" & num
@@ -446,7 +423,6 @@ Public Class ft
     Private Sub Button1_Click_1(sender As Object, e As EventArgs)
         'extracttournamentmtggoldfish("https://www.mtggoldfish.com/decks/budget/Modern#paper", 100)
     End Sub
-
 
     Public Shared Function IsFormOpen(FormType As Type) As Boolean
         For Each OpenForm In Application.OpenForms
@@ -543,8 +519,6 @@ Public Class ft
             End If
         Next x
 
-
-
         For i = 0 To cartas.Length - 1
             Dim lacarta = Split(cartas(i), "|")(0)
             Dim laedicion = Split(cartas(i), "|")(1)
@@ -585,14 +559,12 @@ Public Class ft
 
             If Environment.NewLine & lacarta & "|" <> anterior Then
 
-
                 If laedicion.Contains("|") Then laedicion = Split(laedicion, "|")(0)
                 lacarta = lacarta
                 laedicion = laedicion
                 Dim hapasado As Boolean
 
                 fn.WriteUserLog("processing " & lacarta & vbCrLf)
-
 
                 For e = 0 To listbuenas.Count - 1
                     hapasado = False
@@ -673,9 +645,6 @@ Public Class ft
 
         Next i
     End Sub
-
-
-
 
     'Private Sub Button1_Click_3(sender As Object, e As EventArgs) Handles Button1.Click
 
@@ -761,7 +730,6 @@ Public Class ft
 
             Next
             fn.WriteUserLog(cuenta & " downloaded Gauntlet has been deleted." & vbCrLf)
-
         Catch
         End Try
     End Sub
@@ -799,6 +767,7 @@ Public Class ft
         index = j + Len(CloseDelimiter)
 
     End Function
+
     Public Shared Sub DownloadFile(address As String, fileName As String, Optional force_download As Boolean = False)
         If File.Exists(fileName) And force_download = False Then Exit Sub
         Try
@@ -809,6 +778,7 @@ Public Class ft
             fn.PrintError(Err.Description)
         End Try
     End Sub
+
     Public Shared Sub CheckLauncherUpdates()
         Try
             fn.WriteUserLog("Checking for updates..." & vbCrLf)
@@ -835,7 +805,6 @@ Public Class ft
                 End Try
                 Application.Restart()
             End If
-
         Catch
 
         End Try
@@ -849,7 +818,6 @@ Public Class ft
             shit = False
         End If
     End Sub
-
 
     Private Sub Button4_Click_1(sender As Object, e As EventArgs)
         CreateCardsBySetFile()
@@ -874,7 +842,6 @@ Public Class ft
 
             Dim SetCode = Split(readText, "Code=")(1).Split(vbLf)(0)
 
-
             Dim SetFolder = SetCode
             Dim SetType = ""
             Dim SetDate = Split(readText, "Date=")(1).Split(vbLf)(0)
@@ -890,7 +857,6 @@ Public Class ft
             Catch
             End Try
 
-
             Dim linea = "SetDate=" & SetDate & "|SetName=" & SetName & "|SetCode=" & SetCode & "|SetFolder=" & SetFolder & "|SetType=" & SetType
             linea = Replace(linea, vbCr, Nothing)
             myList.Add(linea)
@@ -899,7 +865,6 @@ Public Class ft
 
         Next fri
 
-
         '**************
 
         Dim myListSortedByDate As New List(Of String)()
@@ -907,8 +872,6 @@ Public Class ft
         Dim startP As DateTime = New DateTime(1993, 8, 5)
         Dim endP As DateTime = New DateTime(DateTime.Now.Year, Date.Now.Month, Date.Now.Day)
         Dim currD As DateTime = startP
-
-
 
         While (currD <= endP)
 
@@ -922,12 +885,11 @@ Public Class ft
 
         End While
 
-
         myListSortedByDate.Reverse()
 
         'borro y lo creo
         File.Delete(vars.UserDir & "\fldata\allmysets.txt")
-        'aqui lo creo   
+        'aqui lo creo
         Dim fPath = vars.UserDir & "\fldata\allmysets.txt"
 
         Dim afile As New StreamWriter(vars.UserDir & "\fldata\allmysets.txt", True)
@@ -951,9 +913,7 @@ Public Class ft
         poneredicionesenmazos(metagame.SelectedItem.ToString())
     End Sub
 
-
     Sub poneredicionesenmazos(metajuego)
-
 
         For Each f In Directory.GetFiles(Directory.GetCurrentDirectory() & "\user\decks\constructed\" & metajuego)
             Dim t = File.ReadAllText(f)
@@ -978,10 +938,7 @@ Public Class ft
 
     End Sub
 
-
-
     Sub quitarediciones(metajuego)
-
 
         Dim carpeta = ""
 
@@ -1008,7 +965,6 @@ Public Class ft
 
                 name = name
 
-
                 'parto por los saltos
                 Dim lines() = Split(tx, vbCrLf)
                 For i = 0 To lines.Count - 1
@@ -1026,7 +982,6 @@ Public Class ft
                 tx = Replace(tx, Environment.NewLine, vbCrLf)
                 tx = Replace(tx, vbCrLf & vbCrLf & vbCrLf, vbCrLf)
                 tx = Replace(tx, vbCrLf & vbCrLf, vbCrLf)
-
 
                 tx = tx
                 File.Delete(f)
@@ -1055,7 +1010,6 @@ Public Class ft
 
         If carpeta = "" Then carpeta = Directory.GetCurrentDirectory() & "\user\decks\constructed\" & metajuego
 
-
         For Each f In Directory.GetFiles(carpeta)
             Dim t = File.ReadAllText(f)
             If t.Contains(cardname) Then
@@ -1074,7 +1028,6 @@ Public Class ft
     Private Sub Button8_Click(sender As Object, e As EventArgs)
         quitarediciones(metagame.SelectedItem.ToString())
     End Sub
-
 
     Public Shared Sub compressDirectory(DirectoryPath As String, OutputFilePath As String,
                                         ByVal Optional CompressionLevel As Integer = 9)
@@ -1104,7 +1057,6 @@ Public Class ft
                 OutputStream.Close()
                 Console.WriteLine("Files successfully compressed")
             End Using
-
         Catch ex As Exception
             Console.WriteLine("Exception during processing {0}", ex)
         End Try
@@ -1150,7 +1102,6 @@ Public Class ft
                 Listado.Add(i.ToString)
             End If
         Next
-
 
         Dim Cards As New List(Of String)()
 
@@ -1215,7 +1166,6 @@ Public Class ft
         afile.WriteLine(t)
         afile.Close()
 
-
     End Sub
 
     Private Sub by_metagame_Click(sender As Object, e As EventArgs) Handles by_metagame.Click
@@ -1223,7 +1173,6 @@ Public Class ft
     End Sub
 
     Private Sub Button1_Click_3(sender As Object, e As EventArgs)
-
 
         Dim origen = "C:\Forge Versiones\forge\otros exes\NEOCOMANDERJPG"
         Dim destino = "C:\Forge Versiones\forge\cache\pics\cards\NEC"
@@ -1234,7 +1183,6 @@ Public Class ft
         Dim fiArr As FileInfo() = di.GetFiles()
         Dim fri As FileInfo
         For Each fri In fiArr
-
 
             Console.WriteLine(fri.Name)
             'ahora busco si en neo otra se llama asi y la renombro
@@ -1299,16 +1247,11 @@ Public Class ft
         Ext.ExtractfromAetherhubAlt("https://aetherhub.com/Metagame/" & metag & "/")
     End Sub
 
-
-
-
     'Public Shared Function ExtractfromAetherhub(myUrl)
     '    If myUrl = "" Then myUrl = ""
     '    Dim _driver As IWebDriver = New ChromeDriver()
     '    _driver.Navigate().GoToUrl(myUrl.ToString)
     '    Dim elements As IList(Of IWebElement) = _driver.FindElements(By.ClassName("green"))
-
-
 
     '    'Dim manager As New DriverManager
     '    'Dim chromeConfig = New ChromeConfig()

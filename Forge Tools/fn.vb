@@ -1,5 +1,4 @@
-﻿Imports System.ComponentModel
-Imports System.Globalization
+﻿Imports System.Globalization
 Imports System.Net
 Imports System.Text
 Imports System.Text.RegularExpressions
@@ -38,33 +37,34 @@ Public Class fn
     End Function
 
     Public Shared Function Normalize(name As String) As String
-        name = "" & name
-        Try
-            name = Replace(name, "\", " ")
-            name = Replace(name, "/", " ")
-            name = Replace(name, """", "'")
-            Dim reg As New Regex("[^a-zA-Z0-9' ]")
-            name = reg.Replace(name, "")
-            name = Replace(name, "    ", " ")
-            name = Replace(name, "   ", " ")
-            name = Replace(name, "  ", " ")
-            name = Replace(name, "--", "-")
-            name = Replace(name, "---", "-")
-            name = Replace(name, "á", "a")
-            name = Replace(name, "é", "e")
-            name = Replace(name, "í", "i")
-            name = Replace(name, "ó", "o")
-            name = Replace(name, "ú", "u")
-            name = Replace(name, "ú", "u")
-            name = Replace(name, "ü", "u")
-            name = Replace(name, "ñ", "n")
-            name = LTrim(RTrim(name))
-            Normalize = name
-            reg = Nothing
-        Catch
-            Normalize = name
-        End Try
+        'name = "" & name
+        'Try
+        '    name = Replace(name, "\", " ")
+        '    name = Replace(name, "/", " ")
+        '    name = Replace(name, """", "'")
+        '    Dim reg As New Regex("[^a-zA-Z0-9' ]")
+        '    name = reg.Replace(name, "")
+        '    name = Replace(name, "    ", " ")
+        '    name = Replace(name, "   ", " ")
+        '    name = Replace(name, "  ", " ")
+        '    name = Replace(name, "--", "-")
+        '    name = Replace(name, "---", "-")
+        '    name = Replace(name, "á", "a")
+        '    name = Replace(name, "é", "e")
+        '    name = Replace(name, "í", "i")
+        '    name = Replace(name, "ó", "o")
+        '    name = Replace(name, "ú", "u")
+        '    name = Replace(name, "ú", "u")
+        '    name = Replace(name, "ü", "u")
+        '    name = Replace(name, "ñ", "n")
+        '    name = LTrim(RTrim(name))
+        '    Normalize = name
+        '    reg = Nothing
+        'Catch
+        '    Normalize = name
+        'End Try
     End Function
+
     Public Shared Function RemoveDiacritics(s As String) As String
         Dim normalizedString As String = s.Normalize(NormalizationForm.FormD)
         Dim stringBuilder As New StringBuilder()
@@ -84,7 +84,6 @@ Public Class fn
         fs = Replace(fs, " ", " ")
         Return fs
     End Function
-
 
     Public Shared Function removeshit(s As String) As String
         s = Replace(s, "?", "")
@@ -156,7 +155,6 @@ Public Class fn
         Dim reply As String = client.DownloadString(myurl)
         Return reply
     End Function
-
 
     Public Shared Function ReadLogUser(idlog As String, Optional ShowMsg As Boolean = False, Optional ByVal CompareWithServer As Boolean = True) As String
         If idlog = "profileproperties" Then CompareWithServer = False
@@ -292,7 +290,6 @@ Public Class fn
         ReadLogServer = LogServer_data
     End Function
 
-
     Public Shared Sub ExtractToDirectory(archive As ZipArchive, destinationDirectoryName As String,
                                          overwrite As Boolean)
         Dim mycount As Integer
@@ -362,37 +359,36 @@ Public Class fn
         ReadWeb = res
     End Function
 
-
-
-
-
-
-
-
-
-
     Public Shared Sub DownloadStart(dwl, fn)
         downloader = New WebClient
         downloader.DownloadFileAsync(New Uri(dwl), fn)
     End Sub
 
-
-
     Public Shared Function FindIt(total As String, first As String, last As String) As String
         If total = Nothing Then total = ""
-        If last.Length < 1 Then
-            FindIt = total.Substring(total.IndexOf(first))
+
+        If first.Length > 0 AndAlso last.Length > 0 Then
+            Dim startIndex As Integer = total.IndexOf(first)
+            Dim endIndex As Integer = total.IndexOf(last, startIndex + first.Length)
+
+            If startIndex >= 0 AndAlso endIndex >= 0 Then
+                Return total.Substring(startIndex + first.Length, endIndex - startIndex - first.Length)
+            End If
+        ElseIf first.Length > 0 Then
+            Dim startIndex As Integer = total.IndexOf(first)
+            If startIndex >= 0 Then
+                Return total.Substring(startIndex + first.Length)
+            End If
+        ElseIf last.Length > 0 Then
+            Dim endIndex As Integer = total.IndexOf(last)
+            If endIndex >= 0 Then
+                Return total.Substring(0, endIndex)
+            End If
         End If
-        If first.Length < 1 Then
-            FindIt = total.Substring(0, (total.IndexOf(last)))
-        End If
-        Try
-            FindIt =
-                ((total.Substring(total.IndexOf(first), (total.IndexOf(last) - total.IndexOf(first)))).Replace(first, "")) _
-                    .Replace(last, "")
-        Catch
-        End Try
+
+        Return ""
     End Function
+
 
     Public Shared Function GetForgeDecksDir()
         If vars.ForgeDecksDir = "" Then
@@ -401,8 +397,6 @@ Public Class fn
             Return vars.ForgeDecksDir
         End If
     End Function
-
-
 
     Public Shared Function SearchFolders(Optional ShowMsg As Boolean = True, Optional idlog As String = "decks_dir")
 
@@ -584,14 +578,14 @@ Public Class fn
                 Exit Function
             End If
 
-            ' Create the file. 
+            ' Create the file.
             Using fs As FileStream = File.Create(path)
                 Dim info As Byte() = New UTF8Encoding(True).GetBytes(tx)
                 ' Add some information to the file.
                 fs.Write(info, 0, info.Length)
             End Using
 
-            ' Open the stream and read it back. 
+            ' Open the stream and read it back.
             Using sr As StreamReader = File.OpenText(path)
                 Do While sr.Peek() >= 0
                     Console.WriteLine(sr.ReadLine())
@@ -602,7 +596,6 @@ Public Class fn
             StringToDeck = e.Message.ToString & vbCrLf
         End Try
     End Function
-
 
     Public Shared Sub RewriteLog()
         Try
@@ -624,7 +617,6 @@ Public Class fn
         End Try
     End Sub
 
-
     Public Shared Sub CheckLog()
         Try
             CompatibleOldVersions()
@@ -642,9 +634,6 @@ Public Class fn
 
                 Dim readText As String = File.ReadAllText(vars.UserDir & "\" & vars.LogName)
                 Dim WriteLog = False
-
-
-
 
                 If InStr(readText, "<profileproperties>", CompareMethod.Text) = 0 Then
                     readText = readText & "<profileproperties>" & existpp & "</profileproperties>" & Environment.NewLine
@@ -711,7 +700,6 @@ Public Class fn
         Catch
         End Try
     End Sub
-
 
     Public Shared Function UnzipFile(sZipFile As String, sDestPath As String) As Boolean
 
@@ -782,7 +770,6 @@ Problem:
         Return bResult
     End Function
 
-
     Public Shared Function CheckFolder(DestinationFolder As String) As String
 
         If InStr(DestinationFolder, "Commander") > 0 Then Exit Function
@@ -826,14 +813,12 @@ Problem:
         'Catch
         'End Try
 
-
         If InStr(name, "Deck for") > 0 Then name = Split(name, "Deck for")(0).ToString
         If name.Contains(" Deck for Magic the") Then name = Split(name, "Deck for")(0).ToString
 
         name = Trim(name)
         name = RemoveWhitespace(name)
         If name.Contains(" by ") Then name = Split(name, " by ")(0).ToString
-
 
         If commander <> "" Then
             If InStr(commander, "<title>") > 0 Then
@@ -858,7 +843,6 @@ Problem:
             tx = Replace(tx, "[sideboard]", "")
 
             tx = tx & "[commander]" & vbCrLf & commander
-
         Else
 
             If ft.insertedition.Checked = True Then
@@ -941,7 +925,6 @@ Problem:
 
                 contador = contador + 1
             End While
-
         Catch ex As Exception
 
         End Try
@@ -1032,4 +1015,5 @@ Problem:
         index = j + Len(CloseDelimiter)
 
     End Function
+
 End Class

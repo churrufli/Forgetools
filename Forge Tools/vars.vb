@@ -1,6 +1,4 @@
-﻿
-
-Public Class vars
+﻿Public Class vars
     Public Shared MyDll As String = "ICSharpCode.SharpZipLib.dll"
     Public Shared ServerLogName As String = "updates.txt"
     Public Shared BaseUrl As String = "https://github.com/churrufli/Forgetools/releases/tag/0.2/"

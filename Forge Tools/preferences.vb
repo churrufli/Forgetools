@@ -1,4 +1,5 @@
 ﻿Public Class preferences
+
     Private Sub preferences_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         decks_dir.Text = fn.ReadLogUser("decks_dir", False)
         gauntlet_dir.Text = fn.ReadLogUser("gauntlet_dir", False)
@@ -31,7 +32,6 @@
         Else
             checklauncherupdates.Checked = False
         End If
-
 
         If fn.ReadLogUser("removepreviousjarfiles", False) = "yes" Then
             removepreviousjarfiles.Checked = True
@@ -91,4 +91,5 @@
 
     Private Sub group_forgeoptions_Enter(sender As Object, e As EventArgs) Handles group_forgeoptions.Enter
     End Sub
+
 End Class
