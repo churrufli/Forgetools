@@ -115,9 +115,9 @@ Public Class Ext
                 Case "Budget Commander"
                     url = vars.mtggf & "/decks/budget/commander/" & "#paper"
                 Case "Standard", "Modern", "Pioneer", "Historic", "Alchemy", "Pauper", "Legacy", "Vintage", "Penny Dreadful", "Commander 1v1", "Commander", "Historic Brawl", "Brawl", "Explorer"
-                    url = vars.mtggf & "/metagame/" & LCase(fn.Normalize(metag)) & "/full#paper"
+                    url = vars.mtggf & "/metagame/" & LCase(fn.NormalizeUrl(metag)) & "/full#paper"
                 Case Else
-                    url = vars.mtggf & "/deck/custom/" & LCase(Replace(metag, " ", "_")) & "#paper"
+                    url = vars.mtggf & "/deck/custom/" & fn.NormalizeUrl(metag) & "#paper"
             End Select
         End If
 

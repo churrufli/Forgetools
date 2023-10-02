@@ -63,6 +63,12 @@ Public Class fn
         'Catch
         '    Normalize = name
         'End Try
+        Return name
+    End Function
+
+    Public Shared Function NormalizeUrl(name As String) As String
+        name = Replace(name, " ", "_")
+        Return name
     End Function
 
     Public Shared Function RemoveDiacritics(s As String) As String
@@ -388,7 +394,6 @@ Public Class fn
 
         Return ""
     End Function
-
 
     Public Shared Function GetForgeDecksDir()
         If vars.ForgeDecksDir = "" Then

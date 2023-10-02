@@ -80,6 +80,7 @@ Partial Class ft
         Me.Button7 = New System.Windows.Forms.Button()
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
         Me.BackgroundWorker1 = New System.ComponentModel.BackgroundWorker()
+        Me.Button6 = New System.Windows.Forms.Button()
         Me.MenuGeneral.SuspendLayout()
         CType(Me.PictureBox5, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox6, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -639,11 +640,23 @@ Partial Class ft
         'Timer1
         '
         '
+        'Button6
+        '
+        Me.Button6.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.2!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Button6.ForeColor = System.Drawing.Color.Black
+        Me.Button6.Location = New System.Drawing.Point(505, 27)
+        Me.Button6.Name = "Button6"
+        Me.Button6.Size = New System.Drawing.Size(204, 26)
+        Me.Button6.TabIndex = 55
+        Me.Button6.Text = "Download UnsupportedCards.txt file"
+        Me.Button6.UseVisualStyleBackColor = True
+        '
         'ft
         '
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
         Me.BackColor = System.Drawing.Color.WhiteSmoke
         Me.ClientSize = New System.Drawing.Size(721, 617)
+        Me.Controls.Add(Me.Button6)
         Me.Controls.Add(Me.GroupBox1)
         Me.Controls.Add(Me.GroupExtras)
         Me.Controls.Add(Me.Label1)
@@ -739,4 +752,5 @@ Partial Class ft
     Friend WithEvents PictureBox2 As PictureBox
     Friend WithEvents aetherhubfrom As TextBox
     Friend WithEvents Button9 As Button
+    Friend WithEvents Button6 As Button
 End Class

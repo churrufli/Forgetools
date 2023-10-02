@@ -40,7 +40,6 @@ Public Class ft
         fn.CheckLog()
         SetComboboxes()
         'fn.SearchFolders(True)
-        fn.UnsupportedCards()
 
     End Sub
 
@@ -1245,6 +1244,10 @@ Public Class ft
         Dim metag = Replace(ComboBox1.Text, " ", "-")
 
         Ext.ExtractfromAetherhubAlt("https://aetherhub.com/Metagame/" & metag & "/")
+    End Sub
+
+    Private Sub Button6_Click_2(sender As Object, e As EventArgs) Handles Button6.Click
+        fn.UnsupportedCards()
     End Sub
 
     'Public Shared Function ExtractfromAetherhub(myUrl)
