@@ -40,6 +40,8 @@ Public Class ft
         fn.CheckLog()
         SetComboboxes()
         'fn.SearchFolders(True)
+        fn.UnsupportedCards()
+
 
     End Sub
 

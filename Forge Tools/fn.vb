@@ -111,48 +111,30 @@ Public Class fn
         End Try
     End Sub
 
-    Public Shared Sub DownloadFile(address As String, fileName As String, Optional force_download As Boolean = False)
-        Dim fi As New IO.FileInfo(fileName)
-        Dim success As Boolean = False
-        Dim extn As String = fi.Extension
-        If File.Exists(fileName) And force_download = False Then Exit Sub
-        Try
-            If File.Exists(fileName) Then My.Computer.FileSystem.RenameFile(fileName, Replace(fileName, extn, ".bak"))
-        Catch
-            'PrintError(Err.Description)
+    Public Shared Sub DownloadFile(address As String, fileName As String, Optional forceDownload As Boolean = False)
+        If Not forceDownload AndAlso File.Exists(fileName) Then
+            Exit Sub
+        End If
 
-        End Try
-        Try
-            Dim instance As New WebClient
-            instance.DownloadFile(address, fileName)
-            success = True
-        Catch
-            'PrintError(Err.Description)
-        End Try
+        Dim backupFileName As String = $"{Path.GetFileNameWithoutExtension(fileName)}.bak"
 
         Try
-            Dim client As WebClient = New WebClient()
-            System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12
-            Dim reply As String = client.DownloadString(address)
-            Dim myfile As System.IO.StreamWriter
-            myfile = My.Computer.FileSystem.OpenTextFileWriter(fileName, True)
-            myfile.WriteLine(reply)
-            myfile.Close()
-            success = True
-        Catch
-            ' PrintError(Err.Description)
-        End Try
-
-        Try
-            If success = True Then
-                File.Delete(Replace(fileName, extn, ".bak"))
-            Else
-                My.Computer.FileSystem.RenameFile(Replace(fileName, extn, ".bak"), Replace(fileName, ".bak", extn))
-
+            If File.Exists(fileName) Then
+                File.Move(fileName, backupFileName)
             End If
-        Catch
-        End Try
 
+            Using client As New WebClient()
+                System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12
+                client.DownloadFile(address, fileName)
+            End Using
+
+            ' If the download is successful, delete the backup file
+            If File.Exists(fileName) Then
+                File.Delete(backupFileName)
+            End If
+        Catch ex As Exception
+            ' Handle exceptions or log errors here
+        End Try
     End Sub
 
     Function ReadWebAlt(myurl As String)
