@@ -614,63 +614,63 @@ Public Class fn
 
         Dim bResult = False
 
-        On Error GoTo Problem
+        Try
+            'Determine the archive type
+            Select Case Path.GetExtension(sZipFile)
+                Case ".zip"
+                    'If it's a zip, then simply extract the contents
+                    Dim fZ = New FastZip()
+                    fZ.ExtractZip(sZipFile, sDestPath, "") '//use "" for File Filter if you want all files
+                Case ".bz2"
+                    'If it's a tarball, then first decompress the tar, then extract the tar's contents
 
-        'Determine the archive type
-        Select Case Path.GetExtension(sZipFile)
-            Case ".zip"
-                'If it's a zip, then simply extract the contents
-                Dim fZ = New FastZip()
-                fZ.ExtractZip(sZipFile, sDestPath, "") '//use "" for File Filter if you want all files
-            Case ".bz2"
-                'If it's a tarball, then first decompress the tar, then extract the tar's contents
+                    'Get the filename of the resulting tar file
+                    Dim sTarFileName As String = Path.GetDirectoryName(sZipFile) & "\" &
+                                                 Path.GetFileNameWithoutExtension(sZipFile)
 
-                'Get the filename of the resulting tar file
-                Dim sTarFileName As String = Path.GetDirectoryName(sZipFile) & "\" &
-                                             Path.GetFileNameWithoutExtension(sZipFile)
+                    'If the resulting tar file exists alreay, delete it before creating it
+                    If File.Exists(sTarFileName) Then
+                        File.Delete(sTarFileName)
+                    End If
 
-                'If the resulting tar file exists alreay, delete it before creating it
-                If File.Exists(sTarFileName) Then
+                    'Perform the decompression of the tar file
+                    Using fsIn As FileStream = File.OpenRead(sZipFile),
+                          fsOut As FileStream = File.Create(sTarFileName)
+                        BZip2.Decompress(fsIn, fsOut)
+                    End Using
+
+                    'Extract the tar's contents
+                    Using fsTar As FileStream = File.OpenRead(sTarFileName)
+                        Dim tArch As TarArchive = TarArchive.CreateInputTarArchive(fsTar)
+                        Try
+                            tArch.ExtractContents(sDestPath)
+                        Finally
+                            tArch.Close()
+                        End Try
+                    End Using
+
+                    'Get a list of the files that were extracted within the tar folder
+                    Dim sExtractedFiles() As String =
+                            Directory.GetFiles(sDestPath & "\" & Path.GetFileNameWithoutExtension(sTarFileName))
+
+                    'Move all the files to the requested destination directory
+                    Dim sFile As String
+                    For Each sFile In sExtractedFiles
+                        File.Move(sFile, sDestPath & "\" & Path.GetFileName(sFile))
+                    Next
+
+                    'Delete the tar folder
+                    Directory.Delete(sDestPath & "\" & Path.GetFileNameWithoutExtension(sTarFileName))
+
+                    'Delete the decompressed tar file
                     File.Delete(sTarFileName)
-                End If
 
-                'Perform the decompression of the tar file
-                Using fsIn As FileStream = File.OpenRead(sZipFile),
-                      fsOut As FileStream = File.Create(sTarFileName)
-                    BZip2.Decompress(fsIn, fsOut)
-                End Using
+            End Select
 
-                'Extract the tar's contents
-                Using fsTar As FileStream = File.OpenRead(sTarFileName)
-                    Dim tArch As TarArchive = TarArchive.CreateInputTarArchive(fsTar)
-                    Try
-                        tArch.ExtractContents(sDestPath)
-                    Finally
-                        tArch.Close()
-                    End Try
-                End Using
+            bResult = True
+        Catch ex As Exception
+        End Try
 
-                'Get a list of the files that were extracted within the tar folder
-                Dim sExtractedFiles() As String =
-                        Directory.GetFiles(sDestPath & "\" & Path.GetFileNameWithoutExtension(sTarFileName))
-
-                'Move all the files to the requested destination directory
-                Dim sFile As String
-                For Each sFile In sExtractedFiles
-                    File.Move(sFile, sDestPath & "\" & Path.GetFileName(sFile))
-                Next
-
-                'Delete the tar folder
-                Directory.Delete(sDestPath & "\" & Path.GetFileNameWithoutExtension(sTarFileName))
-
-                'Delete the decompressed tar file
-                File.Delete(sTarFileName)
-
-        End Select
-
-        bResult = True
-
-Problem:
         Return bResult
     End Function
 
