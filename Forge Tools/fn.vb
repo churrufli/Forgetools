@@ -71,6 +71,20 @@ Public Class fn
         End Try
     End Sub
 
+    ' Most WAFs/anti-bot services (Cloudflare included) block plain WebClient requests
+    ' because it sends no User-Agent by default. Setting browser-like headers is enough
+    ' to get past header-based bot checks (it can't solve an actual JS challenge).
+    Private Shared Function CreateWebClient() As WebClient
+        System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12
+        Dim client As New WebClient()
+        client.Headers.Add(HttpRequestHeader.UserAgent,
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36")
+        client.Headers.Add(HttpRequestHeader.Accept,
+            "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
+        client.Headers.Add(HttpRequestHeader.AcceptLanguage, "en-US,en;q=0.9")
+        Return client
+    End Function
+
     Public Shared Sub DownloadFile(address As String, fileName As String, Optional forceDownload As Boolean = False)
         If Not forceDownload AndAlso File.Exists(fileName) Then
             Exit Sub
@@ -83,8 +97,7 @@ Public Class fn
                 File.Move(fileName, backupFileName)
             End If
 
-            Using client As New WebClient()
-                System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12
+            Using client As WebClient = CreateWebClient()
                 client.DownloadFile(address, fileName)
             End Using
 
@@ -264,8 +277,7 @@ Public Class fn
         If MyUrl = "" Then Return ""
 
         Try
-            Using client As New WebClient()
-                System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12
+            Using client As WebClient = CreateWebClient()
                 Return client.DownloadString(MyUrl)
             End Using
         Catch ex As Exception
