@@ -1,15 +1,8 @@
 ﻿Imports System.Globalization
 Imports System.Text
 Imports System.Text.RegularExpressions
-Imports OpenQA.Selenium
-Imports OpenQA.Selenium.Chrome
 
 Public Class Ext
-
-    Public Shared Sub Cardsdata()
-        'Dim todaslascartas As String = IO.File.ReadAllText(Directory.GetCurrentDirectory() & "/fldata/allcardsandsets.txt")
-        'Dim todoslossets As String = IO.File.ReadAllText(Directory.GetCurrentDirectory() & "/fldata/allsets.txt")
-    End Sub
 
     Public Shared Function GetTitDeck(tx) As String
         Dim TitDeck = ""
@@ -1189,17 +1182,6 @@ Public Class Ext
             End If
 
             fn.WriteUserLog(fn.StringToDeck(MyDir & "/", Deck, TitDeck))
-        Next
-    End Function
-
-    Public Shared Function ExtractfromAetherhubAlt(url)
-        Dim chromeDriver As OpenQA.Selenium.IWebDriver = New ChromeDriver()
-        chromeDriver.Navigate().GoToUrl(url.ToString)
-
-        Dim elements As IList(Of IWebElement) = chromeDriver.FindElements(By.Id("metaHubTable_wrapper"))
-
-        For i = 0 To elements.Count - 1
-            MsgBox(elements.Item(i))
         Next
     End Function
 

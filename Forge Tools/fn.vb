@@ -7,17 +7,6 @@ Imports ICSharpCode.SharpZipLib.Tar
 Imports ICSharpCode.SharpZipLib.Zip
 
 Public Class fn
-    Shared WithEvents downloader As WebClient
-
-    Shared Sub WriteLogFL(s As String)
-        Try
-            Dim sFileName As String = Environment.CurrentDirectory & "\fllog.txt"
-            If File.Exists(sFileName) Then
-                File.Delete(sFileName)
-            End If
-        Catch
-        End Try
-    End Sub
 
     Shared Function IsValidFileNameOrPath(name As String) As Boolean
         ' Determines if the name is Nothing.
@@ -37,32 +26,6 @@ Public Class fn
     End Function
 
     Public Shared Function Normalize(name As String) As String
-        'name = "" & name
-        'Try
-        '    name = Replace(name, "\", " ")
-        '    name = Replace(name, "/", " ")
-        '    name = Replace(name, """", "'")
-        '    Dim reg As New Regex("[^a-zA-Z0-9' ]")
-        '    name = reg.Replace(name, "")
-        '    name = Replace(name, "    ", " ")
-        '    name = Replace(name, "   ", " ")
-        '    name = Replace(name, "  ", " ")
-        '    name = Replace(name, "--", "-")
-        '    name = Replace(name, "---", "-")
-        '    name = Replace(name, "á", "a")
-        '    name = Replace(name, "é", "e")
-        '    name = Replace(name, "í", "i")
-        '    name = Replace(name, "ó", "o")
-        '    name = Replace(name, "ú", "u")
-        '    name = Replace(name, "ú", "u")
-        '    name = Replace(name, "ü", "u")
-        '    name = Replace(name, "ñ", "n")
-        '    name = LTrim(RTrim(name))
-        '    Normalize = name
-        '    reg = Nothing
-        'Catch
-        '    Normalize = name
-        'End Try
         Return name
     End Function
 
@@ -97,9 +60,6 @@ Public Class fn
         s = Replace(s, "(", "-")
         removeshit = s
     End Function
-
-    Public Shared Sub checkunsupportedcards()
-    End Sub
 
     Public Shared Sub UnsupportedCards()
         Try
@@ -136,13 +96,6 @@ Public Class fn
             ' Handle exceptions or log errors here
         End Try
     End Sub
-
-    Function ReadWebAlt(myurl As String)
-        Dim client As WebClient = New WebClient()
-        System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12
-        Dim reply As String = client.DownloadString(myurl)
-        Return reply
-    End Function
 
     Public Shared Function ReadLogUser(idlog As String, Optional ShowMsg As Boolean = False, Optional ByVal CompareWithServer As Boolean = True) As String
         If idlog = "profileproperties" Then CompareWithServer = False
@@ -207,22 +160,22 @@ Public Class fn
         ReadLogUser = log_user
     End Function
 
-    Public Shared Function OpenLogFile()
+    Public Shared Sub OpenLogFile()
         Dim logfile As String = Directory.GetCurrentDirectory & "\user\forge.log"
         Dim logfile2 As String = Directory.GetCurrentDirectory & "\UserDir\forge.log"
 
-        If File.Exists(logfile) = True Then
-            Shell("c:\windows\notepad.exe " & logfile)
-            Exit Function
+        If File.Exists(logfile) Then
+            Process.Start(logfile)
+            Exit Sub
         End If
 
-        If File.Exists(logfile2) = True Then
-            Shell("c:\windows\notepad.exe " & logfile2)
-            Exit Function
+        If File.Exists(logfile2) Then
+            Process.Start(logfile2)
+            Exit Sub
         End If
 
-        MsgBox("Cant'f find forge.log file.")
-    End Function
+        MsgBox("Can't find forge.log file.")
+    End Sub
 
     Public Shared Sub UpdateLog(idlog, myvalue)
         Dim mylog As String = My.Computer.FileSystem.ReadAllText(vars.LogName)
@@ -305,52 +258,21 @@ Public Class fn
         WriteUserLog("Done!." & vbCrLf)
     End Sub
 
-    Public Shared Function ReadWeb(MyUrl As String)
+    Public Shared Function ReadWeb(MyUrl As String) As String
         MyUrl = Replace(MyUrl, "'", "")
         MyUrl = Replace(MyUrl, """", "")
-        Dim res As String
-        If MyUrl = "" Then Exit Function
-        'Dim request As WebRequest
-        'Try
-        '    request = WebRequest.Create(MyUrl)
-        'Catch
-        '    ReadWeb = ""
-        '    Exit Function
-        'End Try
-        'Dim response As WebResponse
-        'Try
-        '    response = request.GetResponse()
-        'Catch
-        '    ReadWeb = ""
-        '    Exit Function
-        'End Try
-        'Dim reader As New StreamReader(response.GetResponseStream())
-        'Try
-        '    res = reader.ReadToEnd()
-        'Catch
-        '    Exit Function
-        'End Try
-        'reader.Close()
-        'response.Close()
+        If MyUrl = "" Then Return ""
 
         Try
-
-            Dim client As WebClient = New WebClient()
-            System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12
-            Dim reply As String = client.DownloadString(MyUrl)
-            Return reply
-            Exit Function
+            Using client As New WebClient()
+                System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12
+                Return client.DownloadString(MyUrl)
+            End Using
         Catch ex As Exception
-
         End Try
 
-        ReadWeb = res
+        Return ""
     End Function
-
-    Public Shared Sub DownloadStart(dwl, fn)
-        downloader = New WebClient
-        downloader.DownloadFileAsync(New Uri(dwl), fn)
-    End Sub
 
     Public Shared Function FindIt(total As String, first As String, last As String) As String
         If total = Nothing Then total = ""
@@ -706,27 +628,27 @@ Public Class fn
                 'Get the filename of the resulting tar file
                 Dim sTarFileName As String = Path.GetDirectoryName(sZipFile) & "\" &
                                              Path.GetFileNameWithoutExtension(sZipFile)
-                'Create a new file stream for the tar ball
-                Dim fsIn As FileStream = File.OpenRead(sZipFile)
 
                 'If the resulting tar file exists alreay, delete it before creating it
                 If File.Exists(sTarFileName) Then
                     File.Delete(sTarFileName)
                 End If
 
-                'Create a file stream to receive the decompressed tar file
-                Dim fsOut As FileStream = File.Create(sTarFileName)
-
                 'Perform the decompression of the tar file
-                BZip2.Decompress(fsIn, fsOut)
-
-                'Open a new file stream for the tar file
-                Dim fsTar As FileStream = File.OpenRead(sTarFileName)
-                'Create a TarArchive object for the tar file
-                Dim tArch As TarArchive = TarArchive.CreateInputTarArchive(fsTar)
+                Using fsIn As FileStream = File.OpenRead(sZipFile),
+                      fsOut As FileStream = File.Create(sTarFileName)
+                    BZip2.Decompress(fsIn, fsOut)
+                End Using
 
                 'Extract the tar's contents
-                tArch.ExtractContents(sDestPath)
+                Using fsTar As FileStream = File.OpenRead(sTarFileName)
+                    Dim tArch As TarArchive = TarArchive.CreateInputTarArchive(fsTar)
+                    Try
+                        tArch.ExtractContents(sDestPath)
+                    Finally
+                        tArch.Close()
+                    End Try
+                End Using
 
                 'Get a list of the files that were extracted within the tar folder
                 Dim sExtractedFiles() As String =
@@ -741,12 +663,7 @@ Public Class fn
                 'Delete the tar folder
                 Directory.Delete(sDestPath & "\" & Path.GetFileNameWithoutExtension(sTarFileName))
 
-                'Close the open file streams
-                tArch.Close()
-                fsIn.Close()
-
                 'Delete the decompressed tar file
-
                 File.Delete(sTarFileName)
 
         End Select

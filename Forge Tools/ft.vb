@@ -1,18 +1,7 @@
-﻿Imports System.Net
-Imports System.Timers
-Imports ICSharpCode.SharpZipLib.Zip
+﻿Imports ICSharpCode.SharpZipLib.Zip
 
 Public Class ft
-    Shared todas
-
-    Public WithEvents downloader As WebClient
     Dim second As Integer
-
-    Sub TimerElapsed(sender As Object, e As ElapsedEventArgs)
-        ' Write the SignalTime.
-        Dim time As DateTime = e.SignalTime
-        Console.WriteLine("TIME: " + time)
-    End Sub
 
     Private Sub Fl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         GroupExtras.TabPages.Remove(GroupExtras.TabPages(1))
@@ -120,64 +109,7 @@ Public Class ft
         End If
     End Sub
 
-    Private Sub Button5_Click(sender As Object, e As EventArgs)
-        Ext.ExtractTournamentMtgtop8()
-    End Sub
-
-    Private Sub ForgeDiscordChannelToolStripMenuItem_Click(sender As Object, e As EventArgs)
-
-        Process.Start("https://discord.gg/3v9JCVr")
-    End Sub
-
-    Private Sub ForgeForumToolStripMenuItem_Click(sender As Object, e As EventArgs)
-
-        Process.Start("https://www.slightlymagic.net/forum/viewforum.php?f=26")
-    End Sub
-
-    Private Sub ForgeWikiToolStripMenuItem_Click(sender As Object, e As EventArgs)
-        Process.Start("https://www.slightlymagic.net/wiki/Forge")
-    End Sub
-
-    Private Sub RestartForgeLauncherToolStripMenuItem_Click(sender As Object, e As EventArgs)
-        Application.Restart()
-    End Sub
-
-    Private Sub GauntletContestFolderToolStripMenuItem_Click(sender As Object, e As EventArgs)
-        Try
-            Process.Start(fn.ReadLogUser("gauntlet_dir", False))
-        Catch
-            fn.PrintError(Err.Description)
-        End Try
-    End Sub
-
-    Private Sub PreferencesToolStripMenuItem_Click(sender As Object, e As EventArgs)
-    End Sub
-
-    Private Sub extract2_Click(sender As Object, e As EventArgs)
-        Ext.ExtractTournamentMtgtop8()
-    End Sub
-
-    Private Sub PicsFolderToolStripMenuItem_Click(sender As Object, e As EventArgs)
-        Try
-            Process.Start(fn.ReadLogUser("pics_dir", False))
-        Catch
-            fn.PrintError(Err.Description)
-        End Try
-    End Sub
-
-    Private Sub ForzeUpdateForgeLauncherToolStripMenuItem_Click(sender As Object, e As EventArgs)
-
-        fn.UpdateLog("launcher_version", "")
-        fn.UpdateLog("lastupdate", "")
-        Application.Restart()
-    End Sub
-
-    Private Sub CancelButton1_Click(sender As Object, e As EventArgs)
-        vars.continueLooping = True
-    End Sub
-
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles extract3.Click
-        fn.checkunsupportedcards()
         If InStr(metag2.SelectedItem.ToString, "-") = 0 Then
             Ext.ExtractTopMtggoldfish(metag2.SelectedItem.ToString, howmuch2.SelectedValue, False, "", "", True)
         End If
@@ -197,29 +129,6 @@ Public Class ft
         Return t
     End Function
 
-    Private Sub OpenToolStripMenuItem_Click(sender As Object, e As EventArgs)
-        Try
-            Dim lafolder = fn.ReadLogUser("decks_dir", False)
-            Process.Start(lafolder)
-        Catch
-            fn.PrintError(Err.Description)
-        End Try
-    End Sub
-
-    Private Sub DecksFolderToolStripMenuItem_Click_1(sender As Object, e As EventArgs)
-        Try
-            Dim lafolder = fn.ReadLogUser("decks_dir", False)
-            Process.Start(lafolder)
-        Catch
-            fn.PrintError(Err.Description)
-        End Try
-    End Sub
-
-    Private Sub ReadForgeLogFileToolStripMenuItem_Click(sender As Object, e As EventArgs)
-
-        fn.OpenLogFile()
-    End Sub
-
     Private Sub OpenDecksFolderToolStripMenuItem_Click(sender As Object, e As EventArgs) _
         Handles OpenDecksFolderToolStripMenuItem.Click
         Try
@@ -230,25 +139,7 @@ Public Class ft
         End Try
     End Sub
 
-    Private Sub SettingsToolStripMenuItem_Click(sender As Object, e As EventArgs)
-
-        Dim opened = False
-
-        For Each frm As Form In Application.OpenForms
-            If frm.Name.Equals("preferences") Then
-                frm.Show()
-                opened = True
-            End If
-        Next
-
-        If opened = False Then
-            Dim box = New preferences()
-            box.Show()
-        End If
-    End Sub
-
     Private Sub extract4_Click(sender As Object, e As EventArgs) Handles extract4.Click
-        fn.checkunsupportedcards()
         Select Case fromweb.SelectedItem.ToString
             Case "mtgtop8"
                 Ext.ExtractFromMtgtop8(Replace(maxtournamentsdecks.SelectedItem.ToString, "Limit ", ""))
@@ -421,10 +312,6 @@ Public Class ft
         'fin del continua
     End Sub
 
-    Private Sub Button1_Click_1(sender As Object, e As EventArgs)
-        'extracttournamentmtggoldfish("https://www.mtggoldfish.com/decks/budget/Modern#paper", 100)
-    End Sub
-
     Public Shared Function IsFormOpen(FormType As Type) As Boolean
         For Each OpenForm In Application.OpenForms
             If OpenForm.GetType() = FormType Then
@@ -451,18 +338,7 @@ Public Class ft
         End If
     End Sub
 
-    Private Sub btnupdate_Click(sender As Object, e As EventArgs)
-        'If typeofupdate.SelectedItem.ToString = "release" Then
-        '    MsgBox("Please, consider using snapshots, releases have not been created for months.")
-        '    Exit Sub
-        'End If
-    End Sub
-
     Private Sub txlog_TextChanged(sender As Object, e As EventArgs) Handles txlog.TextChanged
-    End Sub
-
-    Private Sub Button1_Click_2(sender As Object, e As EventArgs)
-        'CreateCardsBySetFile()
     End Sub
 
     Sub CreateCardsBySetFile()
@@ -539,9 +415,9 @@ Public Class ft
                     archivodestino = Replace(archivodestino, vbCrLf & vbCrLf & vbCrLf, vbCrLf)
                     archivodestino = Replace(archivodestino, vbCrLf & vbCrLf, vbCrLf)
 
-                    Dim afile As New StreamWriter(fPath, True)
-                    afile.WriteLine(archivodestino)
-                    afile.Close()
+                    Using afile As New StreamWriter(fPath, True)
+                        afile.WriteLine(archivodestino)
+                    End Using
                 End If
             Next b
 
@@ -626,17 +502,16 @@ Public Class ft
                 End If
                 If resultado <> "" Then
                     If i > 0 Then '"ach ach run"
-                        Dim file = My.Computer.FileSystem.OpenTextFileWriter(vars.UserDir & "\fldata\allcardsandsets.txt", True)
-                        file.WriteLine(resultado)
-                        file.Close()
-
+                        Using file = My.Computer.FileSystem.OpenTextFileWriter(vars.UserDir & "\fldata\allcardsandsets.txt", True)
+                            file.WriteLine(resultado)
+                        End Using
                     End If
                 Else
                     archivodestino = File.ReadAllText(vars.UserDir & "\fldata\allcardsandsets.txt")
                     If archivodestino.Contains(vbCrLf & lacarta & "|") = False Then
-                        Dim file = My.Computer.FileSystem.OpenTextFileWriter(vars.UserDir & "\fldata\allcardsandsets.txt", True)
-                        file.WriteLine(lacarta & "|" & laedicion)
-                        file.Close()
+                        Using file = My.Computer.FileSystem.OpenTextFileWriter(vars.UserDir & "\fldata\allcardsandsets.txt", True)
+                            file.WriteLine(lacarta & "|" & laedicion)
+                        End Using
                     End If
                     archivodestino = ""
                 End If
@@ -713,71 +588,9 @@ Public Class ft
         'End If
     End Sub
 
-    Private Sub Button3_Click_3(sender As Object, e As EventArgs)
-        Dim rutausuario = fn.ReadLogUser("gauntlet_dir", False, False)
-        Dim directoryName As String = rutausuario
-        Try
-            Dim cuenta = 0
-            For Each deleteFile In Directory.GetFiles(directoryName, "LOCKED_*.*", SearchOption.TopDirectoryOnly)
-                If deleteFile.Contains("LOCKED_DotP") = False Then
-                    If deleteFile.Contains("LOCKED_Starting") = False Then
-                        If deleteFile.Contains("LOCKED_Swimming") = False Then
-                            File.Delete(deleteFile)
-                            fn.WriteUserLog("Deleting " & deleteFile & vbCrLf)
-                            cuenta = cuenta + 1
-                        End If
-                    End If
-                End If
-
-            Next
-            fn.WriteUserLog(cuenta & " downloaded Gauntlet has been deleted." & vbCrLf)
-        Catch
-        End Try
-    End Sub
-
     Private Sub CheckForForgeLauncherUpdatesToolStripMenuItem_Click(sender As Object, e As EventArgs) _
         Handles CheckForForgeLauncherUpdatesToolStripMenuItem.Click
         CheckLauncherUpdates()
-    End Sub
-
-    Public Shared Function GetDelimitedText(Text As String, OpenDelimiter As String,
-  CloseDelimiter As String, index As Long) As String
-        Dim i As Long, j As Long
-
-        If index = 0 Then index = 1
-
-        ' search the opening mark
-        i = InStr(index, Text, OpenDelimiter, vbTextCompare)
-        If i = 0 Then
-            index = 0
-            Exit Function
-        End If
-        i = i + Len(OpenDelimiter)
-
-        ' search the closing mark
-        j = InStr(i + 1, Text, CloseDelimiter, vbTextCompare)
-        If j = 0 Then
-            index = 0
-            Exit Function
-        End If
-
-        ' get the text between the two Delimiters
-        GetDelimitedText = Mid$(Text, i, j - i)
-
-        ' advanced the index after the closing Delimiter
-        index = j + Len(CloseDelimiter)
-
-    End Function
-
-    Public Shared Sub DownloadFile(address As String, fileName As String, Optional force_download As Boolean = False)
-        If File.Exists(fileName) And force_download = False Then Exit Sub
-        Try
-            Dim instance As New WebClient
-            If File.Exists(fileName) Then File.Delete(fileName)
-            instance.DownloadFile(address, fileName)
-        Catch
-            fn.PrintError(Err.Description)
-        End Try
     End Sub
 
     Public Shared Sub CheckLauncherUpdates()
@@ -791,7 +604,7 @@ Public Class ft
                 Try
                     fn.WriteUserLog("Downloading new version from GitHub..." & vbCrLf)
                     Dim myUrl = "https://github.com/churrufli/myforgetools/releases/download/0.2/Forge.Tools.zip"
-                    DownloadFile(myUrl, "Forge Tools New Version.zip")
+                    fn.DownloadFile(myUrl, "Forge Tools New Version.zip", True)
                     fn.WriteUserLog("Unpacking new version in " & Directory.GetCurrentDirectory() & "..." & vbCrLf)
                     fn.UnzipFile(Directory.GetCurrentDirectory() & "/" & "Forge Tools New Version.zip",
                                   Directory.GetCurrentDirectory() & "/fltmp")
@@ -809,19 +622,6 @@ Public Class ft
         Catch
 
         End Try
-    End Sub
-
-    Private Sub chkenableprompt_CheckedChanged(sender As Object, e As EventArgs)
-        Dim shit As Boolean
-        If fn.ReadLogUser("enableprompt", False, False) = "yes" Then
-            shit = True
-        Else
-            shit = False
-        End If
-    End Sub
-
-    Private Sub Button4_Click_1(sender As Object, e As EventArgs)
-        CreateCardsBySetFile()
     End Sub
 
     Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click
@@ -893,11 +693,11 @@ Public Class ft
         'aqui lo creo
         Dim fPath = vars.UserDir & "\fldata\allmysets.txt"
 
-        Dim afile As New StreamWriter(vars.UserDir & "\fldata\allmysets.txt", True)
-        For i = 0 To myListSortedByDate.Count - 1
-            afile.WriteLine(myListSortedByDate(i))
-        Next i
-        afile.Close()
+        Using afile As New StreamWriter(vars.UserDir & "\fldata\allmysets.txt", True)
+            For i = 0 To myListSortedByDate.Count - 1
+                afile.WriteLine(myListSortedByDate(i))
+            Next i
+        End Using
         MsgBox("\fldata\allmysets.tx created!")
 
     End Sub
@@ -908,10 +708,6 @@ Public Class ft
         CreateCardsBySetFile()
         Button5.Enabled = True
 
-    End Sub
-
-    Private Sub Button6_Click(sender As Object, e As EventArgs)
-        poneredicionesenmazos(metagame.SelectedItem.ToString())
     End Sub
 
     Sub poneredicionesenmazos(metajuego)
@@ -928,9 +724,9 @@ Public Class ft
                 'tx = fn.PonerEdicion(tx, name)
                 tx = tx
                 File.Delete(f)
-                Dim afile As New StreamWriter(f, True)
-                afile.WriteLine(tx)
-                afile.Close()
+                Using afile As New StreamWriter(f, True)
+                    afile.WriteLine(tx)
+                End Using
                 fn.WriteUserLog(name & vbCrLf)
 
             End If
@@ -939,19 +735,21 @@ Public Class ft
 
     End Sub
 
+    Function GetMetagameFolder(metajuego As String) As String
+        If metajuego.Contains("Commander") Then
+            Return Directory.GetCurrentDirectory() & "\user\decks\commander\"
+        End If
+
+        If metajuego.Contains("Brawl") Then
+            Return Directory.GetCurrentDirectory() & "\user\decks\brawl\"
+        End If
+
+        Return Directory.GetCurrentDirectory() & "\user\decks\constructed\" & metajuego
+    End Function
+
     Sub quitarediciones(metajuego)
 
-        Dim carpeta = ""
-
-        If metajuego.contains("Commander") Then
-            carpeta = Directory.GetCurrentDirectory() & "\user\decks\commander\"
-        End If
-
-        If metajuego.contains("Brawl") Then
-            carpeta = Directory.GetCurrentDirectory() & "\user\decks\brawl\"
-        End If
-
-        If carpeta = "" Then carpeta = Directory.GetCurrentDirectory() & "\user\decks\constructed\" & metajuego
+        Dim carpeta = GetMetagameFolder(metajuego)
 
         Dim result As String
 
@@ -986,9 +784,9 @@ Public Class ft
 
                 tx = tx
                 File.Delete(f)
-                Dim afile As New StreamWriter(f, True)
-                afile.WriteLine(tx)
-                afile.Close()
+                Using afile As New StreamWriter(f, True)
+                    afile.WriteLine(tx)
+                End Using
                 fn.WriteUserLog(name & vbCrLf)
 
             End If
@@ -999,17 +797,7 @@ Public Class ft
 
     Sub findcard(cardname)
         Dim metajuego = metagame.SelectedItem.ToString()
-        Dim carpeta = ""
-
-        If metajuego.Contains("Commander") Then
-            carpeta = Directory.GetCurrentDirectory() & "\user\decks\commander\"
-        End If
-
-        If metajuego.Contains("Brawl") Then
-            carpeta = Directory.GetCurrentDirectory() & "\user\decks\brawl\"
-        End If
-
-        If carpeta = "" Then carpeta = Directory.GetCurrentDirectory() & "\user\decks\constructed\" & metajuego
+        Dim carpeta = GetMetagameFolder(metajuego)
 
         For Each f In Directory.GetFiles(carpeta)
             Dim t = File.ReadAllText(f)
@@ -1024,10 +812,6 @@ Public Class ft
 
     Private Sub Button7_Click(sender As Object, e As EventArgs) Handles Button7.Click
         findcard(cardtofind.Text)
-    End Sub
-
-    Private Sub Button8_Click(sender As Object, e As EventArgs)
-        quitarediciones(metagame.SelectedItem.ToString())
     End Sub
 
     Public Shared Sub compressDirectory(DirectoryPath As String, OutputFilePath As String,
@@ -1061,31 +845,6 @@ Public Class ft
         Catch ex As Exception
             Console.WriteLine("Exception during processing {0}", ex)
         End Try
-    End Sub
-
-    Private Sub Button9_Click(sender As Object, e As EventArgs)
-
-        Dim metajuego = metagame.SelectedItem.ToString()
-        Dim carpeta = ""
-
-        If metajuego.Contains("Commander") Then
-            carpeta = Directory.GetCurrentDirectory() & "\user\decks\commander\"
-        End If
-
-        If metajuego.Contains("Brawl") Then
-            carpeta = Directory.GetCurrentDirectory() & "\user\decks\brawl\"
-        End If
-
-        If carpeta = "" Then carpeta = Directory.GetCurrentDirectory() & "\user\decks\constructed\" & metajuego
-
-        Dim elfichero = Directory.GetCurrentDirectory() & "\current" & LCase(fn.RemoveWhitespace(Replace(metajuego, " ", "")) & "metagame.zip")
-        If File.Exists(elfichero) Then
-            File.Delete(elfichero)
-        End If
-
-        compressDirectory(carpeta, elfichero)
-        fn.WriteUserLog("Zipped " & elfichero & vbCrLf)
-
     End Sub
 
     Private Sub Button2_Click_1(sender As Object, e As EventArgs) Handles Button2.Click
@@ -1154,59 +913,23 @@ Public Class ft
             Next
 
         Next
-        'ORDENO ALFABETICAMENTE
+        'ORDENO ALFABETICAMENTE Y QUITO DUPLICADOS
+        Cards = Cards.Distinct().ToList()
         Cards.Sort()
-        Cards.Distinct()
 
         Dim t As String
         For Each a In Cards
             t = t & a & vbCrLf
         Next
 
-        Dim afile As New StreamWriter(IO.Directory.GetCurrentDirectory() & "/fldata/allcardsandsets.txt", True)
-        afile.WriteLine(t)
-        afile.Close()
+        Using afile As New StreamWriter(IO.Directory.GetCurrentDirectory() & "/fldata/allcardsandsets.txt", True)
+            afile.WriteLine(t)
+        End Using
 
     End Sub
 
     Private Sub by_metagame_Click(sender As Object, e As EventArgs) Handles by_metagame.Click
 
-    End Sub
-
-    Private Sub Button1_Click_3(sender As Object, e As EventArgs)
-
-        Dim origen = "C:\Forge Versiones\forge\otros exes\NEOCOMANDERJPG"
-        Dim destino = "C:\Forge Versiones\forge\cache\pics\cards\NEC"
-        'recorro la carpeta de alternativas, cojo de la de neo y si existe la renombro a 1.fullborder y esta la meto como 2.fullborder
-        Dim file As File
-
-        Dim di As New DirectoryInfo(origen)
-        Dim fiArr As FileInfo() = di.GetFiles()
-        Dim fri As FileInfo
-        For Each fri In fiArr
-
-            Console.WriteLine(fri.Name)
-            'ahora busco si en neo otra se llama asi y la renombro
-
-            Dim di2 As New DirectoryInfo(destino)
-            Dim fiArr2 As FileInfo() = di2.GetFiles()
-            Dim fri2 As FileInfo
-            For Each fri2 In fiArr2
-                Dim nombre1, nombre2 As String
-                nombre1 = Replace(fri.Name, ".fullborder.jpg", "")
-                nombre2 = Replace(fri2.Name, ".fullborder.jpg", "")
-
-                'si hay en el destino una igual que se llama 1.fullborder tengo que del origen copiar renombrando a 1.fullborder
-                If nombre1 = nombre2 Then
-                    If nombre2.Contains("1") = True Then
-                        ' My.Computer.FileSystem.RenameFile(destino & "\" & fri2.Name, nombre2 & "1.fullborder.jpg")
-                        File.Copy(origen & "\" & fri.Name, destino & "\" & nombre2 & "1.fullborder.jpg", True)
-                    Else
-                        File.Copy(origen & "\" & fri.Name, destino & "\" & nombre2 & ".fullborder.jpg", True)
-                    End If
-                End If
-            Next fri2
-        Next fri
     End Sub
 
     Public Sub Button3_Click_4(sender As Object, e As EventArgs) Handles Button3.Click
@@ -1242,28 +965,8 @@ Public Class ft
 
     End Sub
 
-    Private Sub Button6_Click_1(sender As Object, e As EventArgs)
-        Dim metag = Replace(ComboBox1.Text, " ", "-")
-
-        Ext.ExtractfromAetherhubAlt("https://aetherhub.com/Metagame/" & metag & "/")
-    End Sub
-
     Private Sub Button6_Click_2(sender As Object, e As EventArgs) Handles Button6.Click
         fn.UnsupportedCards()
     End Sub
-
-    'Public Shared Function ExtractfromAetherhub(myUrl)
-    '    If myUrl = "" Then myUrl = ""
-    '    Dim _driver As IWebDriver = New ChromeDriver()
-    '    _driver.Navigate().GoToUrl(myUrl.ToString)
-    '    Dim elements As IList(Of IWebElement) = _driver.FindElements(By.ClassName("green"))
-
-    '    'Dim manager As New DriverManager
-    '    'Dim chromeConfig = New ChromeConfig()
-    '    'manager.SetUpDriver(chromeConfig)
-    '    'driver.Navigate().GoToUrl(myUrl)
-    '    'Dim elements As IList(Of IWebElement) = driverOne.FindElements(By.ClassName("green"))
-
-    'End Function
 
 End Class
