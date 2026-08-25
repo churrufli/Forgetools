@@ -1,18 +1,7 @@
-﻿Imports System.Net
-Imports System.Timers
-Imports ICSharpCode.SharpZipLib.Zip
+﻿Imports ICSharpCode.SharpZipLib.Zip
 
 Public Class ft
-    Shared todas
-
-    Public WithEvents downloader As WebClient
     Dim second As Integer
-
-    Sub TimerElapsed(sender As Object, e As ElapsedEventArgs)
-        ' Write the SignalTime.
-        Dim time As DateTime = e.SignalTime
-        Console.WriteLine("TIME: " + time)
-    End Sub
 
     Private Sub Fl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         GroupExtras.TabPages.Remove(GroupExtras.TabPages(1))
@@ -120,64 +109,7 @@ Public Class ft
         End If
     End Sub
 
-    Private Sub Button5_Click(sender As Object, e As EventArgs)
-        Ext.ExtractTournamentMtgtop8()
-    End Sub
-
-    Private Sub ForgeDiscordChannelToolStripMenuItem_Click(sender As Object, e As EventArgs)
-
-        Process.Start("https://discord.gg/3v9JCVr")
-    End Sub
-
-    Private Sub ForgeForumToolStripMenuItem_Click(sender As Object, e As EventArgs)
-
-        Process.Start("https://www.slightlymagic.net/forum/viewforum.php?f=26")
-    End Sub
-
-    Private Sub ForgeWikiToolStripMenuItem_Click(sender As Object, e As EventArgs)
-        Process.Start("https://www.slightlymagic.net/wiki/Forge")
-    End Sub
-
-    Private Sub RestartForgeLauncherToolStripMenuItem_Click(sender As Object, e As EventArgs)
-        Application.Restart()
-    End Sub
-
-    Private Sub GauntletContestFolderToolStripMenuItem_Click(sender As Object, e As EventArgs)
-        Try
-            Process.Start(fn.ReadLogUser("gauntlet_dir", False))
-        Catch
-            fn.PrintError(Err.Description)
-        End Try
-    End Sub
-
-    Private Sub PreferencesToolStripMenuItem_Click(sender As Object, e As EventArgs)
-    End Sub
-
-    Private Sub extract2_Click(sender As Object, e As EventArgs)
-        Ext.ExtractTournamentMtgtop8()
-    End Sub
-
-    Private Sub PicsFolderToolStripMenuItem_Click(sender As Object, e As EventArgs)
-        Try
-            Process.Start(fn.ReadLogUser("pics_dir", False))
-        Catch
-            fn.PrintError(Err.Description)
-        End Try
-    End Sub
-
-    Private Sub ForzeUpdateForgeLauncherToolStripMenuItem_Click(sender As Object, e As EventArgs)
-
-        fn.UpdateLog("launcher_version", "")
-        fn.UpdateLog("lastupdate", "")
-        Application.Restart()
-    End Sub
-
-    Private Sub CancelButton1_Click(sender As Object, e As EventArgs)
-        vars.continueLooping = True
-    End Sub
-
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles extract3.Click
-        fn.checkunsupportedcards()
         If InStr(metag2.SelectedItem.ToString, "-") = 0 Then
             Ext.ExtractTopMtggoldfish(metag2.SelectedItem.ToString, howmuch2.SelectedValue, False, "", "", True)
         End If
@@ -197,58 +129,17 @@ Public Class ft
         Return t
     End Function
 
-    Private Sub OpenToolStripMenuItem_Click(sender As Object, e As EventArgs)
-        Try
-            Dim lafolder = fn.ReadLogUser("decks_dir", False)
-            Process.Start(lafolder)
-        Catch
-            fn.PrintError(Err.Description)
-        End Try
-    End Sub
-
-    Private Sub DecksFolderToolStripMenuItem_Click_1(sender As Object, e As EventArgs)
-        Try
-            Dim lafolder = fn.ReadLogUser("decks_dir", False)
-            Process.Start(lafolder)
-        Catch
-            fn.PrintError(Err.Description)
-        End Try
-    End Sub
-
-    Private Sub ReadForgeLogFileToolStripMenuItem_Click(sender As Object, e As EventArgs)
-
-        fn.OpenLogFile()
-    End Sub
-
     Private Sub OpenDecksFolderToolStripMenuItem_Click(sender As Object, e As EventArgs) _
         Handles OpenDecksFolderToolStripMenuItem.Click
         Try
-            Dim lafolder = fn.ReadLogUser("decks_dir", False)
-            Process.Start(lafolder)
+            Dim folder = fn.ReadLogUser("decks_dir", False)
+            Process.Start(folder)
         Catch
             fn.PrintError(Err.Description)
         End Try
     End Sub
 
-    Private Sub SettingsToolStripMenuItem_Click(sender As Object, e As EventArgs)
-
-        Dim opened = False
-
-        For Each frm As Form In Application.OpenForms
-            If frm.Name.Equals("preferences") Then
-                frm.Show()
-                opened = True
-            End If
-        Next
-
-        If opened = False Then
-            Dim box = New preferences()
-            box.Show()
-        End If
-    End Sub
-
     Private Sub extract4_Click(sender As Object, e As EventArgs) Handles extract4.Click
-        fn.checkunsupportedcards()
         Select Case fromweb.SelectedItem.ToString
             Case "mtgtop8"
                 Ext.ExtractFromMtgtop8(Replace(maxtournamentsdecks.SelectedItem.ToString, "Limit ", ""))
@@ -257,7 +148,7 @@ Public Class ft
                         fn.ReadWeb(LCase(
                             "https://www.mtggoldfish.com/tournaments/" & ComboBox2.SelectedItem.ToString & "#paper"))
                 Dim links = Ext.extlinks(w, "/tournament/")
-                Dim laweb = ""
+                Dim pageUrl = ""
                 Dim t = ""
 
                 Dim urls() As String = Split(links, vbCrLf)
@@ -291,56 +182,56 @@ Public Class ft
         End Select
     End Sub
 
-    'esta es la funcion buena
+    'this is the good function
     Public Sub extracttournamentmtggoldfish(Optional ByVal tournament_url As String = "",
                                             Optional ByVal maxdecks As Integer = 100)
 
-        'aqui saco el link del torneo OK, debería de crear la carpeta
-        Dim eldir As String = "netdecks\mtggoldfish\" & fn.ReadLogUser("tournamentsdecks_dir", False) &
+        'get the tournament link here, OK, should create the folder
+        Dim baseDir As String = "netdecks\mtggoldfish\" & fn.ReadLogUser("tournamentsdecks_dir", False) &
                               "\"
 
         Dim tx1 As String
-        'METEMOS EN UNA VARIABLE EL tx DEL TORNEO PARA SACAR LAS URLS DE LOS MAZOS
+        'PUT THE TOURNAMENT'S TEXT IN A VARIABLE TO GET THE DECK URLS
         tx1 = fn.ReadWeb(tournament_url)
 
-        Dim tourname = ""
+        Dim tournamentName = ""
 
-        ' Leer el contenido.
+        ' Read the content.
         Dim res As String = tx1
-        'FORMATO DEL name
-        tourname = fn.FindIt(tx1, "<title>", "</title>")
-        tourname = Replace(tourname, " (" & ComboBox2.SelectedItem.ToString & ") Decks", "")
-        While tourname = Nothing
+        'FORMAT THE name
+        tournamentName = fn.FindIt(tx1, "<title>", "</title>")
+        tournamentName = Replace(tournamentName, " (" & ComboBox2.SelectedItem.ToString & ") Decks", "")
+        While tournamentName = Nothing
             If _
         MsgBox(
             "Throtted in page, PLEASE WAIT!!! 1 OR 2 MINUTE TO CONTINUE, THEN PRESS YES", MsgBoxStyle.YesNo, "Warning!") = MsgBoxResult.Yes Then
                 tx1 = fn.ReadWeb(tournament_url)
-                'repito codigo
-                tourname = ""
-                ' Leer el contenido.
+                'retry
+                tournamentName = ""
+                ' Read the content.
                 res = tx1
-                'FORMATO DEL name
-                tourname = fn.FindIt(tx1, "<title>", "</title>")
-                'repito hasta aqui
+                'FORMAT THE name
+                tournamentName = fn.FindIt(tx1, "<title>", "</title>")
+                'retry ends here
             Else
                 Exit Sub
             End If
         End While
 
-        If tourname Is Nothing Then tourname = ""
-        tourname = fn.Normalize(tourname)
-        tourname = tourname.Trim()
-        tourname = Replace(tourname, ":", "")
-        'CREAMOS UNA MyFolder CON EL name DEL TORNEO
-        Dim MyFolder As String = eldir & tourname & "\"
+        If tournamentName Is Nothing Then tournamentName = ""
+        tournamentName = fn.Normalize(tournamentName)
+        tournamentName = tournamentName.Trim()
+        tournamentName = Replace(tournamentName, ":", "")
+        'BUILD A MyFolder USING THE TOURNAMENT name
+        Dim MyFolder As String = baseDir & tournamentName & "\"
 
         If Directory.Exists(MyFolder) Then
             If _
                 MsgBox(
-                    "Folder " & tourname & " exists, do you want to download decks again? " & vbCrLf & vbCrLf &
+                    "Folder " & tournamentName & " exists, do you want to download decks again? " & vbCrLf & vbCrLf &
                     " (Decks inside the folder will be deleted)", MsgBoxStyle.YesNoCancel, "Warning!") = MsgBoxResult.No _
                 Then 'Or (MsgBoxResult.Cancel)
-                fn.WriteUserLog(tourname & " folder exists. Operation cancelled." & vbCrLf)
+                fn.WriteUserLog(tournamentName & " folder exists. Operation cancelled." & vbCrLf)
                 Exit Sub
             End If
         End If
@@ -353,40 +244,40 @@ Public Class ft
         txlog.Text = ""
         fn.WriteUserLog("Creating " & MyFolder & vbCrLf)
 
-        'SACAMOS LAS URLS DE LOS MAZOS
+        'GET THE DECK URLS
 
         tx1 = Ext.extlinks(tx1, "/deck/", "/deck/custom/standard") '"/visual/",
 
-        'YA TENGO LAS URL, AHORA A EXTRAER UNA POR UNA
-        Dim lasurls() As String = Split(tx1, vbCrLf)
-        Dim mx = Replace(maxtournamentsdecks.SelectedItem.ToString, "Limit ", "")
-        Dim contadorposicion = 0
-        For a = 0 To lasurls.Length - 1
+        'WE NOW HAVE THE URLS, TIME TO EXTRACT THEM ONE BY ONE
+        Dim deckUrls() As String = Split(tx1, vbCrLf)
+        Dim maxDecksLimit = Replace(maxtournamentsdecks.SelectedItem.ToString, "Limit ", "")
+        Dim positionCounter = 0
+        For a = 0 To deckUrls.Length - 1
 
             If _
-                lasurls(a).ToString <> "" And
-                lasurls(a).ToString <> "/deck/custom/" & LCase(ComboBox2.SelectedItem.ToString) Then
+                deckUrls(a).ToString <> "" And
+                deckUrls(a).ToString <> "/deck/custom/" & LCase(ComboBox2.SelectedItem.ToString) Then
 
-                If a > mx Then Exit For
+                If a > maxDecksLimit Then Exit For
 
                 Dim DeckPage = ""
                 Dim UrlDeck = ""
-                'pagina del mazo i
-                DeckPage = fn.ReadWeb(vars.mtggf & lasurls(a))
-                'url del mazo i
+                'page for deck i
+                DeckPage = fn.ReadWeb(vars.mtggf & deckUrls(a))
+                'url for deck i
 
                 UrlDeck = Ext.extmtggoldfish(DeckPage, "/deck/download/")
                 If UrlDeck.Contains(vbCrLf) Then UrlDeck = UrlDeck.Split(vbCrLf)(0).ToString
                 Dim Deck = ""
                 Dim TitDeck = ""
-                'titulo del mazo i
+                'title for deck i
 
-                'formato del titulo del mazo
+                'format the deck title
 
-                'sacamos el tx del
+                'get the deck's text
                 Deck = fn.ReadWeb(vars.mtggf & "/" & UrlDeck)
 
-                'formato del mazo
+                'format the deck
                 Deck = Replace(Deck, "sideboard", "[sideboard]")
                 Deck = Replace(Deck, vbCrLf & vbCrLf, vbCrLf & "[sideboard]" & vbCrLf)
 
@@ -400,12 +291,12 @@ Public Class ft
                 TitDeck = Replace(TitDeck, "_", " ")
                 TitDeck = Replace(TitDeck, """", "'")
 
-                Dim num As String = (contadorposicion + 1).ToString
+                Dim num As String = (positionCounter + 1).ToString
                 If Len(num) <= 1 Then num = "0" & num
 
                 TitDeck = "#" & num & " - " & TitDeck
 
-                contadorposicion = (contadorposicion + 1).ToString
+                positionCounter = (positionCounter + 1).ToString
                 Deck = fn.FormatDeck(Deck, TitDeck)
                 fn.StringToDeck(MyFolder, Deck, TitDeck)
                 fn.WriteUserLog("Saving " & TitDeck & vbCrLf)
@@ -415,14 +306,10 @@ Public Class ft
         extract1.Enabled = True
         fn.WriteUserLog("Completed")
         't = fn.ReadWeb(web)
-        'y esto de abajo está bien?
+        'is the below ok?
         ' If i = 0 Then Exit For
 
-        'fin del continua
-    End Sub
-
-    Private Sub Button1_Click_1(sender As Object, e As EventArgs)
-        'extracttournamentmtggoldfish("https://www.mtggoldfish.com/decks/budget/Modern#paper", 100)
+        'end of the loop
     End Sub
 
     Public Shared Function IsFormOpen(FormType As Type) As Boolean
@@ -451,197 +338,185 @@ Public Class ft
         End If
     End Sub
 
-    Private Sub btnupdate_Click(sender As Object, e As EventArgs)
-        'If typeofupdate.SelectedItem.ToString = "release" Then
-        '    MsgBox("Please, consider using snapshots, releases have not been created for months.")
-        '    Exit Sub
-        'End If
-    End Sub
-
     Private Sub txlog_TextChanged(sender As Object, e As EventArgs) Handles txlog.TextChanged
-    End Sub
-
-    Private Sub Button1_Click_2(sender As Object, e As EventArgs)
-        'CreateCardsBySetFile()
     End Sub
 
     Sub CreateCardsBySetFile()
 
-        Dim todaslascartas As String = File.ReadAllText(vars.UserDir & "\fldata\allsupportedcards.txt")
-        Dim todaslasediciones As String = File.ReadAllText(vars.UserDir & "\fldata\allmysets.txt")
-        Dim archivodestino As String = File.ReadAllText(vars.UserDir & "\fldata\allcardsandsets.txt")
+        Dim allCards As String = File.ReadAllText(vars.UserDir & "\fldata\allsupportedcards.txt")
+        Dim allEditions As String = File.ReadAllText(vars.UserDir & "\fldata\allmysets.txt")
+        Dim destinationContent As String = File.ReadAllText(vars.UserDir & "\fldata\allcardsandsets.txt")
 
-        Dim resultado = ""
+        Dim result = ""
 
-        Dim cartas = Split(todaslascartas, vbCrLf)
-        Dim edici() = Split(todaslasediciones, vbCrLf)
+        Dim cardLines = Split(allCards, vbCrLf)
+        Dim editionLines() = Split(allEditions, vbCrLf)
 
-        Dim ediciones() As String
+        Dim editionsArray() As String
 
-        Dim edicionesmalas() As String
-        Dim listbuenas As New List(Of String)()
-        Dim listmalas As New List(Of String)()
-        Dim listignorar As New List(Of String)()
+        Dim badEditionsArray() As String
+        Dim goodEditionsList As New List(Of String)()
+        Dim badEditionsList As New List(Of String)()
+        Dim ignoreList As New List(Of String)()
 
-        Dim cuentabuenas = 0
-        Dim cuentamalas = 0
+        Dim goodCount = 0
+        Dim badCount = 0
 
-        For x = 0 To edici.Length - 1
-            If edici(x) <> "" Then
+        For x = 0 To editionLines.Length - 1
+            If editionLines(x) <> "" Then
 
-                Dim setcode = Split(edici(x), "SetCode=")(1).Split("|")(0)
-                Dim setfolder = Split(edici(x), "Folder=")(1).Split("|")(0)
-                Dim SetType = Split(edici(x), "SetType=")(1).Split("|")(0)
+                Dim setCode = Split(editionLines(x), "SetCode=")(1).Split("|")(0)
+                Dim setFolder = Split(editionLines(x), "Folder=")(1).Split("|")(0)
+                Dim SetType = Split(editionLines(x), "SetType=")(1).Split("|")(0)
 
-                Dim pasar As Boolean = True
-                'aqui pongo las que no quiero que tome
-                Dim tipodeexpansion = Split(edici(x), "SetType=")(1).Split(vbLf)(0).ToString
-                If setcode = "UNH" Then
-                    listbuenas.Add(setcode)
-                    pasar = False
+                Dim shouldInclude As Boolean = True
+                'this is where I list the ones I don't want to include
+                Dim expansionType = Split(editionLines(x), "SetType=")(1).Split(vbLf)(0).ToString
+                If setCode = "UNH" Then
+                    goodEditionsList.Add(setCode)
+                    shouldInclude = False
                 End If
-                If setcode = "PLIST" Then
-                    listmalas.Add(setcode)
-                    pasar = False
+                If setCode = "PLIST" Then
+                    badEditionsList.Add(setCode)
+                    shouldInclude = False
                 End If
-                If setcode = "PSLD" Then
-                    listmalas.Add(setcode)
-                    pasar = False
+                If setCode = "PSLD" Then
+                    badEditionsList.Add(setCode)
+                    shouldInclude = False
                 End If
-                If pasar Then
-                    Select Case tipodeexpansion
+                If shouldInclude Then
+                    Select Case expansionType
                         Case "Expansion", "Core", "Other", "Reprint"
-                            listbuenas.Add(setcode)
+                            goodEditionsList.Add(setCode)
                         Case Else
-                            listmalas.Add(setcode)
+                            badEditionsList.Add(setCode)
                     End Select
                 End If
 
             End If
         Next x
 
-        For i = 0 To cartas.Length - 1
-            Dim lacarta = Split(cartas(i), "|")(0)
-            Dim laedicion = Split(cartas(i), "|")(1)
-            If laedicion.Contains("|") Then laedicion = Split(laedicion, "|")(0)
+        For i = 0 To cardLines.Length - 1
+            Dim cardName = Split(cardLines(i), "|")(0)
+            Dim cardEdition = Split(cardLines(i), "|")(1)
+            If cardEdition.Contains("|") Then cardEdition = Split(cardEdition, "|")(0)
 
-            lacarta = lacarta
-            laedicion = laedicion
+            cardName = cardName
+            cardEdition = cardEdition
 
-            For b = 0 To listmalas.Count - 1
-                Dim cartaconsalto = cartas(i) & vbCrLf
-                If cartaconsalto.Contains("|" & listmalas(b) & vbCrLf) Then
-                    archivodestino = Replace(archivodestino, vbCrLf & lacarta & "|" & listmalas(b) & vbCrLf, Nothing)
+            For b = 0 To badEditionsList.Count - 1
+                Dim cardLineWithBreak = cardLines(i) & vbCrLf
+                If cardLineWithBreak.Contains("|" & badEditionsList(b) & vbCrLf) Then
+                    destinationContent = Replace(destinationContent, vbCrLf & cardName & "|" & badEditionsList(b) & vbCrLf, Nothing)
                     File.Delete(vars.UserDir & "\fldata\allcardsandsets.txt")
                     Dim fPath = vars.UserDir & "\fldata\allcardsandsets.txt"
-                    archivodestino = Replace(archivodestino, vbCrLf & vbCrLf & vbCrLf & vbCrLf & vbCrLf, vbCrLf)
-                    archivodestino = Replace(archivodestino, vbCrLf & vbCrLf & vbCrLf & vbCrLf, vbCrLf)
-                    archivodestino = Replace(archivodestino, vbCrLf & vbCrLf & vbCrLf, vbCrLf)
-                    archivodestino = Replace(archivodestino, vbCrLf & vbCrLf, vbCrLf)
+                    destinationContent = Replace(destinationContent, vbCrLf & vbCrLf & vbCrLf & vbCrLf & vbCrLf, vbCrLf)
+                    destinationContent = Replace(destinationContent, vbCrLf & vbCrLf & vbCrLf & vbCrLf, vbCrLf)
+                    destinationContent = Replace(destinationContent, vbCrLf & vbCrLf & vbCrLf, vbCrLf)
+                    destinationContent = Replace(destinationContent, vbCrLf & vbCrLf, vbCrLf)
 
-                    Dim afile As New StreamWriter(fPath, True)
-                    afile.WriteLine(archivodestino)
-                    afile.Close()
+                    Using afile As New StreamWriter(fPath, True)
+                        afile.WriteLine(destinationContent)
+                    End Using
                 End If
             Next b
 
         Next i
 
-        archivodestino = ""
-        Dim anterior As String = ""
-        For i = 0 To cartas.Length - 1
+        destinationContent = ""
+        Dim previousCard As String = ""
+        For i = 0 To cardLines.Length - 1
 
-            archivodestino = ""
-            archivodestino = File.ReadAllText(vars.UserDir & "\fldata\allcardsandsets.txt")
+            destinationContent = ""
+            destinationContent = File.ReadAllText(vars.UserDir & "\fldata\allcardsandsets.txt")
 
-            'formateo la carta
-            Dim lacarta = Split(cartas(i), "|")(0)
-            Dim laedicion = Split(cartas(i), "|")(1)
+            'format the card
+            Dim cardName = Split(cardLines(i), "|")(0)
+            Dim cardEdition = Split(cardLines(i), "|")(1)
 
-            If Environment.NewLine & lacarta & "|" <> anterior Then
+            If Environment.NewLine & cardName & "|" <> previousCard Then
 
-                If laedicion.Contains("|") Then laedicion = Split(laedicion, "|")(0)
-                lacarta = lacarta
-                laedicion = laedicion
-                Dim hapasado As Boolean
+                If cardEdition.Contains("|") Then cardEdition = Split(cardEdition, "|")(0)
+                cardName = cardName
+                cardEdition = cardEdition
+                Dim found As Boolean
 
-                fn.WriteUserLog("processing " & lacarta & vbCrLf)
+                fn.WriteUserLog("processing " & cardName & vbCrLf)
 
-                For e = 0 To listbuenas.Count - 1
-                    hapasado = False
+                For e = 0 To goodEditionsList.Count - 1
+                    found = False
 
-                    'patron para buscar en el listado de todas
-                    Dim patron = lacarta & "|" & listbuenas(e)
-                    If archivodestino.Contains(Environment.NewLine & lacarta & "|") Then
-                        hapasado = True
+                    'pattern used to search through the full list
+                    Dim pattern = cardName & "|" & goodEditionsList(e)
+                    If destinationContent.Contains(Environment.NewLine & cardName & "|") Then
+                        found = True
                         Exit For
                     End If
 
                     If _
-                        lacarta = "Forest" Or lacarta = "Plains" Or lacarta = "Swamp" Or lacarta = "Mountain" Or
-                        lacarta = "Island" Then
-                        hapasado = True
-                        resultado = lacarta & "|KHM"
+                        cardName = "Forest" Or cardName = "Plains" Or cardName = "Swamp" Or cardName = "Mountain" Or
+                        cardName = "Island" Then
+                        found = True
+                        result = cardName & "|KHM"
                         Exit For
                     End If
 
-                    If lacarta = "Wastes" Then
-                        hapasado = True
-                        resultado = lacarta & "|OGW"
+                    If cardName = "Wastes" Then
+                        found = True
+                        result = cardName & "|OGW"
                         Exit For
                     End If
 
-                    Dim contiene = False
+                    Dim hasMatch = False
                     Try
-                        'AQUI ES DONDE MIRO SI LA EDICION X COINCIDE EN EL FICHERO DE TODAS DE CARTAS
-                        'Dim controlar = Split(todaslascartas,Environment.NewLine & patron)(0).Split(vbCrLf)(0)
-                        'If controlar = patron then
-                        If todaslascartas.Contains(Environment.NewLine & patron) = True Then
-                            resultado = patron
-                            hapasado = True
+                        'THIS IS WHERE I CHECK IF EDITION X MATCHES IN THE FILE OF ALL CARDS
+                        'Dim check = Split(allCards,Environment.NewLine & pattern)(0).Split(vbCrLf)(0)
+                        'If check = pattern then
+                        If allCards.Contains(Environment.NewLine & pattern) = True Then
+                            result = pattern
+                            found = True
                             Exit For
                         End If
                     Catch
                     End Try
                 Next e
 
-                If hapasado = False Then
-                    resultado = lacarta & "|" & laedicion
+                If found = False Then
+                    result = cardName & "|" & cardEdition
                 Else
-                    resultado = resultado
+                    result = result
                 End If
 
-                If resultado <> "" Then
-                    Dim carpetaca = Directory.GetCurrentDirectory() & "\cache\pics\cards\" &
-                                    Split(resultado, "|")(1)
-                    If Directory.Exists(carpetaca) = False And hapasado = True Then
-                        carpetaca = carpetaca
+                If result <> "" Then
+                    Dim cacheFolder = Directory.GetCurrentDirectory() & "\cache\pics\cards\" &
+                                    Split(result, "|")(1)
+                    If Directory.Exists(cacheFolder) = False And found = True Then
+                        cacheFolder = cacheFolder
                     End If
                 End If
-                If resultado <> "" Then
-                    Dim test = Environment.NewLine & Split(resultado, "|")(0) & "|"
-                    If archivodestino.Contains(test) = True Then
-                        resultado = ""
+                If result <> "" Then
+                    Dim test = Environment.NewLine & Split(result, "|")(0) & "|"
+                    If destinationContent.Contains(test) = True Then
+                        result = ""
                     End If
                 End If
-                If resultado <> "" Then
+                If result <> "" Then
                     If i > 0 Then '"ach ach run"
-                        Dim file = My.Computer.FileSystem.OpenTextFileWriter(vars.UserDir & "\fldata\allcardsandsets.txt", True)
-                        file.WriteLine(resultado)
-                        file.Close()
-
+                        Using file = My.Computer.FileSystem.OpenTextFileWriter(vars.UserDir & "\fldata\allcardsandsets.txt", True)
+                            file.WriteLine(result)
+                        End Using
                     End If
                 Else
-                    archivodestino = File.ReadAllText(vars.UserDir & "\fldata\allcardsandsets.txt")
-                    If archivodestino.Contains(vbCrLf & lacarta & "|") = False Then
-                        Dim file = My.Computer.FileSystem.OpenTextFileWriter(vars.UserDir & "\fldata\allcardsandsets.txt", True)
-                        file.WriteLine(lacarta & "|" & laedicion)
-                        file.Close()
+                    destinationContent = File.ReadAllText(vars.UserDir & "\fldata\allcardsandsets.txt")
+                    If destinationContent.Contains(vbCrLf & cardName & "|") = False Then
+                        Using file = My.Computer.FileSystem.OpenTextFileWriter(vars.UserDir & "\fldata\allcardsandsets.txt", True)
+                            file.WriteLine(cardName & "|" & cardEdition)
+                        End Using
                     End If
-                    archivodestino = ""
+                    destinationContent = ""
                 End If
 
-                anterior = Environment.NewLine & lacarta & "|"
+                previousCard = Environment.NewLine & cardName & "|"
             End If
 
         Next i
@@ -649,33 +524,33 @@ Public Class ft
 
     'Private Sub Button1_Click_3(sender As Object, e As EventArgs) Handles Button1.Click
 
-    '    Dim validoano = False
-    '    Dim validoformat = False
+    '    Dim yearValid = False
+    '    Dim formatValid = False
     '    If lbgauntletyear.SelectedIndex <> -1 Then
-    '        validoano = True
+    '        yearValid = True
     '    End If
-    '    If validoano = False Then
+    '    If yearValid = False Then
     '        MsgBox("Select Year")
     '        Exit Sub
     '    End If
 
     '    If lbgauntletformat.SelectedIndex <> -1 Then
-    '        validoformat = True
+    '        formatValid = True
     '    End If
-    '    If validoformat = False Then
+    '    If formatValid = False Then
     '        MsgBox("Select Format")
     '        Exit Sub
     '    End If
 
-    '    Dim ano = lbgauntletyear.SelectedItem.ToString
-    '    Dim formato = lbgauntletformat.SelectedItem.ToString
+    '    Dim year = lbgauntletyear.SelectedItem.ToString
+    '    Dim tournamentFormat = lbgauntletformat.SelectedItem.ToString
     '    Button1.Enabled = False
     '    Try
     '        File.Delete("gauntlet.zip")
     '    Catch
     '    End Try
     '    Try
-    '        fn.DownloadFile(vars.BaseUrl & "gauntlets/" & LCase(formato) & "/" & ano & ".zip", "gauntlet.zip", True)
+    '        fn.DownloadFile(vars.BaseUrl & "gauntlets/" & LCase(tournamentFormat) & "/" & year & ".zip", "gauntlet.zip", True)
     '    Catch
     '        fn.WriteUserLog("Unable to get from server temporarily, please try later." & vbCrLf)
     '        Exit Sub
@@ -685,11 +560,11 @@ Public Class ft
     '    vars.UserDir = My.Settings.myuser_directory
     '    vars.UserDir = Replace(vars.UserDir, "/user", "")
     '    vars.UserDir = Replace(vars.UserDir, "\user", "")
-    '    Dim rutausuario = fn.ReadLogUser("gauntlet_dir", False, False)
+    '    Dim userPath = fn.ReadLogUser("gauntlet_dir", False, False)
 
     '    Using archive As ZipArchive = ZipFile.OpenRead("gauntlet.zip")
     '        For Each entry As ZipArchiveEntry In archive.Entries
-    '            entry.ExtractToFile(Path.Combine(rutausuario & "\", entry.FullName), True)
+    '            entry.ExtractToFile(Path.Combine(userPath & "\", entry.FullName), True)
     '            fn.WriteUserLog("Extracting Gauntlet " & entry.Name & vbCrLf)
     '            mycount += 1
     '        Next
@@ -713,71 +588,9 @@ Public Class ft
         'End If
     End Sub
 
-    Private Sub Button3_Click_3(sender As Object, e As EventArgs)
-        Dim rutausuario = fn.ReadLogUser("gauntlet_dir", False, False)
-        Dim directoryName As String = rutausuario
-        Try
-            Dim cuenta = 0
-            For Each deleteFile In Directory.GetFiles(directoryName, "LOCKED_*.*", SearchOption.TopDirectoryOnly)
-                If deleteFile.Contains("LOCKED_DotP") = False Then
-                    If deleteFile.Contains("LOCKED_Starting") = False Then
-                        If deleteFile.Contains("LOCKED_Swimming") = False Then
-                            File.Delete(deleteFile)
-                            fn.WriteUserLog("Deleting " & deleteFile & vbCrLf)
-                            cuenta = cuenta + 1
-                        End If
-                    End If
-                End If
-
-            Next
-            fn.WriteUserLog(cuenta & " downloaded Gauntlet has been deleted." & vbCrLf)
-        Catch
-        End Try
-    End Sub
-
     Private Sub CheckForForgeLauncherUpdatesToolStripMenuItem_Click(sender As Object, e As EventArgs) _
         Handles CheckForForgeLauncherUpdatesToolStripMenuItem.Click
         CheckLauncherUpdates()
-    End Sub
-
-    Public Shared Function GetDelimitedText(Text As String, OpenDelimiter As String,
-  CloseDelimiter As String, index As Long) As String
-        Dim i As Long, j As Long
-
-        If index = 0 Then index = 1
-
-        ' search the opening mark
-        i = InStr(index, Text, OpenDelimiter, vbTextCompare)
-        If i = 0 Then
-            index = 0
-            Exit Function
-        End If
-        i = i + Len(OpenDelimiter)
-
-        ' search the closing mark
-        j = InStr(i + 1, Text, CloseDelimiter, vbTextCompare)
-        If j = 0 Then
-            index = 0
-            Exit Function
-        End If
-
-        ' get the text between the two Delimiters
-        GetDelimitedText = Mid$(Text, i, j - i)
-
-        ' advanced the index after the closing Delimiter
-        index = j + Len(CloseDelimiter)
-
-    End Function
-
-    Public Shared Sub DownloadFile(address As String, fileName As String, Optional force_download As Boolean = False)
-        If File.Exists(fileName) And force_download = False Then Exit Sub
-        Try
-            Dim instance As New WebClient
-            If File.Exists(fileName) Then File.Delete(fileName)
-            instance.DownloadFile(address, fileName)
-        Catch
-            fn.PrintError(Err.Description)
-        End Try
     End Sub
 
     Public Shared Sub CheckLauncherUpdates()
@@ -791,7 +604,7 @@ Public Class ft
                 Try
                     fn.WriteUserLog("Downloading new version from GitHub..." & vbCrLf)
                     Dim myUrl = "https://github.com/churrufli/myforgetools/releases/download/0.2/Forge.Tools.zip"
-                    DownloadFile(myUrl, "Forge Tools New Version.zip")
+                    fn.DownloadFile(myUrl, "Forge Tools New Version.zip", True)
                     fn.WriteUserLog("Unpacking new version in " & Directory.GetCurrentDirectory() & "..." & vbCrLf)
                     fn.UnzipFile(Directory.GetCurrentDirectory() & "/" & "Forge Tools New Version.zip",
                                   Directory.GetCurrentDirectory() & "/fltmp")
@@ -809,19 +622,6 @@ Public Class ft
         Catch
 
         End Try
-    End Sub
-
-    Private Sub chkenableprompt_CheckedChanged(sender As Object, e As EventArgs)
-        Dim shit As Boolean
-        If fn.ReadLogUser("enableprompt", False, False) = "yes" Then
-            shit = True
-        Else
-            shit = False
-        End If
-    End Sub
-
-    Private Sub Button4_Click_1(sender As Object, e As EventArgs)
-        CreateCardsBySetFile()
     End Sub
 
     Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click
@@ -858,9 +658,9 @@ Public Class ft
             Catch
             End Try
 
-            Dim linea = "SetDate=" & SetDate & "|SetName=" & SetName & "|SetCode=" & SetCode & "|SetFolder=" & SetFolder & "|SetType=" & SetType
-            linea = Replace(linea, vbCr, Nothing)
-            myList.Add(linea)
+            Dim lineText = "SetDate=" & SetDate & "|SetName=" & SetName & "|SetCode=" & SetCode & "|SetFolder=" & SetFolder & "|SetType=" & SetType
+            lineText = Replace(lineText, vbCr, Nothing)
+            myList.Add(lineText)
 
             Console.WriteLine(fri.Name)
 
@@ -870,34 +670,34 @@ Public Class ft
 
         Dim myListSortedByDate As New List(Of String)()
 
-        Dim startP As DateTime = New DateTime(1993, 8, 5)
-        Dim endP As DateTime = New DateTime(DateTime.Now.Year, Date.Now.Month, Date.Now.Day)
-        Dim currD As DateTime = startP
+        Dim startDate As DateTime = New DateTime(1993, 8, 5)
+        Dim endDate As DateTime = New DateTime(DateTime.Now.Year, Date.Now.Month, Date.Now.Day)
+        Dim currentDate As DateTime = startDate
 
-        While (currD <= endP)
+        While (currentDate <= endDate)
 
             For i = 0 To myList.Count - 1
-                Dim fecha = Split(myList(i), "SetDate=")(1).Split("|")(0)
-                If CDate(fecha).ToShortDateString = CDate(currD).ToShortDateString Then
+                Dim entryDate = Split(myList(i), "SetDate=")(1).Split("|")(0)
+                If CDate(entryDate).ToShortDateString = CDate(currentDate).ToShortDateString Then
                     myListSortedByDate.Add(myList(i))
                 End If
             Next i
-            currD = currD.AddDays(1)
+            currentDate = currentDate.AddDays(1)
 
         End While
 
         myListSortedByDate.Reverse()
 
-        'borro y lo creo
+        'delete it and create it
         File.Delete(vars.UserDir & "\fldata\allmysets.txt")
-        'aqui lo creo
+        'create it here
         Dim fPath = vars.UserDir & "\fldata\allmysets.txt"
 
-        Dim afile As New StreamWriter(vars.UserDir & "\fldata\allmysets.txt", True)
-        For i = 0 To myListSortedByDate.Count - 1
-            afile.WriteLine(myListSortedByDate(i))
-        Next i
-        afile.Close()
+        Using afile As New StreamWriter(vars.UserDir & "\fldata\allmysets.txt", True)
+            For i = 0 To myListSortedByDate.Count - 1
+                afile.WriteLine(myListSortedByDate(i))
+            Next i
+        End Using
         MsgBox("\fldata\allmysets.tx created!")
 
     End Sub
@@ -910,13 +710,9 @@ Public Class ft
 
     End Sub
 
-    Private Sub Button6_Click(sender As Object, e As EventArgs)
-        poneredicionesenmazos(metagame.SelectedItem.ToString())
-    End Sub
+    Sub PutEditionsInDecks(gameFormat)
 
-    Sub poneredicionesenmazos(metajuego)
-
-        For Each f In Directory.GetFiles(Directory.GetCurrentDirectory() & "\user\decks\constructed\" & metajuego)
+        For Each f In Directory.GetFiles(Directory.GetCurrentDirectory() & "\user\decks\constructed\" & gameFormat)
             Dim t = File.ReadAllText(f)
             t = t
             If t <> "" Then
@@ -925,12 +721,12 @@ Public Class ft
                 tx = tx
 
                 name = name
-                'tx = fn.PonerEdicion(tx, name)
+                'tx = fn.PutEdition(tx, name)
                 tx = tx
                 File.Delete(f)
-                Dim afile As New StreamWriter(f, True)
-                afile.WriteLine(tx)
-                afile.Close()
+                Using afile As New StreamWriter(f, True)
+                    afile.WriteLine(tx)
+                End Using
                 fn.WriteUserLog(name & vbCrLf)
 
             End If
@@ -939,23 +735,25 @@ Public Class ft
 
     End Sub
 
-    Sub quitarediciones(metajuego)
-
-        Dim carpeta = ""
-
-        If metajuego.contains("Commander") Then
-            carpeta = Directory.GetCurrentDirectory() & "\user\decks\commander\"
+    Function GetMetagameFolder(gameFormat As String) As String
+        If gameFormat.Contains("Commander") Then
+            Return Directory.GetCurrentDirectory() & "\user\decks\commander\"
         End If
 
-        If metajuego.contains("Brawl") Then
-            carpeta = Directory.GetCurrentDirectory() & "\user\decks\brawl\"
+        If gameFormat.Contains("Brawl") Then
+            Return Directory.GetCurrentDirectory() & "\user\decks\brawl\"
         End If
 
-        If carpeta = "" Then carpeta = Directory.GetCurrentDirectory() & "\user\decks\constructed\" & metajuego
+        Return Directory.GetCurrentDirectory() & "\user\decks\constructed\" & gameFormat
+    End Function
+
+    Sub RemoveEditionsFromDecks(gameFormat)
+
+        Dim folder = GetMetagameFolder(gameFormat)
 
         Dim result As String
 
-        For Each f In Directory.GetFiles(carpeta)
+        For Each f In Directory.GetFiles(folder)
             result = ""
             Dim t = File.ReadAllText(f)
             t = t
@@ -966,7 +764,7 @@ Public Class ft
 
                 name = name
 
-                'parto por los saltos
+                'split it by newlines
                 Dim lines() = Split(tx, vbCrLf)
                 For i = 0 To lines.Count - 1
                     If lines(i) <> "" Then
@@ -986,9 +784,9 @@ Public Class ft
 
                 tx = tx
                 File.Delete(f)
-                Dim afile As New StreamWriter(f, True)
-                afile.WriteLine(tx)
-                afile.Close()
+                Using afile As New StreamWriter(f, True)
+                    afile.WriteLine(tx)
+                End Using
                 fn.WriteUserLog(name & vbCrLf)
 
             End If
@@ -998,20 +796,10 @@ Public Class ft
     End Sub
 
     Sub findcard(cardname)
-        Dim metajuego = metagame.SelectedItem.ToString()
-        Dim carpeta = ""
+        Dim gameFormat = metagame.SelectedItem.ToString()
+        Dim folder = GetMetagameFolder(gameFormat)
 
-        If metajuego.Contains("Commander") Then
-            carpeta = Directory.GetCurrentDirectory() & "\user\decks\commander\"
-        End If
-
-        If metajuego.Contains("Brawl") Then
-            carpeta = Directory.GetCurrentDirectory() & "\user\decks\brawl\"
-        End If
-
-        If carpeta = "" Then carpeta = Directory.GetCurrentDirectory() & "\user\decks\constructed\" & metajuego
-
-        For Each f In Directory.GetFiles(carpeta)
+        For Each f In Directory.GetFiles(folder)
             Dim t = File.ReadAllText(f)
             If t.Contains(cardname) Then
                 MsgBox("Find " & cardname & " in " & f)
@@ -1024,10 +812,6 @@ Public Class ft
 
     Private Sub Button7_Click(sender As Object, e As EventArgs) Handles Button7.Click
         findcard(cardtofind.Text)
-    End Sub
-
-    Private Sub Button8_Click(sender As Object, e As EventArgs)
-        quitarediciones(metagame.SelectedItem.ToString())
     End Sub
 
     Public Shared Sub compressDirectory(DirectoryPath As String, OutputFilePath As String,
@@ -1063,31 +847,6 @@ Public Class ft
         End Try
     End Sub
 
-    Private Sub Button9_Click(sender As Object, e As EventArgs)
-
-        Dim metajuego = metagame.SelectedItem.ToString()
-        Dim carpeta = ""
-
-        If metajuego.Contains("Commander") Then
-            carpeta = Directory.GetCurrentDirectory() & "\user\decks\commander\"
-        End If
-
-        If metajuego.Contains("Brawl") Then
-            carpeta = Directory.GetCurrentDirectory() & "\user\decks\brawl\"
-        End If
-
-        If carpeta = "" Then carpeta = Directory.GetCurrentDirectory() & "\user\decks\constructed\" & metajuego
-
-        Dim elfichero = Directory.GetCurrentDirectory() & "\current" & LCase(fn.RemoveWhitespace(Replace(metajuego, " ", "")) & "metagame.zip")
-        If File.Exists(elfichero) Then
-            File.Delete(elfichero)
-        End If
-
-        compressDirectory(carpeta, elfichero)
-        fn.WriteUserLog("Zipped " & elfichero & vbCrLf)
-
-    End Sub
-
     Private Sub Button2_Click_1(sender As Object, e As EventArgs) Handles Button2.Click
 
         If File.Exists(IO.Directory.GetCurrentDirectory() & "/fldata/allcardsandsets.txt") = False Then
@@ -1096,7 +855,7 @@ Public Class ft
 
         Dim actual As String = File.ReadAllText(IO.Directory.GetCurrentDirectory() & "/fldata/allcardsandsets.txt")
         Dim Listado As New List(Of String)()
-        Dim listbuenas As New List(Of String)()
+        Dim goodEditionsList As New List(Of String)()
         Dim arr = Split(actual, vbCrLf)
         For Each i In arr
             If i <> "" Then
@@ -1106,7 +865,7 @@ Public Class ft
 
         Dim Cards As New List(Of String)()
 
-        'realmente tendría que recorrer los sets por fecha para tener las cartas actuales, PERO PRUEBO ASI
+        'I should really go through the sets by date to get the current cards, BUT TRYING IT THIS WAY FOR NOW
 
         Dim di As New DirectoryInfo(Directory.GetCurrentDirectory() & "\res\editions\")
 
@@ -1140,73 +899,37 @@ Public Class ft
             Dim list = Split(Listcards, vbCrLf)
             For i = 0 To list.Count - 1
                 If list(i) <> "" Then
-                    Dim carta = list(i)
-                    If carta.Contains("+") Then carta = Split(carta, "+")(0).ToString()
-                    If carta.Contains("|") Then carta = Split(carta, "|")(0).ToString()
-                    If carta.Contains("[") Then carta = Split(carta, "[")(0).ToString()
-                    carta = Trim(carta)
+                    Dim card = list(i)
+                    If card.Contains("+") Then card = Split(card, "+")(0).ToString()
+                    If card.Contains("|") Then card = Split(card, "|")(0).ToString()
+                    If card.Contains("[") Then card = Split(card, "[")(0).ToString()
+                    card = Trim(card)
                     '"★"
-                    'si no existe ya se añade
-                    If actual.Contains(carta & vbCrLf) = False Then
-                        Cards.Add(carta)
+                    'add it if it doesn't already exist
+                    If actual.Contains(card & vbCrLf) = False Then
+                        Cards.Add(card)
                     End If
                 End If
             Next
 
         Next
-        'ORDENO ALFABETICAMENTE
+        'SORT ALPHABETICALLY AND REMOVE DUPLICATES
+        Cards = Cards.Distinct().ToList()
         Cards.Sort()
-        Cards.Distinct()
 
         Dim t As String
         For Each a In Cards
             t = t & a & vbCrLf
         Next
 
-        Dim afile As New StreamWriter(IO.Directory.GetCurrentDirectory() & "/fldata/allcardsandsets.txt", True)
-        afile.WriteLine(t)
-        afile.Close()
+        Using afile As New StreamWriter(IO.Directory.GetCurrentDirectory() & "/fldata/allcardsandsets.txt", True)
+            afile.WriteLine(t)
+        End Using
 
     End Sub
 
     Private Sub by_metagame_Click(sender As Object, e As EventArgs) Handles by_metagame.Click
 
-    End Sub
-
-    Private Sub Button1_Click_3(sender As Object, e As EventArgs)
-
-        Dim origen = "C:\Forge Versiones\forge\otros exes\NEOCOMANDERJPG"
-        Dim destino = "C:\Forge Versiones\forge\cache\pics\cards\NEC"
-        'recorro la carpeta de alternativas, cojo de la de neo y si existe la renombro a 1.fullborder y esta la meto como 2.fullborder
-        Dim file As File
-
-        Dim di As New DirectoryInfo(origen)
-        Dim fiArr As FileInfo() = di.GetFiles()
-        Dim fri As FileInfo
-        For Each fri In fiArr
-
-            Console.WriteLine(fri.Name)
-            'ahora busco si en neo otra se llama asi y la renombro
-
-            Dim di2 As New DirectoryInfo(destino)
-            Dim fiArr2 As FileInfo() = di2.GetFiles()
-            Dim fri2 As FileInfo
-            For Each fri2 In fiArr2
-                Dim nombre1, nombre2 As String
-                nombre1 = Replace(fri.Name, ".fullborder.jpg", "")
-                nombre2 = Replace(fri2.Name, ".fullborder.jpg", "")
-
-                'si hay en el destino una igual que se llama 1.fullborder tengo que del origen copiar renombrando a 1.fullborder
-                If nombre1 = nombre2 Then
-                    If nombre2.Contains("1") = True Then
-                        ' My.Computer.FileSystem.RenameFile(destino & "\" & fri2.Name, nombre2 & "1.fullborder.jpg")
-                        File.Copy(origen & "\" & fri.Name, destino & "\" & nombre2 & "1.fullborder.jpg", True)
-                    Else
-                        File.Copy(origen & "\" & fri.Name, destino & "\" & nombre2 & ".fullborder.jpg", True)
-                    End If
-                End If
-            Next fri2
-        Next fri
     End Sub
 
     Public Sub Button3_Click_4(sender As Object, e As EventArgs) Handles Button3.Click
@@ -1219,51 +942,31 @@ Public Class ft
     End Sub
 
     Private Sub Button9_Click_1(sender As Object, e As EventArgs) Handles Button9.Click
-        Dim metajuego = metagame.SelectedItem.ToString()
-        Dim carpeta = ""
+        Dim gameFormat = metagame.SelectedItem.ToString()
+        Dim folder = ""
 
-        If metajuego.Contains("Commander") Then
-            carpeta = Directory.GetCurrentDirectory() & "\user\decks\commander\"
+        If gameFormat.Contains("Commander") Then
+            folder = Directory.GetCurrentDirectory() & "\user\decks\commander\"
         End If
 
-        If metajuego.Contains("Brawl") Then
-            carpeta = Directory.GetCurrentDirectory() & "\user\decks\brawl\"
+        If gameFormat.Contains("Brawl") Then
+            folder = Directory.GetCurrentDirectory() & "\user\decks\brawl\"
         End If
 
-        If carpeta = "" Then carpeta = Directory.GetCurrentDirectory() & "\user\decks\constructed\mtggoldfish\" & metajuego
+        If folder = "" Then folder = Directory.GetCurrentDirectory() & "\user\decks\constructed\mtggoldfish\" & gameFormat
 
-        Dim elfichero = carpeta & "\current" & LCase(fn.RemoveWhitespace(Replace(metajuego, " ", "")) & "metagame.zip")
-        If File.Exists(elfichero) Then
-            File.Delete(elfichero)
+        Dim outputFile = folder & "\current" & LCase(fn.RemoveWhitespace(Replace(gameFormat, " ", "")) & "metagame.zip")
+        If File.Exists(outputFile) Then
+            File.Delete(outputFile)
         End If
 
-        compressDirectory(carpeta, elfichero)
-        fn.WriteUserLog("Zipped " & elfichero & vbCrLf)
+        compressDirectory(folder, outputFile)
+        fn.WriteUserLog("Zipped " & outputFile & vbCrLf)
 
-    End Sub
-
-    Private Sub Button6_Click_1(sender As Object, e As EventArgs)
-        Dim metag = Replace(ComboBox1.Text, " ", "-")
-
-        Ext.ExtractfromAetherhubAlt("https://aetherhub.com/Metagame/" & metag & "/")
     End Sub
 
     Private Sub Button6_Click_2(sender As Object, e As EventArgs) Handles Button6.Click
         fn.UnsupportedCards()
     End Sub
-
-    'Public Shared Function ExtractfromAetherhub(myUrl)
-    '    If myUrl = "" Then myUrl = ""
-    '    Dim _driver As IWebDriver = New ChromeDriver()
-    '    _driver.Navigate().GoToUrl(myUrl.ToString)
-    '    Dim elements As IList(Of IWebElement) = _driver.FindElements(By.ClassName("green"))
-
-    '    'Dim manager As New DriverManager
-    '    'Dim chromeConfig = New ChromeConfig()
-    '    'manager.SetUpDriver(chromeConfig)
-    '    'driver.Navigate().GoToUrl(myUrl)
-    '    'Dim elements As IList(Of IWebElement) = driverOne.FindElements(By.ClassName("green"))
-
-    'End Function
 
 End Class

@@ -7,17 +7,6 @@ Imports ICSharpCode.SharpZipLib.Tar
 Imports ICSharpCode.SharpZipLib.Zip
 
 Public Class fn
-    Shared WithEvents downloader As WebClient
-
-    Shared Sub WriteLogFL(s As String)
-        Try
-            Dim sFileName As String = Environment.CurrentDirectory & "\fllog.txt"
-            If File.Exists(sFileName) Then
-                File.Delete(sFileName)
-            End If
-        Catch
-        End Try
-    End Sub
 
     Shared Function IsValidFileNameOrPath(name As String) As Boolean
         ' Determines if the name is Nothing.
@@ -37,32 +26,6 @@ Public Class fn
     End Function
 
     Public Shared Function Normalize(name As String) As String
-        'name = "" & name
-        'Try
-        '    name = Replace(name, "\", " ")
-        '    name = Replace(name, "/", " ")
-        '    name = Replace(name, """", "'")
-        '    Dim reg As New Regex("[^a-zA-Z0-9' ]")
-        '    name = reg.Replace(name, "")
-        '    name = Replace(name, "    ", " ")
-        '    name = Replace(name, "   ", " ")
-        '    name = Replace(name, "  ", " ")
-        '    name = Replace(name, "--", "-")
-        '    name = Replace(name, "---", "-")
-        '    name = Replace(name, "á", "a")
-        '    name = Replace(name, "é", "e")
-        '    name = Replace(name, "í", "i")
-        '    name = Replace(name, "ó", "o")
-        '    name = Replace(name, "ú", "u")
-        '    name = Replace(name, "ú", "u")
-        '    name = Replace(name, "ü", "u")
-        '    name = Replace(name, "ñ", "n")
-        '    name = LTrim(RTrim(name))
-        '    Normalize = name
-        '    reg = Nothing
-        'Catch
-        '    Normalize = name
-        'End Try
         Return name
     End Function
 
@@ -98,9 +61,6 @@ Public Class fn
         removeshit = s
     End Function
 
-    Public Shared Sub checkunsupportedcards()
-    End Sub
-
     Public Shared Sub UnsupportedCards()
         Try
             fn.DownloadFile(vars.BaseUrlUnsupportedCards, "fldata\unsupportedcards.txt", True)
@@ -110,6 +70,20 @@ Public Class fn
             fn.WriteUserLog("Can't fetch unsupportedcards.txt from server, please try later." & vbCrLf)
         End Try
     End Sub
+
+    ' Most WAFs/anti-bot services (Cloudflare included) block plain WebClient requests
+    ' because it sends no User-Agent by default. Setting browser-like headers is enough
+    ' to get past header-based bot checks (it can't solve an actual JS challenge).
+    Private Shared Function CreateWebClient() As WebClient
+        System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12
+        Dim client As New WebClient()
+        client.Headers.Add(HttpRequestHeader.UserAgent,
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36")
+        client.Headers.Add(HttpRequestHeader.Accept,
+            "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
+        client.Headers.Add(HttpRequestHeader.AcceptLanguage, "en-US,en;q=0.9")
+        Return client
+    End Function
 
     Public Shared Sub DownloadFile(address As String, fileName As String, Optional forceDownload As Boolean = False)
         If Not forceDownload AndAlso File.Exists(fileName) Then
@@ -123,8 +97,7 @@ Public Class fn
                 File.Move(fileName, backupFileName)
             End If
 
-            Using client As New WebClient()
-                System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12
+            Using client As WebClient = CreateWebClient()
                 client.DownloadFile(address, fileName)
             End Using
 
@@ -136,13 +109,6 @@ Public Class fn
             ' Handle exceptions or log errors here
         End Try
     End Sub
-
-    Function ReadWebAlt(myurl As String)
-        Dim client As WebClient = New WebClient()
-        System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12
-        Dim reply As String = client.DownloadString(myurl)
-        Return reply
-    End Function
 
     Public Shared Function ReadLogUser(idlog As String, Optional ShowMsg As Boolean = False, Optional ByVal CompareWithServer As Boolean = True) As String
         If idlog = "profileproperties" Then CompareWithServer = False
@@ -167,24 +133,24 @@ Public Class fn
         If File.Exists(vars.LogName) = False Then
             File.Create(vars.LogName).Dispose()
         End If
-        Dim ladire = vars.UserDir & "\" & vars.LogName
-        ladire = Replace(ladire, "/", "\")
-        ladire = Replace(ladire, "\", "/")
-        'If ladire.Contains() Then
+        Dim logFilePath = vars.UserDir & "\" & vars.LogName
+        logFilePath = Replace(logFilePath, "/", "\")
+        logFilePath = Replace(logFilePath, "\", "/")
+        'If logFilePath.Contains() Then
         Dim LogUser = ""
         Try
-            LogUser = File.ReadAllText(ladire).ToString
+            LogUser = File.ReadAllText(logFilePath).ToString
         Catch
         End Try
         If LogUser = "" Then
             Try
-                LogUser = File.ReadAllText(vars.UserDir & ladire).ToString
+                LogUser = File.ReadAllText(vars.UserDir & logFilePath).ToString
             Catch
             End Try
         End If
         If LogUser = "" Then
             Try
-                LogUser = File.ReadAllText(Directory.GetCurrentDirectory & ladire).ToString
+                LogUser = File.ReadAllText(Directory.GetCurrentDirectory & logFilePath).ToString
             Catch
             End Try
         End If
@@ -207,22 +173,22 @@ Public Class fn
         ReadLogUser = log_user
     End Function
 
-    Public Shared Function OpenLogFile()
+    Public Shared Sub OpenLogFile()
         Dim logfile As String = Directory.GetCurrentDirectory & "\user\forge.log"
         Dim logfile2 As String = Directory.GetCurrentDirectory & "\UserDir\forge.log"
 
-        If File.Exists(logfile) = True Then
-            Shell("c:\windows\notepad.exe " & logfile)
-            Exit Function
+        If File.Exists(logfile) Then
+            Process.Start(logfile)
+            Exit Sub
         End If
 
-        If File.Exists(logfile2) = True Then
-            Shell("c:\windows\notepad.exe " & logfile2)
-            Exit Function
+        If File.Exists(logfile2) Then
+            Process.Start(logfile2)
+            Exit Sub
         End If
 
-        MsgBox("Cant'f find forge.log file.")
-    End Function
+        MsgBox("Can't find forge.log file.")
+    End Sub
 
     Public Shared Sub UpdateLog(idlog, myvalue)
         Dim mylog As String = My.Computer.FileSystem.ReadAllText(vars.LogName)
@@ -250,7 +216,7 @@ Public Class fn
     End Sub
 
     Public Shared Function ReadLogServer(idlog As String, Optional ShowMsg As Boolean = True)
-        'lo comento que dice Snoops que no le checkea bien
+        'Commented out - Snoops said it wasn't checking this correctly
         'If IO.File.Exists("fldata/" & vars.ServerLogName) = False Then
         Try
             DownloadFile(vars.BaseUrl & vars.ServerLogName, "fldata/" & vars.ServerLogName)
@@ -305,52 +271,18 @@ Public Class fn
         WriteUserLog("Done!." & vbCrLf)
     End Sub
 
-    Public Shared Function ReadWeb(MyUrl As String)
+    Public Shared Function ReadWeb(MyUrl As String) As String
         MyUrl = Replace(MyUrl, "'", "")
         MyUrl = Replace(MyUrl, """", "")
-        Dim res As String
-        If MyUrl = "" Then Exit Function
-        'Dim request As WebRequest
-        'Try
-        '    request = WebRequest.Create(MyUrl)
-        'Catch
-        '    ReadWeb = ""
-        '    Exit Function
-        'End Try
-        'Dim response As WebResponse
-        'Try
-        '    response = request.GetResponse()
-        'Catch
-        '    ReadWeb = ""
-        '    Exit Function
-        'End Try
-        'Dim reader As New StreamReader(response.GetResponseStream())
-        'Try
-        '    res = reader.ReadToEnd()
-        'Catch
-        '    Exit Function
-        'End Try
-        'reader.Close()
-        'response.Close()
+        If MyUrl = "" Then Return ""
 
         Try
-
-            Dim client As WebClient = New WebClient()
-            System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12
-            Dim reply As String = client.DownloadString(MyUrl)
-            Return reply
-            Exit Function
+            Using client As WebClient = CreateWebClient()
+                Return client.DownloadString(MyUrl)
+            End Using
         Catch ex As Exception
-
         End Try
-
-        ReadWeb = res
     End Function
-
-    Public Shared Sub DownloadStart(dwl, fn)
-        downloader = New WebClient
-        downloader.DownloadFileAsync(New Uri(dwl), fn)
-    End Sub
 
     Public Shared Function FindIt(total As String, first As String, last As String) As String
         If total = Nothing Then total = ""
@@ -387,14 +319,14 @@ Public Class fn
 
     Public Shared Function SearchFolders(Optional ShowMsg As Boolean = True, Optional idlog As String = "decks_dir")
 
-        Dim lafolder As String = ReadLogUser(idlog, False, False)
+        Dim folder As String = ReadLogUser(idlog, False, False)
 
-        If lafolder <> "" Then
+        If folder <> "" Then
             If ShowMsg Then
                 WriteUserLog(
-                    lafolder & " -> user decks directory (You may change the directories in Settings)." & vbCrLf)
+                    folder & " -> user decks directory (You may change the directories in Settings)." & vbCrLf)
             End If
-            Return lafolder
+            Return folder
             Exit Function
         End If
 
@@ -409,20 +341,20 @@ Public Class fn
                 For Each line As String In lines
                     If InStr(LCase(line.ToString), "UserDir") > 0 Then
                         Try
-                            Dim posibledir = Split(line, "=")(1).ToString
-                            If posibledir <> "" And Directory.Exists(posibledir) Then
-                                If posibledir <> "" Then
-                                    posibledir = posibledir & "\decks"
+                            Dim possibleDir = Split(line, "=")(1).ToString
+                            If possibleDir <> "" And Directory.Exists(possibleDir) Then
+                                If possibleDir <> "" Then
+                                    possibleDir = possibleDir & "\decks"
                                     If CheckIfForgeExists() Then
                                         If ShowMsg Then
                                             WriteUserLog(
-                                                "Detected " & posibledir &
+                                                "Detected " & possibleDir &
                                                 " As Custom User Directory (You can change the directories In Settings)." &
                                                 vbCrLf)
                                         End If
                                     End If
-                                    MyFolder = posibledir
-                                    SearchFolders = posibledir
+                                    MyFolder = possibleDir
+                                    SearchFolders = possibleDir
                                     Exit Function
                                 End If
                             End If
@@ -549,7 +481,7 @@ Public Class fn
 
             Dim x = 1
             If File.Exists(path) Then
-                'comparo y si es igual paso de guardar
+                'compare it and if it's the same, skip saving it
                 Do
                     x = x + 1
                     path = mypath & FinalName & "(" & CStr(x) & ").dck"
@@ -558,8 +490,8 @@ Public Class fn
             tx = Replace(tx, vbCrLf & vbCrLf, vbCrLf)
             tx = Replace(tx, vbLf & vbLf, vbLf)
 
-            Dim delcardordeck = ""
-            Dim msg As String = validatecards(tx, FinalName, delcardordeck)
+            Dim deleteCardOrDeck = ""
+            Dim msg As String = validatecards(tx, FinalName, deleteCardOrDeck)
             If msg <> "" Then
                 Return (msg)
                 Exit Function
@@ -587,8 +519,8 @@ Public Class fn
     Public Shared Sub RewriteLog()
         Try
             CompatibleOldVersions()
-            Dim hoy As String = DateTime.Now.ToString("dd'/'MM'/'yyyy")
-            Dim existpp As String = IIf(File.Exists("forge.profile.properties"), "yes", "no")
+            Dim today As String = DateTime.Now.ToString("dd'/'MM'/'yyyy")
+            Dim profilePropertiesExist As String = IIf(File.Exists("forge.profile.properties"), "yes", "no")
 
             Dim readText As String = File.ReadAllText(vars.UserDir & "/" & vars.LogName)
             Dim WriteLog = False
@@ -607,15 +539,15 @@ Public Class fn
     Public Shared Sub CheckLog()
         Try
             CompatibleOldVersions()
-            Dim hoy As String = DateTime.Now.ToString("dd'/'MM'/'yyyy")
-            Dim existpp As String = IIf(File.Exists("forge.profile.properties"), "yes", "no")
+            Dim today As String = DateTime.Now.ToString("dd'/'MM'/'yyyy")
+            Dim profilePropertiesExist As String = IIf(File.Exists("forge.profile.properties"), "yes", "no")
             If File.Exists(vars.LogName) = False Then
                 Dim t As String
                 t = t & "<decks_dir>" & GetForgeDecksDir() & "</decks_dir>" & vbCrLf
                 t = t & "<preserve_decks>no</preserve_decks>" & vbCrLf
                 t = t & "<preserve_decks_number>1</preserve_decks_number>" & vbCrLf
                 t = t & "<tournamentsdecks_dir>Tournaments</tournamentsdecks_dir>" & vbCrLf
-                t = t & "<profileproperties>" & existpp & "</profileproperties>" & vbCrLf
+                t = t & "<profileproperties>" & profilePropertiesExist & "</profileproperties>" & vbCrLf
                 File.WriteAllText(vars.LogName, t)
             Else
 
@@ -623,7 +555,7 @@ Public Class fn
                 Dim WriteLog = False
 
                 If InStr(readText, "<profileproperties>", CompareMethod.Text) = 0 Then
-                    readText = readText & "<profileproperties>" & existpp & "</profileproperties>" & Environment.NewLine
+                    readText = readText & "<profileproperties>" & profilePropertiesExist & "</profileproperties>" & Environment.NewLine
                     WriteLog = True
                 End If
 
@@ -692,68 +624,63 @@ Public Class fn
 
         Dim bResult = False
 
-        On Error GoTo Problem
+        Try
+            'Determine the archive type
+            Select Case Path.GetExtension(sZipFile)
+                Case ".zip"
+                    'If it's a zip, then simply extract the contents
+                    Dim fZ = New FastZip()
+                    fZ.ExtractZip(sZipFile, sDestPath, "") '//use "" for File Filter if you want all files
+                Case ".bz2"
+                    'If it's a tarball, then first decompress the tar, then extract the tar's contents
 
-        'Determine the archive type
-        Select Case Path.GetExtension(sZipFile)
-            Case ".zip"
-                'If it's a zip, then simply extract the contents
-                Dim fZ = New FastZip()
-                fZ.ExtractZip(sZipFile, sDestPath, "") '//use "" for File Filter if you want all files
-            Case ".bz2"
-                'If it's a tarball, then first decompress the tar, then extract the tar's contents
+                    'Get the filename of the resulting tar file
+                    Dim sTarFileName As String = Path.GetDirectoryName(sZipFile) & "\" &
+                                                 Path.GetFileNameWithoutExtension(sZipFile)
 
-                'Get the filename of the resulting tar file
-                Dim sTarFileName As String = Path.GetDirectoryName(sZipFile) & "\" &
-                                             Path.GetFileNameWithoutExtension(sZipFile)
-                'Create a new file stream for the tar ball
-                Dim fsIn As FileStream = File.OpenRead(sZipFile)
+                    'If the resulting tar file exists alreay, delete it before creating it
+                    If File.Exists(sTarFileName) Then
+                        File.Delete(sTarFileName)
+                    End If
 
-                'If the resulting tar file exists alreay, delete it before creating it
-                If File.Exists(sTarFileName) Then
+                    'Perform the decompression of the tar file
+                    Using fsIn As FileStream = File.OpenRead(sZipFile),
+                          fsOut As FileStream = File.Create(sTarFileName)
+                        BZip2.Decompress(fsIn, fsOut)
+                    End Using
+
+                    'Extract the tar's contents
+                    Using fsTar As FileStream = File.OpenRead(sTarFileName)
+                        Dim tArch As TarArchive = TarArchive.CreateInputTarArchive(fsTar)
+                        Try
+                            tArch.ExtractContents(sDestPath)
+                        Finally
+                            tArch.Close()
+                        End Try
+                    End Using
+
+                    'Get a list of the files that were extracted within the tar folder
+                    Dim sExtractedFiles() As String =
+                            Directory.GetFiles(sDestPath & "\" & Path.GetFileNameWithoutExtension(sTarFileName))
+
+                    'Move all the files to the requested destination directory
+                    Dim sFile As String
+                    For Each sFile In sExtractedFiles
+                        File.Move(sFile, sDestPath & "\" & Path.GetFileName(sFile))
+                    Next
+
+                    'Delete the tar folder
+                    Directory.Delete(sDestPath & "\" & Path.GetFileNameWithoutExtension(sTarFileName))
+
+                    'Delete the decompressed tar file
                     File.Delete(sTarFileName)
-                End If
 
-                'Create a file stream to receive the decompressed tar file
-                Dim fsOut As FileStream = File.Create(sTarFileName)
+            End Select
 
-                'Perform the decompression of the tar file
-                BZip2.Decompress(fsIn, fsOut)
+            bResult = True
+        Catch ex As Exception
+        End Try
 
-                'Open a new file stream for the tar file
-                Dim fsTar As FileStream = File.OpenRead(sTarFileName)
-                'Create a TarArchive object for the tar file
-                Dim tArch As TarArchive = TarArchive.CreateInputTarArchive(fsTar)
-
-                'Extract the tar's contents
-                tArch.ExtractContents(sDestPath)
-
-                'Get a list of the files that were extracted within the tar folder
-                Dim sExtractedFiles() As String =
-                        Directory.GetFiles(sDestPath & "\" & Path.GetFileNameWithoutExtension(sTarFileName))
-
-                'Move all the files to the requested destination directory
-                Dim sFile As String
-                For Each sFile In sExtractedFiles
-                    File.Move(sFile, sDestPath & "\" & Path.GetFileName(sFile))
-                Next
-
-                'Delete the tar folder
-                Directory.Delete(sDestPath & "\" & Path.GetFileNameWithoutExtension(sTarFileName))
-
-                'Close the open file streams
-                tArch.Close()
-                fsIn.Close()
-
-                'Delete the decompressed tar file
-
-                File.Delete(sTarFileName)
-
-        End Select
-
-        bResult = True
-
-Problem:
         Return bResult
     End Function
 
@@ -784,7 +711,7 @@ Problem:
         tx = Replace(tx, "&#27;", "'")
 
         tx = Replace(tx, "  ", " ")
-        'igual esta aqui el problema de las /////// comento el if commander
+        'maybe the /////// issue is here - commenting out the if commander check
         'If commander = "" Then
         If InStr(tx, "/", CompareMethod.Text) > 0 Then
             tx = Replace(tx, "/", " // ")
@@ -793,7 +720,7 @@ Problem:
         'Dim mytest = Split("1" & commander, "1")
         'Try
         '    If mytest(2).ToString <> "" Then
-        '        Dim hola = "vale"
+        '        Dim tmp = "ok"
         '        commander = RemoveWhitespace("1 " & Split(commander, "1")(1).ToString) & vbCrLf & "1" & RemoveWhitespace(mytest(2).ToString)
 
         '    End If
@@ -823,7 +750,7 @@ Problem:
             commander = Replace(commander, "1 1 ", "1 ")
 
             If ft.insertedition.Checked = True Then
-                'tx = PonerEdicion(tx, name)
+                'tx = PutEdition(tx, name)
             Else
                 tx = "[metadata]" & vbCrLf & "Name = " & name & vbCrLf & "[Main]" & vbCrLf & tx
             End If
@@ -833,7 +760,7 @@ Problem:
         Else
 
             If ft.insertedition.Checked = True Then
-                'tx = PonerEdicion(tx, name)
+                'tx = PutEdition(tx, name)
             Else
                 tx = "[metadata]" & vbCrLf & "Name = " & name & vbCrLf & "[Main]" & vbCrLf & tx
             End If
@@ -853,64 +780,64 @@ Problem:
         ft.txlog.ScrollToCaret()
     End Sub
 
-    Public Shared Function validatecards(tx, titdeck, delcardordeck) As String
+    Public Shared Function validatecards(tx, deckTitle, deleteCardOrDeck) As String
         'Return ""
         Try
 
-            'leo las cartas no soportadas y la meto en un array
+            'read the unsupported cards and put them in an array
             Dim readText As String = File.ReadAllText(vars.UserDir & "\fldata\unsupportedcards.txt")
             Dim tx1 As String = readText
             tx1 = Replace(tx1, vbLf, vbCrLf)
             Dim a As Array = Split(tx1, vbCrLf)
 
-            'leo las cartas del mazo y la meto en un array
+            'read the deck's cards and put them in an array
             readText = tx
             Dim t As String = Split(readText, "[Main]" & vbCrLf)(1).ToString
             t = Replace((t), vbCrLf & "[sideboard]", "")
             t = Replace(t, vbLf, vbCrLf)
             Dim b As Array = Split(t, vbCrLf)
 
-            Dim contador = 0
-            'recorro cada carta del mazo
+            Dim counter = 0
+            'go through every card in the deck
 
-            While contador < b.Length
-                'doy formato a la carta
+            While counter < b.Length
+                'format the card
 
-                Dim nombrecarta = b(contador) & ""
-                If nombrecarta.contains("|") Then nombrecarta = Split(nombrecarta, "|")(0)
-                If InStr(nombrecarta, "|") Then nombrecarta = Split(nombrecarta, "|")(0)
+                Dim cardName = b(counter) & ""
+                If cardName.contains("|") Then cardName = Split(cardName, "|")(0)
+                If InStr(cardName, "|") Then cardName = Split(cardName, "|")(0)
 
-                'nombre de la carta que viene en el mazo
-                nombrecarta = nombrecarta
+                'the card name as it comes from the deck
+                cardName = cardName
 
-                Dim contador2 = 0
-                Dim lineacarta = ""
-                While contador2 < a.Length
-                    lineacarta = nombrecarta
+                Dim counter2 = 0
+                Dim cardLine = ""
+                While counter2 < a.Length
+                    cardLine = cardName
                     For x = 0 To 20
-                        nombrecarta = Replace(nombrecarta, x + 1 & " ", "")
+                        cardName = Replace(cardName, x + 1 & " ", "")
                     Next x
-                    nombrecarta = nombrecarta
-                    nombrecarta = Replace(nombrecarta, vbCr, Nothing)
-                    nombrecarta = Replace(nombrecarta, vbCrLf, Nothing)
+                    cardName = cardName
+                    cardName = Replace(cardName, vbCr, Nothing)
+                    cardName = Replace(cardName, vbCrLf, Nothing)
 
-                    Dim cartaprohibida As String = a(contador2)
-                    If nombrecarta = "Gemrazer" Or nombrecarta = "Dirge Bat" Or nombrecarta = "Auspicious Starrix" Then
-                        nombrecarta = nombrecarta
+                    Dim forbiddenCard As String = a(counter2)
+                    If cardName = "Gemrazer" Or cardName = "Dirge Bat" Or cardName = "Auspicious Starrix" Then
+                        cardName = cardName
                     End If
 
-                    If LCase(nombrecarta) = LCase(cartaprohibida) Then
+                    If LCase(cardName) = LCase(forbiddenCard) Then
 
                         Return _
-                            ("Forge unsupported card '" & cartaprohibida & "' in " & titdeck & ". Deck not saved." &
+                            ("Forge unsupported card '" & forbiddenCard & "' in " & deckTitle & ". Deck not saved." &
                              vbCrLf)
                         Exit Function
                     End If
 
-                    contador2 = contador2 + 1
+                    counter2 = counter2 + 1
                 End While
 
-                contador = contador + 1
+                counter = counter + 1
             End While
         Catch ex As Exception
 
@@ -919,9 +846,9 @@ Problem:
     End Function
 
     Public Shared Function movefilestofldata()
-        'muevo todo a la carpeta fldata LO DEJO AQUÍ
-        ' SI NO EXISTE LA CREO
-        'SI NO EXISTE ESE FICHERO DENTRO LO BUSCO FUERA Y LO METO DENTRO
+        'move everything to the fldata folder - KEEPING THIS HERE
+        ' CREATE IT IF IT DOESN'T EXIST
+        'IF THE FILE ISN'T IN THERE, LOOK FOR IT OUTSIDE AND MOVE IT IN
         Try
             If My.Computer.FileSystem.DirectoryExists(Directory.GetCurrentDirectory & "\fldata") = False Then
                 Directory.CreateDirectory(Directory.GetCurrentDirectory & "\fldata")

@@ -1,15 +1,8 @@
 ﻿Imports System.Globalization
 Imports System.Text
 Imports System.Text.RegularExpressions
-Imports OpenQA.Selenium
-Imports OpenQA.Selenium.Chrome
 
 Public Class Ext
-
-    Public Shared Sub Cardsdata()
-        'Dim todaslascartas As String = IO.File.ReadAllText(Directory.GetCurrentDirectory() & "/fldata/allcardsandsets.txt")
-        'Dim todoslossets As String = IO.File.ReadAllText(Directory.GetCurrentDirectory() & "/fldata/allsets.txt")
-    End Sub
 
     Public Shared Function GetTitDeck(tx) As String
         Dim TitDeck = ""
@@ -64,7 +57,7 @@ Public Class Ext
                 testValue = Replace(testValue, "-", "/")
                 testValue = Replace(testValue, """", "")
                 Try
-                    Dim resultado = DateTime.ParseExact(Convert.ToString(testValue), "d/MMM/yyyy", CultureInfo.CreateSpecificCulture("es-US"))
+                    Dim result = DateTime.ParseExact(Convert.ToString(testValue), "d/MMM/yyyy", CultureInfo.CreateSpecificCulture("es-US"))
                 Catch
                 End Try
 
@@ -100,10 +93,10 @@ Public Class Ext
     End Function
 
     Public Shared Sub ExtractTopMtggoldfish(metag As String, hm As Object, puttop As Object, customurl As String, Optional customfolder As String = "", Optional fromuser As Boolean = False)
-        'se usa para el top de los decks y para los custom decks
+        'used for the top decks and for custom decks
         ft.txlog.Text = ""
 
-        'establezco la URL
+        'set the URL
         Dim url = ""
         If Not IsNothing(customurl) Then url = customurl
         If url = "" Then
@@ -124,7 +117,7 @@ Public Class Ext
         ft.extract1.Enabled = False
         Dim tx1 As String
 
-        'meto el contenido de esa url en una variable
+        'put that url's content into a variable
         tx1 = fn.ReadWeb(url)
         Dim MyDir
         If url.Contains("/custom/") Then
@@ -136,11 +129,11 @@ Public Class Ext
         fn.CheckFolder(MyDir)
         Dim MyFolder = MyDir
 
-        'creo la carpeta
+        'create the folder
         MyFolder = Replace(MyFolder, "\\", "\")
 
         If ft.mtggoldfishfrom.Text = "1" Then
-            'BORRO MAZOS ANTERIORES
+            'DELETE PREVIOUS DECKS
             fn.DeleteDecks(MyFolder, "[" & metag & "] *")
         End If
 
@@ -149,7 +142,7 @@ Public Class Ext
         fn.WriteUserLog("Extracting " & metag & " Decks In " & MyFolder & vbCrLf)
 
         Select Case metag
-            'oficiales
+            'official formats
             Case "Standard", "Modern", "Pioneer", "Pauper", "Legacy", "Vintage", "Historic", "Penny Dreadful"
                 tx1 = extmtggoldfish(tx1, "/archetype/", "#paper")
             Case "Budget Modern", "Budget Standard"
@@ -157,7 +150,7 @@ Public Class Ext
             Case "Duel Commander", "Arena Singleton", "Historic Brawl", "Artisan Historic", "Cascade", "Oathbreaker",
                 "Canadian Highlander", "Old School", "No Banned List Modern", "Frontier", "Tiny Leaders", "Limited",
                 "Block", "Free Form"
-                ', "-->lo quito de aquí
+                ', "-->removed from here
                 tx1 = extmtggoldfish(tx1, "/deck/", "#paper", "/deck/custom")
             Case "Arena Standard"
                 tx1 = extmtggoldfish(tx1, "/archetype/", "#paper")
@@ -168,29 +161,29 @@ Public Class Ext
         End Select
 
         Dim num As String
-        Dim checkurls() As String
-        checkurls = Split(tx1, vbCrLf)
-        Dim lasurls As String = tx1
+        Dim checkedUrls() As String
+        checkedUrls = Split(tx1, vbCrLf)
+        Dim deckUrls As String = tx1
 
         Try
 
-            Dim cuentaveces As Long = 2
-            Dim cuentacosas = CInt(checkurls.Length - (ft.mtggoldfishfrom.Text))
-            'If cuentacosas < hm Then
-            'antes era asi:
-            If checkurls.Length < hm Then
-                'si es menor que el total de la pagina voy a la otra y añado links
-                ' While hm > checkurls.Length
+            Dim pageCounter As Long = 2
+            Dim itemCount = CInt(checkedUrls.Length - (ft.mtggoldfishfrom.Text))
+            'If itemCount < hm Then
+            'it used to be like this:
+            If checkedUrls.Length < hm Then
+                'if it's less than the total for the page, go to the next one and add links
+                ' While hm > checkedUrls.Length
                 Dim tx2
-                While checkurls.Length < hm
+                While checkedUrls.Length < hm
 
                     If _
                         LCase(metag) = "standard" Or LCase(metag) = "legacy" Or LCase(metag) = "vintage" Or
                         LCase(metag) = "pauper" Or LCase(metag) = "pioneer" Or LCase(metag) = "historic" Or LCase(metag) = "penny dreadful" Or LCase(metag) = "brawl" Then
-                        If cuentaveces = 2 Then
+                        If pageCounter = 2 Then
                             tx2 = ""
-                            'entra por primera vez
-                            'entro a esta url y saco resultados
+                            'first time through
+                            'go to this url and get results
                             Dim val = LCase(metag)
                             Select Case val
                                 Case "legacy"
@@ -233,27 +226,27 @@ Public Class Ext
                                     tx2 =
                                         fn.ReadWeb(
                                             "https://www.mtggoldfish.com/archetype/other-315fcdf4-70d6-41b8-bd39-699032073591/decks?page=" &
-                                            cuentaveces)
+                                            pageCounter)
                                 Case "vintage"
                                     tx2 =
                                         fn.ReadWeb(
                                             "https://www.mtggoldfish.com/archetype/other-4b59bfe3-e589-45f1-bf1b-5312d945f2d3/decks?page=" &
-                                            cuentaveces)
+                                            pageCounter)
                                 Case "pauper"
                                     tx2 =
                                         fn.ReadWeb(
                                             "https://www.mtggoldfish.com/archetype/other-e2f79915-5636-44cc-9c6f-7a74834fd316/decks?page=" &
-                                            cuentaveces)
+                                            pageCounter)
                                 Case "pioneer"
                                     tx2 =
                                         fn.ReadWeb(
                                             "https://www.mtggoldfish.com/archetype/other-2309ea0a-91b7-44c4-b0cd-945fdc82dd90/decks?page=" &
-                                            cuentaveces)
+                                            pageCounter)
                                 Case "historic"
                                     tx2 =
                                         fn.ReadWeb(
                                             "https://www.mtggoldfish.com/archetype/other-061deb94-cf17-4926-a252-571799137b88/decks?page=" &
-                                            cuentaveces)
+                                            pageCounter)
 
                                 Case ("penny dreadful")
                                     tx2 =
@@ -268,7 +261,7 @@ Public Class Ext
                             tx2 = extmtggoldfish(tx2, "/deck/", "", "custom")
                         End If
                     Else
-                        url = vars.mtggf & "/metagame/" & Replace(LCase(metag), " ", "_") & "/full?page=" & cuentaveces &
+                        url = vars.mtggf & "/metagame/" & Replace(LCase(metag), " ", "_") & "/full?page=" & pageCounter &
                               "#paper"
                         If LCase(metag) = "oathbreaker" Then
                             url = Replace(url, "/metagame/", "/deck/custom/")
@@ -284,51 +277,51 @@ Public Class Ext
 
                     End If
 
-                    lasurls = lasurls & tx2
-                    checkurls = Split(lasurls, vbCrLf)
-                    cuentaveces = cuentaveces + 1
+                    deckUrls = deckUrls & tx2
+                    checkedUrls = Split(deckUrls, vbCrLf)
+                    pageCounter = pageCounter + 1
                     If tx2 = "" Then Exit While
                 End While
             End If
         Catch
         End Try
         Dim urls()
-        urls = Split(lasurls, vbCrLf)
-        Dim desdecual As Integer
+        urls = Split(deckUrls, vbCrLf)
+        Dim startFrom As Integer
         If ft.mtggoldfishfrom.Text = "1" Then
-            desdecual = 0
+            startFrom = 0
         Else
-            desdecual = CInt(ft.mtggoldfishfrom.Text) - 1
+            startFrom = CInt(ft.mtggoldfishfrom.Text) - 1
         End If
 
-        Dim my2counter = 0
+        Dim secondaryCounter = 0
 
-        For i = desdecual To urls.Length - 1
+        For i = startFrom To urls.Length - 1
 
             If urls(i).ToString <> "" Then
 
                 If i >= CInt(hm) Then Exit For
                 If CInt(ft.mtggoldfishfrom.Text) <> 1 Then
-                    my2counter = my2counter + 1
+                    secondaryCounter = secondaryCounter + 1
                 End If
                 If CInt(ft.mtggoldfishfrom.Text) <> 1 Then
-                    Dim quedan = CInt(my2counter + CInt(ft.mtggoldfishfrom.Text)) - 1
-                    If quedan > hm Then Exit Sub
+                    Dim remaining = CInt(secondaryCounter + CInt(ft.mtggoldfishfrom.Text)) - 1
+                    If remaining > hm Then Exit Sub
                 End If
 
                 Dim DeckPage = ""
                 Dim UrlDeck = ""
                 Dim Deck = ""
-                Dim mycmnd = ""
+                Dim commanderText = ""
                 Dim TitDeck = ""
 
-                Dim laweb As String = vars.mtggf & urls(i)
-                DeckPage = fn.ReadWeb(laweb)
+                Dim pageUrl As String = vars.mtggf & urls(i)
+                DeckPage = fn.ReadWeb(pageUrl)
                 'COMMENT HERE TO TRY TO GET COMMANDER LIST NOT FROM USERS
                 'If _
                 '    (InStr(metag, "Commander") > 0 Or InStr(metag, "Tiny") > 0) And
                 '    InStr(DeckPage, "<h3>Similar Decks</h3>", CompareMethod.Text) > 0 Then
-                '    'puede que no tenga similar decks
+                '    'it might not have similar decks
                 '    Dim t2 As String = Split(DeckPage, "<h3>Similar Decks</h3>")(1).ToString
                 '    TitDeck = GetTitDeck(DeckPage)
                 '    Dim links = extlinks(t2, "/deck/")
@@ -342,7 +335,7 @@ Public Class Ext
 
                 UrlDeck = extmtggoldfish(DeckPage, "/deck/download/")
 
-                'ESTABLEZCO EL TÍTULO DEL MAZO
+                'SET THE DECK TITLE
                 If TitDeck = "" Then
                     TitDeck = GetTitDeck(DeckPage)
                     If TitDeck = Nothing Then
@@ -370,16 +363,16 @@ Public Class Ext
 
                 End If
 
-                Dim pasar = False
+                Dim shouldInclude = False
                 If InStr(metag, "Commander") > 0 Or InStr(metag, "Tiny") > 0 Or InStr(metag, "Brawl") > 0 Then
-                    pasar = True
+                    shouldInclude = True
                 End If
 
                 If UrlDeck <> "" Then
-                    pasar = True
+                    shouldInclude = True
                 End If
 
-                If pasar Then
+                If shouldInclude Then
                     If InStr(UrlDeck, vbCrLf) > 0 Then
                         UrlDeck = Split(UrlDeck, vbCrLf)(0)
                     End If
@@ -387,22 +380,22 @@ Public Class Ext
                     If Deck = "" Then Deck = fn.ReadWeb(vars.mtggf & "" & UrlDeck)
                     If Deck <> "" And Deck <> "Throttled" Then
                         Deck = Replace(Deck, vbLf, vbCrLf)
-                        'formato del mazo
+                        'format the deck
                         If InStr(Deck, "container-fluid layout-container-fluid", CompareMethod.Text) > 0 Then
                             Deck = mtggoldfishnewformat(Deck)
                             Deck = extmtggoldfish(Deck, "/deck/download/")
                             Deck = fn.ReadWeb(Deck)
                         End If
 
-                        'EL TEMA DE LOS CEROS EN LOS MAZOS
+                        'ZERO-PADDING FOR DECK NUMBERS
                         num = (i + 1)
                         Select Case Len(hm)
-                            Case 3 '100 o mas
-                                'cuanto mide el numero?
+                            Case 3 '100 or more
+                                'how many digits does the number have?
                                 Select Case Len(num)
-                                    Case 1 ' hasta el 9
+                                    Case 1 ' up to 9
                                         num = "00" & num
-                                    Case 2 'desde el 10 al 99
+                                    Case 2 'from 10 to 99
                                         num = "0" & num
                                 End Select
                             Case Else
@@ -414,130 +407,130 @@ Public Class Ext
                         If puttop Then
                             TitDeck = "#" & num & " - " & TitDeck
                         End If
-                        'DANDO FORMATO
+                        'FORMATTING
                         Deck = Replace(Deck, vbCr, "")
                         Deck = Replace(Deck, vbLf, vbCrLf)
                         Deck = Replace(Deck, "'" & vbCrLf & "<div id='error'" & vbCrLf & "</div" & vbCrLf, "")
                         Deck = Replace(Deck, "sideboard", "sideboard")
                         Deck = Replace(Deck, vbCrLf & vbCrLf, vbCrLf & "[sideboard]" & vbCrLf)
 
-                        Dim isacommander = False
+                        Dim isCommander = False
 
                         If InStr(metag, "Commander") > 0 Or InStr(metag, "Tiny") > 0 Or InStr(metag, "Brawl") > 0 Then
 
-                            isacommander = True
+                            isCommander = True
 
-                            Dim searchfor As String
-                            searchfor = fn.HTMLToText(DeckPage)
-                            searchfor = fn.RemoveWhitespace(searchfor)
-                            mycmnd = fn.FindIt(searchfor, "Tabletop Arena MTGO Commander", "Creatures")
-                            If mycmnd = "" Then _
-                                mycmnd = fn.FindIt(searchfor, "Tabletop Arena MTGO Commander", "Planeswalkers")
-                            If mycmnd = "" Then mycmnd = fn.FindIt(searchfor, "Tabletop Arena MTGO Commander", "Spells")
+                            Dim searchText As String
+                            searchText = fn.HTMLToText(DeckPage)
+                            searchText = fn.RemoveWhitespace(searchText)
+                            commanderText = fn.FindIt(searchText, "Tabletop Arena MTGO Commander", "Creatures")
+                            If commanderText = "" Then _
+                                commanderText = fn.FindIt(searchText, "Tabletop Arena MTGO Commander", "Planeswalkers")
+                            If commanderText = "" Then commanderText = fn.FindIt(searchText, "Tabletop Arena MTGO Commander", "Spells")
 
-                            If Len(mycmnd) > 100 Then
-                                mycmnd = fn.FindIt(searchfor, "Tabletop Arena MTGO Commander", "Spells")
+                            If Len(commanderText) > 100 Then
+                                commanderText = fn.FindIt(searchText, "Tabletop Arena MTGO Commander", "Spells")
                             End If
 
-                            If Len(mycmnd) > 100 Then
-                                mycmnd = fn.FindIt(searchfor, "Tabletop Arena MTGO Commander", "Planeswalkerss")
+                            If Len(commanderText) > 100 Then
+                                commanderText = fn.FindIt(searchText, "Tabletop Arena MTGO Commander", "Planeswalkerss")
                             End If
 
-                            If InStr(mycmnd, " Companion ") > 0 Then
-                                mycmnd = Split(mycmnd, " Companion ")(0).ToString
+                            If InStr(commanderText, " Companion ") > 0 Then
+                                commanderText = Split(commanderText, " Companion ")(0).ToString
                             End If
-                            mycmnd = Replace(mycmnd, "$", "")
-                            mycmnd = Replace(mycmnd, " Â", "")
+                            commanderText = Replace(commanderText, "$", "")
+                            commanderText = Replace(commanderText, " Â", "")
 
-                            'voy a ver si tiene varios comandantes
-                            Dim cuentacomandantes As Long = 1
+                            'check whether there are multiple commanders
+                            Dim commanderCount As Long = 1
                             Try
-                                Dim partirlinea() = Split(mycmnd, " 1 ")
-                                If partirlinea(2) <> "" Then
-                                    cuentacomandantes = 2
+                                Dim splitLine() = Split(commanderText, " 1 ")
+                                If splitLine(2) <> "" Then
+                                    commanderCount = 2
                                 End If
-                                If partirlinea(4) <> "" Then
-                                    cuentacomandantes = 3
+                                If splitLine(4) <> "" Then
+                                    commanderCount = 3
                                 End If
-                                If partirlinea(6) <> "" Then
-                                    cuentacomandantes = 4
+                                If splitLine(6) <> "" Then
+                                    commanderCount = 4
                                 End If
-                                If partirlinea(8) <> "" Then
-                                    cuentacomandantes = 5
+                                If splitLine(8) <> "" Then
+                                    commanderCount = 5
                                 End If
                             Catch
 
                             End Try
 
                             Dim sb As New StringBuilder
-                            If Not IsNothing(mycmnd) Then
-                                For Each c As Char In mycmnd
+                            If Not IsNothing(commanderText) Then
+                                For Each c As Char In commanderText
                                     If Not Char.IsNumber(c) Then
                                         sb.Append(c)
                                     End If
                                 Next
                             End If
 
-                            mycmnd = sb.ToString
-                            mycmnd = Replace(mycmnd, "&#;", "'")
-                            mycmnd = Replace(mycmnd, "$", "")
-                            If InStr(mycmnd, "<title>") > 0 Then
-                                mycmnd = Split(mycmnd, "<title>")(0).ToString
+                            commanderText = sb.ToString
+                            commanderText = Replace(commanderText, "&#;", "'")
+                            commanderText = Replace(commanderText, "$", "")
+                            If InStr(commanderText, "<title>") > 0 Then
+                                commanderText = Split(commanderText, "<title>")(0).ToString
                             End If
-                            mycmnd = Trim(mycmnd)
-                            Dim spcomm = Split(mycmnd, ".")
-                            Dim concatcomm = ""
+                            commanderText = Trim(commanderText)
+                            Dim commanderParts = Split(commanderText, ".")
+                            Dim combinedCommander = ""
 
-                            For xy = 0 To spcomm.Length - 1
-                                If Len(spcomm(xy).ToString) > 3 Then
-                                    concatcomm += "1 " & spcomm(xy).ToString & vbCrLf
+                            For xy = 0 To commanderParts.Length - 1
+                                If Len(commanderParts(xy).ToString) > 3 Then
+                                    combinedCommander += "1 " & commanderParts(xy).ToString & vbCrLf
                                 End If
 
                             Next xy
 
-                            mycmnd = concatcomm
+                            commanderText = combinedCommander
 
-                            If InStr(concatcomm, vbCrLf) > 0 Then
-                                'mycmnd = Split(concatcomm, vbCrLf)(0).ToString
+                            If InStr(combinedCommander, vbCrLf) > 0 Then
+                                'commanderText = Split(combinedCommander, vbCrLf)(0).ToString
 
                             End If
 
-                            mycmnd = fn.RemoveWhitespace(mycmnd)
-                            mycmnd = Trim(mycmnd)
-                            mycmnd = Replace(mycmnd, " Â", "")
+                            commanderText = fn.RemoveWhitespace(commanderText)
+                            commanderText = Trim(commanderText)
+                            commanderText = Replace(commanderText, " Â", "")
 
-                            Dim substr As String = mycmnd
-                            If mycmnd <> "" Then
+                            Dim firstToken As String = commanderText
+                            If commanderText <> "" Then
 
-                                'substr = substr.Substring(substr.Length - 1, 1)
-                                substr = Trim(Split(substr, " ")(0))
+                                'firstToken = firstToken.Substring(firstToken.Length - 1, 1)
+                                firstToken = Trim(Split(firstToken, " ")(0))
 
-                                If substr = "1" Then
-                                    'mycmnd = mycmnd.Substring(0, (mycmnd.Length - 1))
-                                    'mycmnd = (Split(mycmnd, "1 ")(1))
+                                If firstToken = "1" Then
+                                    'commanderText = commanderText.Substring(0, (commanderText.Length - 1))
+                                    'commanderText = (Split(commanderText, "1 ")(1))
 
-                                    mycmnd = Replace(mycmnd, " 1 ", vbCrLf & "1 ")
-                                    mycmnd = LTrim((RTrim(mycmnd)))
+                                    commanderText = Replace(commanderText, " 1 ", vbCrLf & "1 ")
+                                    commanderText = LTrim((RTrim(commanderText)))
 
-                                    If mycmnd.Contains("Thrasios, Triton Hero") Then
-                                        Dim hola = ""
+                                    If commanderText.Contains("Thrasios, Triton Hero") Then
+                                        Dim debugMarker = ""
                                     End If
 
-                                    '****NUEVA PRUEBA
+                                    '****NEW TEST
 
-                                    'Deck = Replace(Deck, "1 " & uno & vbCrLf, "")
+                                    'Deck = Replace(Deck, "1 " & commanderLine & vbCrLf, "")
 
-                                    '****NUEVA PRUEBA
+                                    '****NEW TEST
 
-                                    'parto, busco en el texto los comandantes y los elimino
-                                    Dim spcmndlines = Split(mycmnd, "1 ")
+                                    'split it, find the commanders in the text and remove them
+                                    Dim commanderLines = Split(commanderText, "1 ")
                                     Dim lines = ""
-                                    For ab = 0 To spcmndlines.Length - 1
-                                        If spcmndlines(ab) <> "" Then
-                                            Dim uno As String = Trim(fn.RemoveWhitespace(Trim(spcmndlines(ab))))
-                                            If InStr(Deck, uno) > 0 Then
-                                                lines = lines & spcmndlines(ab)
-                                                Deck = Replace(Deck, "1 " & uno & vbCrLf, "")
+                                    For ab = 0 To commanderLines.Length - 1
+                                        If commanderLines(ab) <> "" Then
+                                            Dim commanderLine As String = Trim(fn.RemoveWhitespace(Trim(commanderLines(ab))))
+                                            If InStr(Deck, commanderLine) > 0 Then
+                                                lines = lines & commanderLines(ab)
+                                                Deck = Replace(Deck, "1 " & commanderLine & vbCrLf, "")
                                                 'Deck = Replace(Deck, "[sideboard]", "[commander]")
                                             End If
                                         End If
@@ -558,7 +551,7 @@ Public Class Ext
                             End If
 
                             If Deck.Contains("Godzilla") Then
-                                Dim hola = ""
+                                Dim debugMarker = ""
                             End If
 
                             TitDeck = fn.removeshit(TitDeck)
@@ -583,10 +576,10 @@ Public Class Ext
                             Deck = Replace(Deck, "Spacegodzilla, Void Invader", "Void Beckoner")
 
                             If InStr(Deck, "1 Companion") > 0 Then
-                                Dim hola = ""
+                                Dim debugMarker = ""
                             End If
 
-                            fn.WriteUserLog(fn.StringToDeck(MyFolder, fn.FormatDeck(Deck, TitDeck, mycmnd), TitDeck))
+                            fn.WriteUserLog(fn.StringToDeck(MyFolder, fn.FormatDeck(Deck, TitDeck, commanderText), TitDeck))
                             num = num + 1
                         End If
 
@@ -607,85 +600,85 @@ Public Class Ext
         End If
     End Function
 
-    'Shared Function tenertodas()
-    '    'esto funciona pero lo voy a quitar, 2021
+    'Shared Function GetAllCards()
+    '    'this works but I'm going to remove it, 2021
     '    'Return Nothing
     '    'Exit Function
-    '    If todaslascartas = "" Or IsNothing(todaslascartas) Then
+    '    If allCards = "" Or IsNothing(allCards) Then
     '        If isdevmode() Then
     '            Try
-    '                todaslascartas = My.Computer.FileSystem.ReadAllText("fldata/allcardsandsets.txt")
-    '                'no se si está chungo cards = Split(todas, vbCrLf)
+    '                allCards = My.Computer.FileSystem.ReadAllText("fldata/allcardsandsets.txt")
+    '                'not sure this is broken - cards = Split(allCards, vbCrLf)
     '            Catch
     '            End Try
     '        End If
 
-    '        Dim todicas As New List(Of String)
-    '        Dim arr As Array = Split(todaslascartas, vbCrLf)
+    '        Dim allCardsList As New List(Of String)
+    '        Dim arr As Array = Split(allCards, vbCrLf)
     '        Dim x
     '        For x = 0 To arr.Length - 1
-    '            todicas.Add(arr(x))
+    '            allCardsList.Add(arr(x))
     '        Next x
-    '        todicas.Reverse()
+    '        allCardsList.Reverse()
 
     '        x = 0
-    '        todaslascartas = String.Join(vbCrLf, todicas)
+    '        allCards = String.Join(vbCrLf, allCardsList)
     '    End If
 
-    '    Return todaslascartas
+    '    Return allCards
     'End Function
 
     Public Shared Function RemoveDigits(S As String) As String
         Return Regex.Replace(S, "\d", "")
     End Function
 
-    Public Shared Function searchforedition(carta, tcartas, tediciones)
+    Public Shared Function searchforedition(card, allCardsParam, allEditionsParam)
         'Return ""
 
-        If InStr(carta, "tun Grunt") > 0 Then
-            carta = ""
+        If InStr(card, "tun Grunt") > 0 Then
+            card = ""
         End If
-        If carta.contains("[sideboard]") Then Return ""
+        If card.contains("[sideboard]") Then Return ""
 
-        If InStr(carta, "|") = True Then
-            carta = ""
+        If InStr(card, "|") = True Then
+            card = ""
         End If
-        If InStr(carta, "[") = True Then
-            carta = ""
+        If InStr(card, "[") = True Then
+            card = ""
         End If
 
         If _
-            carta = "Forest" Or carta = "Plains" Or carta = "Swamp" Or carta = "Mountain" Or
-            carta = "Island" Then
+            card = "Forest" Or card = "Plains" Or card = "Swamp" Or card = "Mountain" Or
+            card = "Island" Then
             Return "KHM"
         End If
 
-        If carta = "Wastes" Then
+        If card = "Wastes" Then
             Return "OGW"
         End If
 
-        Dim myChars() As Char = carta.ToCharArray()
-        Dim cantidad = ""
+        Dim myChars() As Char = card.ToCharArray()
+        Dim quantity = ""
         For Each ch As Char In myChars
             If Char.IsDigit(ch) Then
-                cantidad = cantidad & ch
+                quantity = quantity & ch
             End If
         Next
 
-        carta = RemoveDigits(carta)
-        carta = Replace(carta, "&apos;", "'")
-        carta = Replace(carta, "ä", "a")
-        carta = Replace(carta, "ë", "e")
-        carta = Replace(carta, "ï", "i")
-        carta = Replace(carta, "ö", "o")
-        carta = Replace(carta, "ü", "u")
-        carta = Trim(carta)
+        card = RemoveDigits(card)
+        card = Replace(card, "&apos;", "'")
+        card = Replace(card, "ä", "a")
+        card = Replace(card, "ë", "e")
+        card = Replace(card, "ï", "i")
+        card = Replace(card, "ö", "o")
+        card = Replace(card, "ü", "u")
+        card = Trim(card)
 
         Dim a
 
         'Try
-        '    Dim buscacaarta = vbCrLf & carta & "|"
-        '    a = Split(todaslascartas, buscacaarta)
+        '    Dim searchCard = vbCrLf & card & "|"
+        '    a = Split(allCards, searchCard)
         '    a = a(1)
         'Catch e As Exception
         '    Return ""
@@ -766,7 +759,7 @@ Public Class Ext
         Dim t2 As String = Split(t, "<h3>Similar Decks</h3>")(1).ToString
 
         Dim links = extlinks(t2, "/deck/")
-        Dim laweb = ""
+        Dim pageUrl = ""
         'MsgBox(tx1)
         Dim urls() As String = Split(links, vbCrLf)
         For i = 0 To urls.Length - 1
@@ -778,7 +771,7 @@ Public Class Ext
         't = FindIt(t, "<td class='deck-header' colspan='4'>" & vbLf & "Commander", "<div class='deck-view-compact-purchase-buttons'>")
         t = fn.FindIt(t, "<td class='deck-header' colspan='4'>" & vbLf & "Commander", "100 Cards Total")
 
-        'reemplazamos con expresión regular
+        'replace using regular expressions
         t = Regex.Replace(t, "<td class='deck-col-price'>.*?</td>", "" _
                           , RegexOptions.IgnoreCase Or RegexOptions.Singleline)
         t = Replace(t, "<td class='deck-col-qty'>", "")
@@ -813,7 +806,7 @@ Public Class Ext
 
     Public Shared Function extmtggoldfish(str As String, condition As String, Optional condition2 As String = "",
                                           Optional excludelinks As String = "") As String
-        'extrae un listado de links con los mazos
+        'extract a list of links with the decks
         If str = Nothing Then
             str = ""
             Exit Function
@@ -869,59 +862,59 @@ Public Class Ext
 
         fn.WriteUserLog("Connecting..." & vbCrLf)
 
-        'Dim eldir As String = GetForgeDecksDir() & "\constructed\" & fn.ReadLogUser("downloadeddecks_dir", False) & "\" & fn.ReadLogUser("tournamentsdecks_dir", False) & "\"
-        Dim eldir As String = "netdecks\mtgtop8\" & fn.ReadLogUser("tournamentsdecks_dir", False) &
+        'Dim baseDir As String = GetForgeDecksDir() & "\constructed\" & fn.ReadLogUser("downloadeddecks_dir", False) & "\" & fn.ReadLogUser("tournamentsdecks_dir", False) & "\"
+        Dim baseDir As String = "netdecks\mtgtop8\" & fn.ReadLogUser("tournamentsdecks_dir", False) &
                               "\"
 
         ft.extract1.Enabled = False
         Dim tx1 As String
-        'METEMOS EN UNA VARIABLE EL tx DEL TORNEO PARA SACAR LAS URLS DE LOS MAZOS
+        'PUT THE TOURNAMENT'S TEXT IN A VARIABLE TO GET THE DECK URLS
         tx1 = fn.ReadWeb(tournament_url)
 
-        Dim tourname = ""
+        Dim tournamentName = ""
 
-        ''SACAMOS EL name DEL TORNEO
+        ''GET THE TOURNAMENT'S NAME
 
         ''Try
         'Dim request As WebRequest = WebRequest.Create(tournament_url)
 
-        '' Obtener la respuesta.
+        '' Get the response.
         'Dim response As WebResponse = request.GetResponse()
 
-        '' Abrir el stream de la respuesta recibida.
+        '' Open the received response stream.
         'Dim reader As New StreamReader(response.GetResponseStream())
 
-        ' Leer el contenido.
+        ' Read the content.
         Dim res As String = tx1
-        'FORMATO DEL name
-        tourname = fn.FindIt(res, "<title>", "</title>")
-        tourname = Replace(tourname, " @ mtgtop8.com", "")
-        ' jugadores y LA FECHA
-        Dim numju As String = fn.FindIt(res, "star.png></div>", "<div class=S10")
-        If numju = "" Then
-            numju = fn.FindIt(res, "bigstar.png height=16></div>", "<div class=S10")
+        'FORMAT THE name
+        tournamentName = fn.FindIt(res, "<title>", "</title>")
+        tournamentName = Replace(tournamentName, " @ mtgtop8.com", "")
+        ' players and the DATE
+        Dim playerCount As String = fn.FindIt(res, "star.png></div>", "<div class=S10")
+        If playerCount = "" Then
+            playerCount = fn.FindIt(res, "bigstar.png height=16></div>", "<div class=S10")
         End If
-        If numju <> "" Then
-            tourname = tourname & " - " & numju
+        If playerCount <> "" Then
+            tournamentName = tournamentName & " - " & playerCount
         End If
-        If tourname Is Nothing Then tourname = ""
+        If tournamentName Is Nothing Then tournamentName = ""
 
-        tourname = tourname.Replace("/", "")
-        tourname = Replace(tourname, vbCrLf, "")
+        tournamentName = tournamentName.Replace("/", "")
+        tournamentName = Replace(tournamentName, vbCrLf, "")
 
-        tourname = Replace(tourname, ":", "")
-        If tourname.Contains("@") Then tourname = Split(tourname, "@")(0)
-        tourname = Trim(tourname)
-        'CREAMOS UNA MyFolder CON EL name DEL TORNEO
-        Dim MyFolder As String = eldir & tourname & "\"
+        tournamentName = Replace(tournamentName, ":", "")
+        If tournamentName.Contains("@") Then tournamentName = Split(tournamentName, "@")(0)
+        tournamentName = Trim(tournamentName)
+        'BUILD A MyFolder USING THE TOURNAMENT NAME
+        Dim MyFolder As String = baseDir & tournamentName & "\"
 
         If Directory.Exists(MyFolder) Then
             If _
                 MsgBox(
-                    "Folder " & tourname & " exists, do you want to download decks again? " & vbCrLf & vbCrLf &
+                    "Folder " & tournamentName & " exists, do you want to download decks again? " & vbCrLf & vbCrLf &
                     " (Decks inside the folder will be deleted)", MsgBoxStyle.YesNoCancel, "Warning!") = MsgBoxResult.No _
                 Then
-                fn.WriteUserLog(tourname & " folder exists. Operation cancelled." & vbCrLf)
+                fn.WriteUserLog(tournamentName & " folder exists. Operation cancelled." & vbCrLf)
                 Exit Sub
             End If
         End If
@@ -933,9 +926,9 @@ Public Class Ext
         End Try
         fn.CheckFolder(MyFolder)
         fn.WriteUserLog("Creating " & MyFolder & vbCrLf)
-        '//////////////FIN DEL name DEL TORNEO
+        '//////////////END OF THE TOURNAMENT name
 
-        'SACAMOS LAS URLS DE LOS MAZOS
+        'GET THE DECK URLS
 
         If InStr(tournament_url, "mtggoldfish", CompareMethod.Text) = 0 Then
             tx1 = extlinks(tx1, "?e=")
@@ -945,28 +938,28 @@ Public Class Ext
 
         'MsgBox(tx1)
 
-        'YA TENGO LAS URL, AHORA A EXTRAER UNA POR UNA
+        'WE NOW HAVE THE URLS, TIME TO EXTRACT THEM ONE BY ONE
         Dim urls() As String = Split(tx1, vbCrLf)
         For i = 0 To urls.Length - 1
 
             If urls(i).ToString <> "" And urls(i).ToString <> "/deck/custom/standard" Then
                 Dim DeckPage = ""
                 Dim UrlDeck = ""
-                'pagina del mazo i
+                'page for deck i
                 DeckPage = fn.ReadWeb(vars.mtgtop8 & "/event" & urls(i))
-                'url del mazo i
+                'url for deck i
 
                 UrlDeck = extlinks(DeckPage, "mtgo?d=")
                 Dim Deck = ""
                 Dim TitDeck = ""
-                'titulo del mazo i
+                'title for deck i
 
-                'formato del titulo del mazo
+                'format the deck title
 
-                'sacamos el tx del
+                'get the deck's text
                 Deck = fn.ReadWeb(vars.mtgtop8 & "/" & UrlDeck)
 
-                'formato del mazo
+                'format the deck
                 Deck = Replace(Deck, "sideboard", "[sideboard]")
                 Deck = Replace(Deck, "[[", "[")
                 Deck = Replace(Deck, "]]", "]")
@@ -991,23 +984,23 @@ Public Class Ext
 
     Public Shared Sub ExtractFromMtgtop8(Optional ByVal maxdecks As Integer = 100)
 
-        Dim formato = ""
+        Dim tournamentFormat = ""
         Select Case ft.ComboBox2.SelectedItem.ToString
             Case "Vintage"
-                formato = "VI"
+                tournamentFormat = "VI"
             Case "Legacy"
-                formato = "LE"
+                tournamentFormat = "LE"
             Case "Modern"
-                formato = "MO"
+                tournamentFormat = "MO"
             Case "Standard"
-                formato = "ST"
+                tournamentFormat = "ST"
             Case "Pauper"
-                formato = "PAU"
+                tournamentFormat = "PAU"
             Case "Commander"
-                formato = "EDH"
+                tournamentFormat = "EDH"
         End Select
 
-        Dim tx1 = fn.ReadWeb(vars.mtgtop8 & "/format?f=" & formato)
+        Dim tx1 = fn.ReadWeb(vars.mtgtop8 & "/format?f=" & tournamentFormat)
         Dim tx2 = extlinks(tx1, "event?e=")
 
         Dim urls() As String = Split(tx2, vbCrLf)
@@ -1031,7 +1024,16 @@ Public Class Ext
         '    Exit Sub
         'If myUrl = "" Then myUrl = "https://aetherhub.com/Metagame/Standard-BO1/"
         Dim doc As HtmlAgilityPack.HtmlDocument = New HtmlAgilityPack.HtmlDocument()
-        doc.LoadHtml(fn.ReadWeb(Trim(myUrl)))
+        If String.IsNullOrWhiteSpace(myUrl) Then
+            Throw New ArgumentException("URL cannot be null or empty.")
+        End If
+
+        Dim htmlContent = fn.ReadWeb(Trim(myUrl))
+        If String.IsNullOrEmpty(htmlContent) Then
+            Throw New InvalidOperationException("Failed to retrieve content from the URL.")
+        End If
+
+        doc.LoadHtml(htmlContent)
         'Dim MyFolderName = doc.DocumentNode.SelectSingleNode("//head/title").InnerText
         Dim MyDir = "netdecks\aetherhub\" & metag & "\"
         If fromuser = True Then
@@ -1064,47 +1066,47 @@ Public Class Ext
             End If
         Next li2
 
-        Dim paginacion = doc.DocumentNode.SelectSingleNode("//ul[@class='pagination']")
-        If paginacion IsNot Nothing Then
-            links = paginacion.Descendants("a").[Select](Function(a) a.GetAttributeValue("href", "")).ToList()
+        Dim pagination = doc.DocumentNode.SelectSingleNode("//ul[@class='pagination']")
+        If pagination IsNot Nothing Then
+            links = pagination.Descendants("a").[Select](Function(a) a.GetAttributeValue("href", "")).ToList()
         End If
 
         Dim i = 0
-        Dim mycounter = 0
-        Dim my2counter = 0
-        Dim desdecual As Integer
+        Dim resultCounter = 0
+        Dim secondaryCounter = 0
+        Dim startFrom As Integer
 
         If ft.aetherhubfrom.Text = "1" Then
-            desdecual = 1
+            startFrom = 1
         Else
-            desdecual = CInt(ft.aetherhubfrom.Text)
+            startFrom = CInt(ft.aetherhubfrom.Text)
         End If
 
-        For i = desdecual To filteredLinks.Count - 1
+        For i = startFrom To filteredLinks.Count - 1
 
-            mycounter = mycounter + 1
-            If mycounter > hm Then Exit Function
+            resultCounter = resultCounter + 1
+            If resultCounter > hm Then Exit Function
 
             If CInt(ft.aetherhubfrom.Text) <> 1 Then
-                my2counter = my2counter + 1
+                secondaryCounter = secondaryCounter + 1
             End If
 
             If CInt(ft.aetherhubfrom.Text) <> 1 Then
-                Dim quedan = CInt(my2counter + CInt(ft.aetherhubfrom.Text)) - 1
-                If quedan > hm Then Exit Function
+                Dim remaining = CInt(secondaryCounter + CInt(ft.aetherhubfrom.Text)) - 1
+                If remaining > hm Then Exit Function
             End If
 
-            'leo la web
+            'read the page
             Dim doc2 As HtmlAgilityPack.HtmlDocument = New HtmlAgilityPack.HtmlDocument()
             Dim mypagetxt = fn.ReadWeb("https://aetherhub.com" & filteredLinks(i).ToString)
             doc2.LoadHtml(mypagetxt)
             Dim TitDeck = GetTitDeck(mypagetxt)
             If System.Text.RegularExpressions.Regex.IsMatch(TitDeck, "\d") Then
-                ' Encuentra la posición del primer dígito en la cadena TitDeck
+                ' Find the position of the first digit in the TitDeck string
                 Dim firstDigitIndex As Integer = System.Text.RegularExpressions.Regex.Match(TitDeck, "\d").Index
-                ' Obtén la primera parte de la cadena antes del número
+                ' Get the part of the string before the number
                 TitDeck = TitDeck.Substring(0, firstDigitIndex)
-                ' Haz lo que necesites con la primera parte de la cadena
+                ' Use the part of the string before the number as needed
             End If
             Dim div2 = doc2.DocumentNode.SelectSingleNode("//div[@class='row pt-2']")
             Dim links2
@@ -1189,17 +1191,6 @@ Public Class Ext
             End If
 
             fn.WriteUserLog(fn.StringToDeck(MyDir & "/", Deck, TitDeck))
-        Next
-    End Function
-
-    Public Shared Function ExtractfromAetherhubAlt(url)
-        Dim chromeDriver As OpenQA.Selenium.IWebDriver = New ChromeDriver()
-        chromeDriver.Navigate().GoToUrl(url.ToString)
-
-        Dim elements As IList(Of IWebElement) = chromeDriver.FindElements(By.Id("metaHubTable_wrapper"))
-
-        For i = 0 To elements.Count - 1
-            MsgBox(elements.Item(i))
         Next
     End Function
 
