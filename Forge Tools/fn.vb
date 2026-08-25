@@ -282,8 +282,6 @@ Public Class fn
             End Using
         Catch ex As Exception
         End Try
-
-        Return ""
     End Function
 
     Public Shared Function FindIt(total As String, first As String, last As String) As String

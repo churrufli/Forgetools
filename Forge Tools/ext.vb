@@ -1024,7 +1024,16 @@ Public Class Ext
         '    Exit Sub
         'If myUrl = "" Then myUrl = "https://aetherhub.com/Metagame/Standard-BO1/"
         Dim doc As HtmlAgilityPack.HtmlDocument = New HtmlAgilityPack.HtmlDocument()
-        doc.LoadHtml(fn.ReadWeb(Trim(myUrl)))
+        If String.IsNullOrWhiteSpace(myUrl) Then
+            Throw New ArgumentException("URL cannot be null or empty.")
+        End If
+
+        Dim htmlContent = fn.ReadWeb(Trim(myUrl))
+        If String.IsNullOrEmpty(htmlContent) Then
+            Throw New InvalidOperationException("Failed to retrieve content from the URL.")
+        End If
+
+        doc.LoadHtml(htmlContent)
         'Dim MyFolderName = doc.DocumentNode.SelectSingleNode("//head/title").InnerText
         Dim MyDir = "netdecks\aetherhub\" & metag & "\"
         If fromuser = True Then
